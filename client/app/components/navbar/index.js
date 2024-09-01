@@ -1,9 +1,29 @@
+'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="bg-white font-sans">
-      <div className="mx-auto px-4">
+    <nav
+      className={`bg-white font-sans fixed top-0 left-0 w-full transition-opacity duration-300 ${isScrolled ? 'bg-opacity-80 backdrop-blur-md' : 'bg-opacity-100 backdrop-blur-none'} z-50`}
+      style={{ backdropFilter: isScrolled ? 'blur(10px)' : 'none' }}
+    >
+      <div className="mx-auto">
         {/* Top section */}
         <div className="flex flex-col md:flex-row justify-around items-center py-3">
           {/* Left section */}
@@ -11,21 +31,29 @@ const Navbar = () => {
             <button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded ">
               Trends
             </button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded">
+            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded"
+                style={{
+                  border: '2px dashed #cccccc',
+                  borderRadius: '8px'
+                }}>
               Accessories
             </button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded">
+            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded"
+                style={{
+                  border: '2px dashed #cccccc',
+                  borderRadius: '8px'
+                }}>
               Exclusive
             </button>
           </div>
 
           {/* Logo */}
           <div className="text-2xl font-serif italic mb-2 md:mb-0">
-            NilaTrends
+            NilaaTrends
           </div>
 
           {/* Right section */}
-          <div className="flex items-center space-x-4 text-[#BFA285] mb-2 md:mb-0">
+          <div className="flex items-center space-x-8 text-[#BFA285] mb-2 md:mb-0">
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -41,7 +69,7 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </button>
-            <button>
+            <button >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -50,7 +78,7 @@ const Navbar = () => {
         </div>
 
         {/* Bottom menu */}
-        <div className="flex flex-wrap justify-center py-2 space-x-4 text-sm font-bold bg-[#faf9f3] overflow-x-auto">
+        <div className="flex flex-wrap justify-center py-2 space-x-10 text-sm font-bold bg-[#faf9f3] overflow-x-auto">
           <Link href="/kerala-traditional" className="text-gray-700 hover:text-gray-900">Kerala traditional</Link>
           <Link href="/kurta" className="text-gray-700 hover:text-gray-900">Kurta</Link>
           <Link href="/kurti-set" className="text-gray-700 hover:text-gray-900">Kurti set</Link>
@@ -66,3 +94,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

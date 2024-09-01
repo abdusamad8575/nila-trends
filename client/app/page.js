@@ -1,10 +1,18 @@
-import Image from "next/image";
-import Banner from "./components/banner";
+import FashionHero from "./components/banner";
+import WardrobeSection from "./components/homecontact";
+import JewelryShop from "./components/lookbook";
+import Lookbook from "./components/products";
+
 
 export default function Home() {
   return (
     <>
-    <Banner/>
+    <FashionHero/>
+    <JewelryShop/>
+    <Lookbook/>
+    <Lookbook/>
+    <Lookbook/>
+    <WardrobeSection/>
     </>
    
   );
