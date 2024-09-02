@@ -1,0 +1,64 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .backButton {
+    margin-bottom: 20px;
+  }
+  
+  .content {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .textSection {
+    flex: 1;
+  }
+  
+  .textSection h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .textSection p {
+    margin: 5px 0;
+    color: gray;
+  }
+  
+  .textSection h2 {
+    font-family: 'Cursive';
+    margin: 20px 0;
+  }
+  
+  .textSection h3 {
+    margin: 15px 0 5px 0;
+    font-weight: bold;
+  }
+  
+  .imageSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mainImage {
+    width: 100%;
+    max-width: 300px;
+    object-fit: cover;
+  }
+  
+  .thumbnailImages {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .thumbnailImages img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
