@@ -27,11 +27,11 @@ export default function ProductDetail() {
           <p>Neck•V-Neck&nbsp;&nbsp; Occasion•Daily&nbsp;&nbsp; Pattern•Printed</p>
         </div>
         <div className={styles.imageSection}>
-          <img src="/images/main-image.jpg" alt="Main product" className={styles.mainImage} />
+          <img src="/assets/product.png" alt="Main product" className={styles.mainImage} />
           <div className={styles.thumbnailImages}>
-            <img src="/images/thumb1.jpg" alt="Thumbnail 1" />
-            <img src="/images/thumb2.jpg" alt="Thumbnail 2" />
-            <img src="/images/thumb3.jpg" alt="Thumbnail 3" />
+            <img src="/assets/product.png" alt="Thumbnail 1" />
+            <img src="/assets/product.png" alt="Thumbnail 2" />
+            <img src="/assets/product.png" alt="Thumbnail 3" />
           </div>
         </div>
       </div>

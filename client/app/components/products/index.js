@@ -2,10 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 
 const lookbookItems = [
-  { id: 1, title: 'CLASSIC KURTIS', image: '/kurtis.jpg' },
-  { id: 2, title: 'CLASSIC KURTI SETS', image: '/kurti-sets.jpg' },
-  { id: 3, title: 'STELLAR SAREES', image: '/sarees.jpg' },
-  { id: 4, title: 'MODERN SKIRTS', image: '/skirts.jpg' },
+  { id: 1, title: 'CLASSIC KURTIS', image: '/assets/home1.png' },
+  { id: 2, title: 'CLASSIC KURTI SETS', image: '/assets/home2.png' },
+  { id: 3, title: 'STELLAR SAREES', image: '/assets/home3.png' },
+  { id: 4, title: 'MODERN SKIRTS', image: '/assets/home4.png' },
 ];
 
 const LookbookItem = ({ title, image }) => (

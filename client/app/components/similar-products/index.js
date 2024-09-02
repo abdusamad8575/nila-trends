@@ -4,28 +4,28 @@ const SimilarStores = () => {
   const products = [
     {
       id: 1,
-      image: '/images/product1.jpg', // Replace with actual image paths
+      image: '/assets/product1.png', // Replace with actual image paths
       title: 'Timeless A-line Evening Dress',
       category: 'Womenswear',
       price: '$109.99',
     },
     {
       id: 2,
-      image: '/images/product2.jpg',
+      image: '/assets/product2.png',
       title: 'Timeless A-line Evening Dress',
       category: 'Womenswear',
       price: '$109.99',
     },
     {
       id: 3,
-      image: '/images/product3.jpg',
+      image: '/assets/proudct3.png',
       title: 'Timeless A-line Evening Dress',
       category: 'Womenswear',
       price: '$109.99',
     },
     {
       id: 4,
-      image: '/images/product4.jpg',
+      image: '/assets/product.png',
       title: 'Timeless A-line Evening Dress',
       category: 'Womenswear',
       price: '$109.99',

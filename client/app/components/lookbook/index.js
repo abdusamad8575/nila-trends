@@ -17,33 +17,34 @@ const JewelryShop = () => {
       <main className="grid grid-cols-2 gap-4">
         {/* First Row */}
         <div className="relative overflow-hidden rounded-lg aspect-video">
-          <img src="/api/placeholder/800/400" alt="Stylish Combo Sets" className="object-cover w-full h-full" />
-          <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
+          <img src="/assets/comboset.png" alt="Stylish Combo Sets" className="object-cover w-full h-full" />
+          {/* <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
             <p className="text-white text-xs md:text-sm mb-2">STYLISH</p>
             <h2 className="text-white text-2xl md:text-3xl font-serif">COMBO SETS</h2>
-          </div>
+          </div> */}
         </div>
         <div className="relative overflow-hidden rounded-lg aspect-video">
-          <img src="/api/placeholder/800/400" alt="Hand Made Jewelry" className="object-cover w-full h-full" />
-          <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
+          <img src="/assets/handmade.png" alt="Hand Made Jewelry" className="object-cover w-full h-full" />
+          {/* <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
             <p className="text-white text-xs md:text-sm mb-2">THE PERFECT</p>
             <h2 className="text-white text-2xl md:text-3xl font-serif">HAND MADE</h2>
-          </div>
+          </div> */}
         </div>
 
         {/* Second Row */}
-        <div className="relative overflow-hidden rounded-lg aspect-video bg-black">
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6">
+        <div className="relative overflow-hidden rounded-lg aspect-video">
+        <img src="/assets/imitation.png" alt="Stylish Combo Sets" className="object-cover w-full h-full rounded-lg" />
+          {/* <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6">
             <p className="text-white text-xs md:text-sm mb-2">CLASSIC</p>
             <h2 className="text-white text-2xl md:text-3xl font-serif">IMITATION</h2>
-          </div>
+          </div> */}
         </div>
         <div className="relative overflow-hidden rounded-lg aspect-video">
-          <img src="/api/placeholder/800/400" alt="Stylish Combo Sets" className="object-cover w-full h-full" />
-          <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
+          <img src="/assets/comboset.png" alt="Stylish Combo Sets" className="object-cover w-full h-full" />
+          {/* <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/50 to-transparent">
             <p className="text-white text-xs md:text-sm mb-2">STYLISH</p>
             <h2 className="text-white text-2xl md:text-3xl font-serif">COMBO SETS</h2>
-          </div>
+          </div> */}
         </div>
       </main>
     </div>

@@ -13,7 +13,7 @@ const Profile = () => {
 
           <div className="flex items-center mb-6">
             <Image
-              src="/profile.jpg"
+              src="/assets/profile.png"
               alt="Profile Picture"
               width={50}
               height={50}

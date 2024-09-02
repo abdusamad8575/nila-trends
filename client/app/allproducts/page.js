@@ -45,25 +45,25 @@ const KurtaSetsListing = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <ProductCard
-          image="/api/placeholder/300/400"
+          image="/assets/product1.png"
           title="Timeless A-line Evening Dress"
           fit="Ankle-length"
           price="109.99"
         />
         <ProductCard
-          image="/api/placeholder/300/400"
+          image="/assets/product2.png"
           title="Timeless A-line Evening Dress"
           fit="Ankle-length"
           price="109.99"
         />
         <ProductCard
-          image="/api/placeholder/300/400"
+          image="/assets/proudct3.png"
           title="Timeless A-line Evening Dress"
           fit="Ankle-length"
           price="109.99"
         />
         <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
-          <img src="/api/placeholder/300/400" alt="Chiku Brown Printed Cotton" className="w-full h-64 object-cover mb-4" />
+          <img src="/assets/product.png" alt="Chiku Brown Printed Cotton" className="w-full h-64 object-cover mb-4" />
           <h2 className="text-lg font-semibold mb-2">Chiku Brown Printed Cotton Zari Weaving</h2>
           <p className="text-sm text-gray-600 mb-4">
             Red floral print a-line Ethnic Dress V-neck,Short, puff sleeve Midi length in flared hem

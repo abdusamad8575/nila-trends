@@ -73,7 +73,7 @@ const FashionLanding = () => {
   // Define carousel items
   const carouselItems = [
     {
-      src: '/onam-banner.jpg',
+      src: '/assets/home.png',
       alt: 'Onam celebration',
       title: 'Happy Onam',
       subtitle: 'Traditional Elegance Meets Modern Flair',
@@ -94,13 +94,13 @@ const FashionLanding = () => {
           <div className="border-2 border-dashed border-gray-300 p-4">
             <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden">
               <Image
-                src="/banner.jpg"
+                src="/assets/home.png"
                 alt="Fashion model"
                 layout="fill"
                 objectFit="cover"
                 className="object-center"
               />
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 bg-white">
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
                 <button className="bg-black text-white px-4 py-2 rounded-full flex items-center">
                   Shop Now
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">

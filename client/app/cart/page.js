@@ -47,7 +47,7 @@ export default function Cart() {
             {/* Item List */}
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row items-center justify-between">
-                <img src="https://via.placeholder.com/50" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
+                <img src="/assets/product1.png" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
                 <div className="w-full sm:w-auto sm:flex-grow px-4">
                   <h4 className="font-semibold">Timeless A-line Evening Dress</h4>
                   <p className="text-gray-500">Fit + Ankle-length &nbsp; Price $109.99</p>
@@ -63,7 +63,7 @@ export default function Cart() {
 
               {/* Another item */}
               <div className="flex flex-col sm:flex-row items-center justify-between">
-                <img src="https://via.placeholder.com/50" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
+                <img src="/assets/product2.png" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
                 <div className="w-full sm:w-auto sm:flex-grow px-4">
                   <h4 className="font-semibold">Timeless A-line Evening Dress</h4>
                   <p className="text-gray-500">Fit + Ankle-length &nbsp; Price $109.99</p>
