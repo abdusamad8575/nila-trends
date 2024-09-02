@@ -8,7 +8,7 @@ const WardrobeSection = () => {
           <div className="absolute top-0 right-0 w-40 h-40 bg-stone-200 rounded-full -mr-20 -mt-20 opacity-50"></div>
           <h2 className="text-3xl font-bold mb-4">ELEVATE YOUR WARDROBE</h2>
           <p className="mb-4">
-            Discover the magic of Nilaa's exclusive collections, where each piece is crafted with
+            Discover the magic of Nilaad&apos;s exclusive collections, where each piece is crafted with
             unparalleled attention to detail.
           </p>
           <p className="mb-4">
