@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 const MobileNavbar = () => {
@@ -35,7 +36,7 @@ const MobileNavbar = () => {
         {/* Center - Logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
           <h1 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-bold italic text-black whitespace-nowrap">
-            NilaaTrends
+          <Link href={'/'}> NilaaTrends</Link>
           </h1>
         </div>
 

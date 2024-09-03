@@ -7,7 +7,7 @@ const ProductCard = ({ image, title, fit, price }) => (
     <img src={image} alt={title} className="w-full h-64 object-cover" />
     <div className="p-4">
       <span className="bg-gray-200 text-xs font-semibold px-2 py-1 rounded">Womenswear</span>
-      <button className="float-right text-sm text-blue-600">Shop Now</button>
+  <Link href={'/products'}>    <button className="float-right text-sm text-blue-600">Shop Now</button></Link>
       <h3 className="mt-2 text-lg font-semibold">{title}</h3>
       <p className="text-sm text-gray-600">Fit • {fit}</p>
       <p className="text-sm text-gray-600">Price • ${price}</p>
@@ -62,7 +62,25 @@ const KurtaSetsListing = () => {
           fit="Ankle-length"
           price="109.99"
         />
-        <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
+        <ProductCard
+          image="/assets/product1.png"
+          title="Timeless A-line Evening Dress"
+          fit="Ankle-length"
+          price="109.99"
+        />
+        <ProductCard
+          image="/assets/product2.png"
+          title="Timeless A-line Evening Dress"
+          fit="Ankle-length"
+          price="109.99"
+        />
+        <ProductCard
+          image="/assets/proudct3.png"
+          title="Timeless A-line Evening Dress"
+          fit="Ankle-length"
+          price="109.99"
+        />
+        <div className="bg-white rounded-lg overflow-hidden shadow-md p-4 hidden">
           <img src="/assets/product.png" alt="Chiku Brown Printed Cotton" className="w-full h-64 object-cover mb-4" />
           <h2 className="text-lg font-semibold mb-2">Chiku Brown Printed Cotton Zari Weaving</h2>
           <p className="text-sm text-gray-600 mb-4">

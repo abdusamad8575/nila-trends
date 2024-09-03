@@ -8,6 +8,8 @@ const lookbookItems = [
   { id: 4, title: 'MODERN SKIRTS', image: '/assets/home4.png' },
 ];
 
+
+
 const LookbookItem = ({ title, image }) => (
   <div className="relative overflow-hidden rounded-lg shadow-md">
     <Image
@@ -18,9 +20,9 @@ const LookbookItem = ({ title, image }) => (
       layout="responsive"
       className="object-cover"
     />
-    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+    {/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
       <h3 className="text-white text-xl font-semibold text-center">{title}</h3>
-    </div>
+    </div> */}
   </div>
 );
 

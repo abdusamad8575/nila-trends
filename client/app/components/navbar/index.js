@@ -49,7 +49,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <div className="text-2xl font-serif italic mb-2 md:mb-0">
-            NilaaTrends
+           <Link href={'/'}> NilaaTrends</Link>
           </div>
 
           {/* Right section */}
@@ -87,14 +87,14 @@ const Navbar = () => {
 
         {/* Bottom menu */}
         <div className="flex flex-wrap justify-center py-2 space-x-10 text-sm font-bold bg-[#faf9f3] overflow-x-auto">
-          <Link href="/kerala-traditional" className="text-gray-700 hover:text-gray-900">Kerala traditional</Link>
-          <Link href="/kurta" className="text-gray-700 hover:text-gray-900">Kurta</Link>
-          <Link href="/kurti-set" className="text-gray-700 hover:text-gray-900">Kurti set</Link>
-          <Link href="/ethnic-wear" className="text-gray-700 hover:text-gray-900">Ethnic wear</Link>
-          <Link href="/feminine" className="text-gray-700 hover:text-gray-900">Feminine</Link>
-          <Link href="/festive-wear" className="text-gray-700 hover:text-gray-900">Festive wear</Link>
-          <Link href="/dual-flare-ears" className="text-gray-700 hover:text-gray-900">Dual flare ears</Link>
-          <Link href="/beach-wear" className="text-gray-700 hover:text-gray-900">Beach wear</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Kerala traditional</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Kurta</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Kurti set</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Ethnic wear</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Feminine</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Festive wear</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Dual flare ears</Link>
+          <Link href="/allproducts" className="text-gray-700 hover:text-gray-900">Beach wear</Link>
         </div>
       </div>
     </nav>
