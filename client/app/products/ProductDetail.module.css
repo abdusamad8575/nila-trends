@@ -1,64 +1,288 @@
 .container {
+  font-family: 'Arial', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
+  color: #333;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+  padding: 0;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 120px; /* space for the footer */
+}
+
+/* Common image styles */
+.imageSection {
+  display: flex;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.mainImage {
+  width: 70%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.sideImages {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25%;
+  gap: 10px;
+}
+
+.sideImages img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Mobile image section */
+.imageSectionMobile {
+  display: none;
+}
+
+.imageSectionDesktop {
+  display: flex;
+}
+
+/* Text section */
+.textSection {
+  width: 55%;
+  padding-right: 30px;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.subtext {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.features li {
+  margin-bottom: 8px;
+}
+
+.section {
+  margin-top: 30px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.loremText {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.fitInfo, .specInfo {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footerSection {
+  flex: 1;
+  text-align: center;
+}
+
+.footerSection h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.footerButtons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.footerButtons button {
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.addToCart {
+  background-color: #333;
+  color: white;
+}
+
+.shopNow {
+  background-color: #b0855f;
+  color: white;
+}
+
+.buttonGroup button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.buttonGroup .selected {
+  background-color: #b0855f;
+  color: white;
+  border-color: #b0855f;
+}
+
+.colorOptions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.colorButton {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.selectedColor {
+  background-color: #b0855f;
+  border-color: #b0855f;
+}
+
+.deliveryInfo, .fitInfoFooter {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* Responsive Styles */
+@media (min-width: 1024px) {
+  .imageSectionMobile {
+    display: none;
+  }
+  .imageSectionDesktop {
     display: flex;
+  }
+}
+
+@media (max-width: 1024px) {
+  .imageSectionMobile {
+    display: flex;
+  }
+  .imageSectionDesktop {
+    display: none;
+  }
+
+  .footer {
     flex-direction: column;
-    padding: 20px;
+    align-items: flex-start;
+    margin-bottom: 45px;
   }
-  
-  .backButton {
-    margin-bottom: 20px;
-  }
-  
-  .content {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .textSection {
-    flex: 1;
-  }
-  
-  .textSection h1 {
-    font-size: 24px;
+
+  .footerSection {
+    width: 100%;
+    text-align: left;
     margin-bottom: 10px;
   }
-  
-  .textSection p {
-    margin: 5px 0;
-    color: gray;
-  }
-  
-  .textSection h2 {
-    font-family: 'Cursive';
-    margin: 20px 0;
-  }
-  
-  .textSection h3 {
-    margin: 15px 0 5px 0;
-    font-weight: bold;
-  }
-  
-  .imageSection {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .mainImage {
+
+  .footerButtons {
     width: 100%;
-    max-width: 300px;
-    object-fit: cover;
+    justify-content: space-between;
+  }
+
+  .mainContent {
+    flex-direction: column; /* Stack items in mobile view */
+  
   }
   
-  .thumbnailImages {
+}
+
+/* Main content styles for mobile view */
+@media (max-width: 1024px) {
+  .mainContent {
+    flex-direction: column; /* Stack content vertically */
+    align-items: stretch; /* Ensure items stretch to full width */
+    margin-bottom: 30px; /* Adjusted margin for mobile */
+  }
+
+  .imageSectionMobile {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    flex-direction: column; /* Stack images vertically */
+    width: 100%;
+    margin-bottom: 20px; /* Add spacing between image and text */
   }
-  
-  .thumbnailImages img {
-    width: 80px;
-    height: 100px;
-    object-fit: cover;
+
+  .mainImage {
+    width: 100%; /* Make the main image take full width */
+    height: auto; /* Maintain aspect ratio */
   }
-  
+
+  .textSection {
+    width: 100%;
+    padding-right: 0; /* Remove padding for mobile */
+  }
+
+  .imageSectionDesktop {
+    display: none; /* Hide desktop images on mobile */
+  }
+}
+
