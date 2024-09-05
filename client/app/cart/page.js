@@ -1,7 +1,7 @@
-"use client"; // This ensures the component is a Client Component
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation for the App Router
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const [isClient, setIsClient] = useState(false);
@@ -14,9 +14,9 @@ export default function Cart() {
 
   useEffect(() => {
     setIsClient(true);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -25,7 +25,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-8">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-8 lg:mt-28">
       <div className="bg-white rounded-lg max-w-7xl w-full p-6 relative">
         {/* Close button */}
         <button
@@ -35,52 +35,70 @@ export default function Cart() {
           &times;
         </button>
 
+        {/* MOBILE VIEW - Cart Total and Checkout at the top */}
+        <div className="block lg:hidden mb-4">
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-semibold">Cart Total :</p>
+            <p className="text-lg font-semibold">$72</p>
+          </div>
+          <button className="mt-2 w-full bg-black text-white py-2 rounded-lg">
+            Proceed To Checkout
+          </button>
+        </div>
+
         {/* Shopping Cart Header */}
-        <h2 className="text-2xl font-semibold mb-4">Shopping Cart 🛒</h2>
+        <h2 className="text-2xl font-semibold mb-4 hidden lg:block">Shopping Cart 🛒</h2>
 
         {/* Items and Cart Totals */}
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col lg:flex-row">
           {/* Items */}
-          <div className="w-full md:w-2/3 mb-6 md:mb-0">
-            <h3 className="text-lg font-semibold mb-2">Items - 4</h3>
+          <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
+            <h3 className="text-lg font-semibold mb-2 hidden lg:block">Items - 4</h3>
 
             {/* Item List */}
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row items-center justify-between">
-                <img src="/assets/product1.png" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
-                <div className="w-full sm:w-auto sm:flex-grow px-4">
-                  <h4 className="font-semibold">Timeless A-line Evening Dress</h4>
-                  <p className="text-gray-500">Fit + Ankle-length &nbsp; Price $109.99</p>
+              {/* Item */}
+              <div className="flex items-center justify-between space-x-4">
+                <img
+                  src="/assets/product1.png"
+                  alt="Product"
+                  className="w-16 h-16 object-cover rounded-lg"
+                />
+                <div className="flex-grow text-left">
+                  <h4 className="font-semibold text-sm">Timeless A-line Evening Dress</h4>
+                  <p className="text-gray-500 text-xs">Size • medium</p>
+                  <p className="text-gray-500 text-xs">$109.99</p>
                 </div>
-                <div className="w-24 sm:w-32 text-center mb-4 sm:mb-0">Medium</div>
-                <div className="flex items-center mb-4 sm:mb-0">
-                  <button className="px-2">-</button>
+                <div className="flex items-center">
+                  <button className="px-2 border border-gray-300 rounded">-</button>
                   <span className="mx-2">1</span>
-                  <button className="px-2">+</button>
+                  <button className="px-2 border border-gray-300 rounded">+</button>
                 </div>
-                <button className="text-gray-500 hover:text-gray-700">save for later</button>
               </div>
 
-              {/* Another item */}
-              <div className="flex flex-col sm:flex-row items-center justify-between">
-                <img src="/assets/product2.png" alt="Product" className="w-20 h-20 object-cover rounded-md mb-4 sm:mb-0" />
-                <div className="w-full sm:w-auto sm:flex-grow px-4">
-                  <h4 className="font-semibold">Timeless A-line Evening Dress</h4>
-                  <p className="text-gray-500">Fit + Ankle-length &nbsp; Price $109.99</p>
+              {/* Another Item */}
+              <div className="flex items-center justify-between space-x-4">
+                <img
+                  src="/assets/product2.png"
+                  alt="Product"
+                  className="w-16 h-16 object-cover rounded-lg"
+                />
+                <div className="flex-grow text-left">
+                  <h4 className="font-semibold text-sm">Timeless A-line Evening Dress</h4>
+                  <p className="text-gray-500 text-xs">Size • medium</p>
+                  <p className="text-gray-500 text-xs">$109.99</p>
                 </div>
-                <div className="w-24 sm:w-32 text-center mb-4 sm:mb-0">Medium</div>
-                <div className="flex items-center mb-4 sm:mb-0">
-                  <button className="px-2">-</button>
+                <div className="flex items-center">
+                  <button className="px-2 border border-gray-300 rounded">-</button>
                   <span className="mx-2">1</span>
-                  <button className="px-2">+</button>
+                  <button className="px-2 border border-gray-300 rounded">+</button>
                 </div>
-                <button className="text-gray-500 hover:text-gray-700">save for later</button>
               </div>
             </div>
           </div>
 
-          {/* Cart Totals */}
-          <div className="w-full md:w-1/3 md:ml-4">
+          {/* Cart Totals - Only for Desktop */}
+          <div className="hidden lg:block w-full lg:w-1/3 lg:ml-4">
             <div className="border p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-4">Cart totals</h3>
               <div className="flex justify-between">

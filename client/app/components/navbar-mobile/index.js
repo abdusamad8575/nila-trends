@@ -1,7 +1,7 @@
 'use client';
-
-import Link from 'next/link';
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { Search } from 'lucide-react';
 
 const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +36,7 @@ const MobileNavbar = () => {
         {/* Center - Logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
           <h1 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-bold italic text-black whitespace-nowrap">
-          <Link href={'/'}> NilaaTrends</Link>
+            <Link href={'/'}> NilaaTrends</Link>
           </h1>
         </div>
 
@@ -70,7 +70,25 @@ const MobileNavbar = () => {
                 </svg>
               </button>
             </div>
-            {/* Add menu items here */}
+            <div className="p-4">
+              <div className="mb-6">
+                <div className="flex items-center bg-gray-100 rounded-md p-2">
+                  <Search size={20} className="text-gray-400 mr-2" />
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="bg-transparent outline-none w-full text-sm"
+                  />
+                </div>
+              </div>
+              <nav>
+                <ul className="space-y-4">
+                  <li><Link href="/orders" className="text-gray-700 text-sm">Orders</Link></li>
+                  <li><Link href="/cart" className="text-gray-700 text-sm">Cart</Link></li>
+                  <li><Link href="/wishlist" className="text-gray-700 text-sm">Wishlist</Link></li>
+                </ul>
+              </nav>
+            </div>
           </div>
         </div>
       )}
