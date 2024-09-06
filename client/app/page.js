@@ -1,16 +1,18 @@
+'use client';
+import { useState } from "react";
 import FashionHero from "./components/banner";
+import ModalLayout from "./components/common/ModalLayout";
 import WardrobeSection from "./components/homecontact";
 import JewelryShop from "./components/lookbook";
 import Lookbook from "./components/products";
 import SimilarStores from "./components/similar-products";
+import Cart from "./cart/page";
 
 
 export default function Home() {
-  const heading = [
-    { title: 'CLASSIC KURTIS',subtitle:'kjfdlk' },
-    { title: 'CLASSIC KURTI SETS', subtitle:'kdjslkf'},
-    { title: 'STELLAR SAREES',subtitle:'fkdlskjl' },
-  ];
+
+  // const [open , setOpen]= useState(true);
+
   return (
     <div>
     <FashionHero/>
@@ -20,6 +22,7 @@ export default function Home() {
   
     <SimilarStores/>
     <WardrobeSection/>
+    {/* <ModalLayout open={open} setOpen={setOpen} children={<Cart/>}/> */}
     </div>
    
   );

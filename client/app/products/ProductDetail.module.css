@@ -1,7 +1,7 @@
 .container {
   font-family: 'Arial', sans-serif;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: auto;
   margin-top: 100px;
   padding: 20px;
   color: #333;
@@ -222,6 +222,7 @@
   .imageSectionDesktop {
     display: flex;
   }
+  
 }
 
 @media (max-width: 1024px) {
@@ -283,6 +284,10 @@
 
   .imageSectionDesktop {
     display: none; /* Hide desktop images on mobile */
+  }
+
+  .container{
+    margin-top: 50px;
   }
 }
 

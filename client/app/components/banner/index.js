@@ -73,7 +73,7 @@ const FashionLanding = () => {
   // Define carousel items
   const carouselItems = [
     {
-      src: '/assets/home.png',
+      src: '/assets/image.png',
       alt: 'Onam celebration',
       title: 'Happy Onam',
       subtitle: 'Traditional Elegance Meets Modern Flair',

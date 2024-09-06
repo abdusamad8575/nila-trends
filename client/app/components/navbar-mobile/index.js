@@ -12,7 +12,7 @@ const MobileNavbar = () => {
 
   return (
     <div className="w-full bg-white shadow-md fixed top-0 left-0 z-40">
-      <nav className="flex items-center justify-between px-4 py-2 relative">
+      <nav className="flex items-center justify-between px-4 py-4 relative">
         {/* Left - Hamburger Menu */}
         <div className="flex items-center z-10">
           <button onClick={toggleMenu} className="focus:outline-none">

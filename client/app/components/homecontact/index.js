@@ -2,8 +2,8 @@ import React from 'react';
 
 const WardrobeSection = () => {
   return (
-    <div className=" p-8 font-sans">
-      <div className="max-w-7xl mx-auto p-4 ">
+    <div className=" font-sans">
+      <div className="md:max-w-7xl mx-auto p-4 ">
         <div className="bg-stone-300 rounded-lg p-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-stone-200 rounded-full -mr-20 -mt-20 opacity-50"></div>
           <h2 className="text-3xl font-bold mb-4">ELEVATE YOUR WARDROBE</h2>
