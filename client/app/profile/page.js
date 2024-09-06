@@ -3,12 +3,13 @@ import Link from 'next/link';
 
 const Profile = () => {
   return (
-    <div className="w-full min-h-screen flex justify-center items-center md:mt-24 p-4 bg-gray-50 ">
-      {/* Mobile View */}
+    <div className="w-full min-h-screen flex justify-center items-center md:mt-20 p-4 bg-gray-50">
+      {/* Mobile View - Updated to match the provided image */}
       <div className="w-full max-w-xl h-full bg-white rounded-2xl shadow-lg p-4 md:hidden">
+        <h1 className="text-2xl font-bold mb-4">Hey! Matilda Pallu</h1>
         
         {/* Profile Section */}
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-6">
           <Image
             src="/assets/profile.png"
             alt="Profile Picture"
@@ -17,133 +18,145 @@ const Profile = () => {
             className="rounded-full"
           />
           <div className="ml-4">
-            <p className="text-lg font-semibold">matildapallu@gmail.com</p>
-            <p className="text-base">Matilda Pallu</p>
-            <p className="text-base">Ph: 9876123450</p>
+            <p className="text-gray-600">matildapallu@gmail.com</p>
+            <p className="font-bold">Matilda Pallu</p>
+            <p>Ph : 9876123450</p>
           </div>
         </div>
 
         {/* Action Buttons - Coupons and Support */}
-        <div className="flex justify-between mb-4">
-          <button className="flex-1 bg-gray-100 py-2 mx-2 rounded-lg text-center">
-            <span className="block">Coupons</span>
+        <div className="flex justify-between mb-6">
+          <button className="flex-1 bg-gray-100 py-3 mx-2 rounded-lg text-center flex items-center justify-center">
+            <span className="mr-2">🎟️</span>
+            <span>Coupons</span>
           </button>
-          <button className="flex-1 bg-gray-100 py-2 mx-2 rounded-lg text-center">
-            <span className="block">Support</span>
+          <button className="flex-1 bg-gray-100 py-3 mx-2 rounded-lg text-center flex items-center justify-center">
+            <span className="mr-2">🎧</span>
+            <span>Support</span>
           </button>
         </div>
 
         {/* My Orders */}
-        <h2 className="text-lg font-semibold mb-4">My Orders</h2>
+        <h2 className="text-xl font-bold mb-4">My Orders</h2>
         <div className="flex justify-around mb-6">
           <button className="flex flex-col items-center text-gray-700">
-            <span className="text-2xl">🔄</span>
+            <span className="text-2xl mb-1">↩️</span>
             <span className="text-sm">Return</span>
           </button>
           <button className="flex flex-col items-center text-gray-700">
-            <span className="text-2xl">⚙️</span>
+            <span className="text-2xl mb-1">⚙️</span>
             <span className="text-sm">Processing</span>
           </button>
           <button className="flex flex-col items-center text-gray-700">
-            <span className="text-2xl">🚚</span>
+            <span className="text-2xl mb-1">🚚</span>
             <span className="text-sm">Shipping</span>
           </button>
           <button className="flex flex-col items-center text-gray-700">
-            <span className="text-2xl">💳</span>
+            <span className="text-2xl mb-1">💳</span>
             <span className="text-sm">Unpaid</span>
           </button>
         </div>
 
         {/* Links */}
-        <div className="border-t border-gray-200 py-4">
-          <Link href="#" className="block text-gray-700 text-base mb-2">
+        <div className="space-y-4">
+          <Link href="#" className="flex justify-between items-center text-gray-700 text-lg">
             Shipping addresses
+            <span className="text-gray-400">&gt;</span>
           </Link>
-          <Link href="#" className="block text-gray-700 text-base mb-2">
+          <Link href="#" className="flex justify-between items-center text-gray-700 text-lg">
             Settings
+            <span className="text-gray-400">&gt;</span>
           </Link>
-          <button className="text-red-500 text-base">Sign Out</button>
+          <button className="text-red-500 text-lg font-semibold">Sign Out</button>
         </div>
       </div>
 
-
       {/* Desktop View - Updated to match the reference image */}
-      <div className="w-full max-w-7xl h-full bg-white rounded-2xl shadow-lg p-6 hidden md:flex">
-        {/* Left Section */}
-        <div className="w-1/2 pr-4 flex flex-col">
-          <div className="flex justify-between items-start mb-6">
-            <h1 className="text-2xl font-bold">My Profile</h1>
-            <button className="text-gray-500 text-2xl">&times;</button>
-          </div>
-
-          <div className="flex items-center mb-6">
-            <Image
-              src="/assets/profile.png"
-              alt="Profile Picture"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-            <div className="ml-4">
-              <p className="text-lg font-semibold">matildapallu@gmail.com</p>
-              <p className="text-base">Matilda Pallu</p>
-              <p className="text-base">Ph: 9876123450</p>
-            </div>
-          </div>
-
-          <h2 className="text-xl font-semibold mb-4">Shipping addresses</h2>
-
-          <div className="space-y-4 flex-grow overflow-auto pr-2">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="bg-gray-100 p-4 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold">Matilda Pallu</p>
-                    <p>98937778492</p>
-                    <p>Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button className="px-3 py-1 bg-gray-200 rounded-md">Edit</button>
-                    <input type="radio" name="address" className="form-radio" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <h2 className="text-xl font-semibold mt-6 mb-2">Settings</h2>
-          <button className="text-red-500 mt-2">Sign Out</button>
+      <div className="w-full max-w-7xl h-full bg-white rounded-3xl shadow-lg p-6 hidden md:block">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">My Profile</h1>
+          <button className="text-gray-500 text-3xl">&times;</button>
         </div>
 
-        {/* Right Section */}
-        <div className="w-1/2 pl-4 border-l border-gray-200">
-          <h2 className="text-xl font-semibold mb-4">My Orders</h2>
-          <div className="flex space-x-2 mb-4">
-            <button className="px-4 py-2 bg-gray-800 text-white rounded-full">Delivered</button>
-            <button className="px-4 py-2 bg-gray-200 rounded-full">Processing</button>
-            <button className="px-4 py-2 bg-gray-200 rounded-full">Cancelled</button>
-            <button className="px-4 py-2 bg-gray-200 rounded-full">returned</button>
+        <div className="flex gap-8">
+          {/* Left Section */}
+          <div className="w-2/3">
+            <div className="flex items-center mb-6">
+              <Image
+                src="/assets/profile.png"
+                alt="Profile Picture"
+                width={80}
+                height={80}
+                className="rounded-full"
+              />
+              <div className="ml-4">
+                <p className="text-gray-600">matildapallu@gmail.com</p>
+                <p className="font-bold">Matilda Pallu</p>
+                <p>Ph : 9876123450</p>
+              </div>
+            </div>
+
+            <h2 className="text-xl font-bold mb-4">Shipping addresses</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="border rounded-lg p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="font-bold">Matilda Pallu</p>
+                      <p>98937778492</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button className="bg-gray-200 text-sm px-3 py-1 rounded-full">Edit</button>
+                      <div className={`w-4 h-4 rounded-full ${item % 2 === 1 ? 'bg-blue-500' : 'border border-gray-300'}`}></div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600">Manzil, Neettani,, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</p>
+                </div>
+              ))}
+            </div>
+
+            <h2 className="text-xl font-bold mt-8 mb-4">Settings</h2>
+            <button className="text-red-500 font-bold">Sign Out</button>
           </div>
 
-          <div className="space-y-4 overflow-auto h-[calc(100vh-250px)] pr-2">
-            {[1, 2].map((item) => (
-              <div key={item} className="bg-gray-100 p-4 rounded-lg">
-                <div className="flex justify-between mb-2">
-                  <p className="font-semibold">Order No: 1947034</p>
-                  <p className="text-gray-500">22-07-2024</p>
+          {/* Right Section */}
+          <div className="w-1/3">
+            <h2 className="text-xl font-bold mb-4">My Orders</h2>
+            <div className="flex space-x-2 mb-4">
+              {['Delivered', 'Processing', 'Cancelled', 'returned'].map((status, index) => (
+                <button
+                  key={index}
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    status === 'Delivered' ? 'bg-black text-white' : 'bg-gray-200 text-gray-700'
+                  }`}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-4">
+              {[1, 2].map((item) => (
+                <div key={item} className="bg-gray-100 rounded-lg p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="font-bold">Order No : 1947034</p>
+                      <p className="text-xs text-gray-600">Shipping addresses</p>
+                      <p className="text-xs text-gray-600 max-w-xs">Manzil, Neettani,, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</p>
+                    </div>
+                    <p className="text-sm text-gray-600">22-07-2024</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm">Quantity : 4</p>
+                    <div className="text-right">
+                      <p className="text-sm">Total Amount $109.99</p>
+                      <Link href={'/orderdetails'}><button className="text-sm bg-gray-200 px-3 py-1 rounded-full mt-1">Details</button></Link>
+                    </div>
+                  </div>
+                  <p className="text-green-500 text-sm mt-2">Delivered</p>
                 </div>
-                <p className="text-sm mb-1">Shipping addresses</p>
-                <p className="text-sm mb-2">Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</p>
-                <div className="flex justify-between items-center">
-                  <p>Quantity: 4</p>
-                  <p>Total Amount: $109.99</p>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                  <button className="px-4 py-1 bg-gray-200 rounded-md">Details</button>
-                  <p className="text-green-600">Delivered</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -152,6 +165,8 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
 
 
 

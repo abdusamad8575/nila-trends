@@ -1,187 +1,127 @@
 'use client';
+
 import React, { useState } from 'react';
+import Image from 'next/image';
 
-const OrderPage = () => {
-  const [selectedOrder, setSelectedOrder] = useState(null);
+const OrderDetailPage = () => {
+  const [activeTab, setActiveTab] = useState('Delivered');
+  const tabs = ['Delivered', 'Processing', 'Cancelled', 'returned'];
 
-  // Dummy order data for demo purposes
-  const orders = [
-    {
-      id: '1947034',
-      address: 'Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India',
-      quantity: 4,
-      total: 109.99,
-      status: 'Delivered',
-      date: '22-07-2024',
-      items: [
-        { name: 'Timeless A-line Evening Dress', size: 'Medium', price: 109.99, quantity: 1, image: '/dress1.jpg' },
-        { name: 'Timeless A-line Evening Dress', size: 'Medium', price: 109.99, quantity: 1, image: '/dress2.jpg' },
-      ],
-    },
-    {
-      id: '1947035',
-      address: 'John Doe, Sample Address, City, STATE, 123456, USA',
-      quantity: 2,
-      total: 299.99,
-      status: 'Processing',
-      date: '15-07-2024',
-      items: [
-        { name: 'Casual T-Shirt', size: 'Large', price: 29.99, quantity: 1, image: '/shirt.jpg' },
-        { name: 'Jeans', size: '32', price: 49.99, quantity: 1, image: '/jeans.jpg' },
-      ],
-    },
-  ];
+  const orderDetails = {
+    orderNo: '1947034',
+    date: '22-07-2024',
+    shippingAddress: 'Manzil, Neettani,, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India',
+    totalAmount: '$109.99',
+    status: 'Delivered',
+    quantity: 4,
+    items: [
+      {
+        name: 'Timeless A-line Evening Dress',
+        fit: 'Ankle-length',
+        price: '$109.99',
+        size: 'Medium',
+        quantity: 1,
+        image: '/assets/product1.png'
+      },
+      {
+        name: 'Timeless A-line Evening Dress',
+        fit: 'Ankle-length',
+        price: '$109.99',
+        size: 'Medium',
+        quantity: 1,
+        image: '/assets/product2.png'
+      }
+    ]
+  };
 
   return (
-    <div className="order-page">
-      {/* Order List Section */}
-      <div className="order-list">
-        <h2>My Orders</h2>
-        <div className="order-filters">
-          <button className="filter-btn">Delivered</button>
-          <button className="filter-btn">Processing</button>
-          <button className="filter-btn">Cancelled</button>
-          <button className="filter-btn">Returned</button>
+    <div className="container mx-auto p-4 max-w-7xl mt-24">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold">My Orders</h1>
+        <button className="text-gray-500 text-2xl">&times;</button>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            className={`px-3 py-1 rounded-full text-sm ${
+              activeTab === tab ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-700'
+            }`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="w-full md:w-1/2">
+          {[1, 2].map((_, index) => (
+            <div key={index} className="bg-white shadow rounded-lg p-4 mb-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start mb-2">
+                <div>
+                  <p className="font-semibold">Order No : {orderDetails.orderNo}</p>
+                  <p className="text-xs text-gray-600">Shipping addresses</p>
+                  <p className="text-xs text-gray-600 max-w-xs">{orderDetails.shippingAddress}</p>
+                </div>
+                <p className="text-sm text-gray-600 mt-2 sm:mt-0">{orderDetails.date}</p>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2">
+                <p className="text-sm">Quantity : {orderDetails.quantity}</p>
+                <div className="text-left sm:text-right mt-2 sm:mt-0">
+                  <p className="text-sm">Total Amount {orderDetails.totalAmount}</p>
+                  <button className="text-sm bg-gray-200 px-3 py-1 rounded-full mt-1">Details</button>
+                </div>
+              </div>
+              <p className="text-green-500 text-sm mt-2">{orderDetails.status}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Orders */}
-        <div className="orders">
-          {orders.map((order) => (
-            <div className="order-card" key={order.id} onClick={() => setSelectedOrder(order)}>
-              <div className="order-info">
-                <p>Order No: <strong>{order.id}</strong></p>
-                <p>Shipping address: {order.address}</p>
-                <p>Quantity: {order.quantity}</p>
-                <p>Total Amount: ${order.total}</p>
+        <div className="w-full md:w-1/2 bg-white shadow rounded-lg p-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
+            <div>
+              <p className="font-semibold">Order No : {orderDetails.orderNo}</p>
+              <p className="text-sm text-gray-600">Shipping addresses</p>
+              <p className="text-sm text-gray-600 max-w-md">{orderDetails.shippingAddress}</p>
+            </div>
+            <div className="text-left sm:text-right mt-2 sm:mt-0">
+              <p className="text-gray-600">{orderDetails.date}</p>
+              <p className="font-semibold mt-2">Total Amount • {orderDetails.totalAmount}</p>
+              <p className="text-green-500">{orderDetails.status}</p>
+            </div>
+          </div>
+
+          <h2 className="text-lg font-semibold mb-4">Items - {orderDetails.quantity}</h2>
+
+          {orderDetails.items.map((item, index) => (
+            <div key={index} className="flex flex-col sm:flex-row items-center border-t py-4">
+              <Image src={item.image} alt={item.name} width={80} height={80} className="mr-4 mb-2 sm:mb-0" />
+              <div className="flex-grow mb-2 sm:mb-0">
+                <h3 className="font-semibold text-sm">{item.name}</h3>
+                <p className="text-xs text-gray-600">
+                  Fit • {item.fit} &nbsp;&nbsp; Price • {item.price}
+                </p>
               </div>
-              <div className="order-status">
-                <p>{order.status}</p>
-                <button className="details-btn">Details</button>
+              <div className="text-center sm:text-right">
+                <p className="text-sm mb-1">Select Size</p>
+                <select className="border rounded px-2 py-1 text-sm mb-1">
+                  <option>{item.size}</option>
+                </select>
+                <div className="flex items-center justify-center sm:justify-end border rounded">
+                  <button className="px-2 py-1 text-sm">-</button>
+                  <span className="px-2 text-sm">{item.quantity}</span>
+                  <button className="px-2 py-1 text-sm">+</button>
+                </div>
+                <button className="mt-1 text-xs text-gray-600 underline">save for later</button>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Order Details Section */}
-      <div className="order-details">
-        {selectedOrder ? (
-          <>
-            <div className="details-header">
-              <h3>Order No: {selectedOrder.id}</h3>
-              <p>Shipping address: {selectedOrder.address}</p>
-              <p>Date: {selectedOrder.date}</p>
-              <p>Total Amount: ${selectedOrder.total}</p>
-              <p>Status: {selectedOrder.status}</p>
-            </div>
-            <div className="items-list">
-              <h3>Items - {selectedOrder.items.length}</h3>
-              {selectedOrder.items.map((item, index) => (
-                <div className="item-card" key={index}>
-                  <img src={item.image} alt={item.name} />
-                  <div className="item-details">
-                    <p>{item.name}</p>
-                    <p>Size: {item.size}</p>
-                    <p>Price: ${item.price}</p>
-                    <div className="quantity">
-                      <button>-</button>
-                      <span>{item.quantity}</span>
-                      <button>+</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div>Select an order to view details</div>
-        )}
-      </div>
-
-      <style jsx>{`
-        /* Basic styling for the order page */
-        .order-page {
-          display: flex;
-          padding: 20px;
-          font-family: 'Arial', sans-serif;
-        }
-
-        .order-list {
-          flex: 1;
-          border-right: 1px solid #e0e0e0;
-          padding-right: 20px;
-        }
-
-        .order-details {
-          flex: 2;
-          padding-left: 20px;
-        }
-
-        .order-filters {
-          margin-bottom: 20px;
-        }
-
-        .filter-btn {
-          margin-right: 10px;
-          background-color: #e0e0e0;
-          border: none;
-          padding: 10px;
-          border-radius: 20px;
-          cursor: pointer;
-        }
-
-        .order-card {
-          background-color: #f9f9f9;
-          padding: 15px;
-          margin-bottom: 15px;
-          border-radius: 8px;
-          display: flex;
-          justify-content: space-between;
-          cursor: pointer;
-        }
-
-        .order-info {
-          font-size: 14px;
-        }
-
-        .details-btn {
-          background-color: #eee;
-          border: none;
-          padding: 8px 12px;
-          border-radius: 20px;
-          cursor: pointer;
-        }
-
-        .item-card {
-          display: flex;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-
-        .item-card img {
-          width: 100px;
-          height: auto;
-          margin-right: 20px;
-        }
-
-        .item-details {
-          flex: 1;
-        }
-
-        .quantity {
-          display: flex;
-          align-items: center;
-        }
-
-        .quantity button {
-          background-color: #eee;
-          border: none;
-          padding: 5px 10px;
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 };
 
-export default OrderPage;
+export default OrderDetailPage;

@@ -84,7 +84,7 @@ const FashionLanding = () => {
 
   return (
     <div>
-      <div className="max-w-7xl mx-auto p-4 mt-32">
+      <div className="max-w-7xl mx-auto p-4 mt-16 md:mt-32">
       {/* Mobile Carousel */}
       <div className="block md:hidden">
         <Carousel items={carouselItems} />
