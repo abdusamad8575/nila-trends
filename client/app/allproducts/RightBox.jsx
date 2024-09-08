@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const ColorOption = ({ color }) => (
     <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-${color}-300 border border-gray-300`} />
@@ -13,10 +14,11 @@ const SizeOption = ({ size }) => (
 );
 
 function RightBox({ product }) {
+    const router = useRouter()
     if (!product) return null;
 
     return (
-        <div className="lg:col-span-4 side-item hidden md:block">
+        <div className="lg:col-span-4 side-item hidden md:block cursor-pointer" onClick={()=>router.push(`/products/${product?._id}`)}>
             <div className="sticky top-24 bg-white rounded-lg overflow-hidden shadow-md p-4">
                 <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`} alt={product.name} className="w-full h-full object-cover mb-4" />
                 <h2 className="text-sm sm:text-lg font-semibold mb-2">{product.name}</h2>

@@ -1,12 +1,13 @@
-"use client";
-import React, { useState, useEffect } from 'react';
-import { Search, Filter } from 'lucide-react';
-import Link from 'next/link';
-import RightBox from './RightBox';
-import Pagination from '@mui/material/Pagination';
-import axios from 'axios';
-   
-const ProductCard = ({ image,category,ProId, title, fit, price, onClick }) => (    
+"use client"
+import { useParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import RightBox from '../RightBox'
+import { Pagination } from '@mui/material'
+import { Filter, Search } from 'lucide-react'
+import axios from 'axios'
+import Link from 'next/link'
+
+const ProductCard = ({ image, category, ProId, title, fit, price, onClick }) => (
   <div className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onClick={onClick}>
     <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" />
     <div className="p-4">
@@ -28,7 +29,11 @@ const ProductCard = ({ image,category,ProId, title, fit, price, onClick }) => (
   </div>
 );
 
-const KurtaSetsListing = () => {
+const Filters = () => {
+  const param = useParams()
+  const category = param?.slug?.replace(/%20/g, ' ');
+  console.log(category);
+  const [message, setMessage] = useState()
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -40,9 +45,25 @@ const KurtaSetsListing = () => {
       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         params: { page, search }
       });
-      console.log('products-',data.docs);
-      
+      console.log('products-', data.products);
+
       setProducts(data.products);
+      setMessage(data.message)
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.error('Error fetching products:', error.message);
+    }
+  };
+  const fetchFilters = async (page = 1, search = '') => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products?category=${category}`, {
+        params: { page, search }
+      });
+      console.log('products-', data.docs);
+
+      setProducts(data.products);
+      setMessage(data.message)
+
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching products:', error.message);
@@ -50,7 +71,8 @@ const KurtaSetsListing = () => {
   };
 
   useEffect(() => {
-    fetchProducts(page, search);
+    fetchFilters(page, search)
+    // fetchProducts(page, search);
   }, [page, search]);
 
   const handlePageChange = (event, value) => {
@@ -64,7 +86,7 @@ const KurtaSetsListing = () => {
   const handleProductClick = (product) => {
     setSelectedProduct(product);
   };
-const fixedSelectedProduct = selectedProduct? selectedProduct : products?.[0]
+  const fixedSelectedProduct = selectedProduct ? selectedProduct : products[0]
   return (
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -85,6 +107,7 @@ const fixedSelectedProduct = selectedProduct? selectedProduct : products?.[0]
               <Search size={20} className="absolute right-2.5 sm:right-3 top-2.5 text-gray-400" />
             </div>
           </div>
+          <div className='w-full pb-5 text-sm'>{message}</div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products?.map((product) => (
               <ProductCard
@@ -110,7 +133,7 @@ const fixedSelectedProduct = selectedProduct? selectedProduct : products?.[0]
         <RightBox product={fixedSelectedProduct} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default KurtaSetsListing;
+export default Filters
