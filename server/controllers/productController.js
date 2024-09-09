@@ -105,8 +105,14 @@ const getClientProductById = async (req, res) => {
   console.log('getClientProductById id', id);
 
   try {
-    const product = await Product.findById(id).populate('category').populate('similarProduct');
-    console.log('product', product);
+    const product = await Product.findById(id)
+    .populate('category')
+    .populate({
+      path: 'similarProduct',
+      populate: {
+        path: 'category',
+      },
+    });
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
