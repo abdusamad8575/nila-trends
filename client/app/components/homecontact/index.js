@@ -1,26 +1,38 @@
+import { Roboto } from 'next/font/google';
 import React from 'react';
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+})
 
 const WardrobeSection = () => {
   return (
-    <div className=" font-sans">
-      <div className="md:max-w-7xl mx-auto p-4 ">
-        <div className="bg-stone-300 rounded-lg p-8 mb-8 relative overflow-hidden">
+    <div className={roboto.className}>
+      <div className="md:max-w-7xl mx-auto p-4 mb-14">
+        <div className="bg-[#C2B4A3] rounded-lg p-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-stone-200 rounded-full -mr-20 -mt-20 opacity-50"></div>
-          <h2 className="text-3xl font-bold mb-4">ELEVATE YOUR WARDROBE</h2>
-          <p className="mb-4">
-            Discover the magic of Nilaad&apos;s exclusive collections, where each piece is crafted with
-            unparalleled attention to detail.
-          </p>
-          <p className="mb-4">
-            Experience the ultimate wardrobe companion, designed to elevate your style effortlessly.
-          </p>
-          <p className="mb-4">
-            Here, timeless tradition harmoniously meets modern elegance, creating a seamless fusion of
-            classic charm and contemporary sophistication.
-          </p>
-          <button className="bg-stone-800 text-white px-4 py-2 rounded hover:bg-stone-700 transition-colors">
-            Shop Now →
-          </button>
+          <div className='flex flex-col md:flex-row'>
+            <div className='w-full md:w-3/4'>
+              <h2 className="text-3xl font-bold mb-4">ELEVATE YOUR WARDROBE</h2>
+              <p className="mb-4">
+                Discover the magic of Nilaad&apos;s exclusive collections, where each piece is crafted with
+                unparalleled attention to detail.
+              </p>
+              <p className="mb-4">
+                Experience the ultimate wardrobe companion, designed to elevate your style effortlessly.
+              </p>
+              <p className="mb-4">
+                Here, timeless tradition harmoniously meets modern elegance, creating a seamless fusion of
+                classic charm and contemporary sophistication.
+              </p>
+            </div>
+            <div className='w-full md:w-1/4 flex items-center md:justify-center'>
+              <button className="bg-stone-800 text-white px-4 py-2 rounded hover:bg-stone-700 transition-colors">
+                Shop Now →
+              </button>
+            </div>
+          </div>
         </div>
         <div className="text-center">
           <div className="inline-block">

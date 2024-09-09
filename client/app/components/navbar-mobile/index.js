@@ -15,7 +15,7 @@ const MobileNavbar = () => {
       <nav className="flex items-center justify-between px-4 py-4 relative">
         {/* Left - Hamburger Menu */}
         <div className="flex items-center z-10">
-          <button onClick={toggleMenu} className="focus:outline-none">
+          <button className="focus:outline-none">
             <svg
               className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 text-gray-600"
               fill="none"

@@ -23,9 +23,8 @@ const MobileFooter = () => {
       <nav className="flex justify-between items-center px-4 py-2">
         <Link href="/" passHref>
           <button
-            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${
-              active === 0 ? 'bg-gray-100' : 'bg-white'
-            }`}
+            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${active === 0 ? 'bg-gray-100' : 'bg-white'
+              }`}
           >
             <FontAwesomeIcon
               icon={faHome}
@@ -40,9 +39,8 @@ const MobileFooter = () => {
         </Link>
         <Link href="/allproducts" passHref> {/* Corrected the link here */}
           <button
-            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${
-              active === 1 ? 'bg-gray-100' : 'bg-white'
-            }`}
+            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${active === 1 ? 'bg-gray-100' : 'bg-white'
+              }`}
           >
             <FontAwesomeIcon
               icon={faSearch}
@@ -55,11 +53,10 @@ const MobileFooter = () => {
             )}
           </button>
         </Link>
-        <Link href="/allproducts" passHref>
+        <Link href="" passHref>
           <button
-            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${
-              active === 2 ? 'bg-gray-100' : 'bg-white'
-            }`}
+            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${active === 2 ? 'bg-gray-100' : 'bg-white'
+              }`}
           >
             <FontAwesomeIcon
               icon={faHeart}
@@ -72,11 +69,10 @@ const MobileFooter = () => {
             )}
           </button>
         </Link>
-        <Link href="/cart" passHref>
+        <Link href="" passHref>
           <button
-            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${
-              active === 3 ? 'bg-gray-100' : 'bg-white'
-            }`}
+            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${active === 3 ? 'bg-gray-100' : 'bg-white'
+              }`}
           >
             <FontAwesomeIcon
               icon={faShoppingCart}
@@ -89,11 +85,10 @@ const MobileFooter = () => {
             )}
           </button>
         </Link>
-        <Link href="/profile" passHref>
+        <Link href="" passHref>
           <button
-            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${
-              active === 4 ? 'bg-gray-100' : 'bg-white'
-            }`}
+            className={`flex items-center px-3 py-2 rounded-full transition-colors duration-300 ease-in-out ${active === 4 ? 'bg-gray-100' : 'bg-white'
+              }`}
           >
             <FontAwesomeIcon
               icon={faUser}

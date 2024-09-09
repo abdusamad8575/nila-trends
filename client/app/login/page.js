@@ -42,7 +42,7 @@ const LoginPage = () => {
           Continue with Google
         </button>
         <div className="text-center mt-4">
-          <span className="text-gray-600">I don't have a account </span>
+          <span className="text-gray-600">I don&apos;t have a account </span>
           <a href="#" className="text-[#b5a183] hover:underline">Sign up</a>
         </div>
       </div>

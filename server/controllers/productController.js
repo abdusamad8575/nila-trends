@@ -13,8 +13,23 @@ const Category = require('../models/category')
 
 const getProducts = async (req, res) => {
   try {
-    const { page = 1, perPage = 9, sortBy = 'createdAt', order = 'desc', search = '' } = req.query;
-    const query = search ? { name: { $regex: search, $options: 'i' } } : {};
+    const { page = 1, perPage = 9, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: 'i' };
+    }
+
+    let categoryNotFound = false;
+    if (category) {
+      const categoryDoc = await Category.findOne({
+        name: { $regex: new RegExp(category, 'i') },
+      });
+      if (categoryDoc) {
+        query.category = categoryDoc._id;
+      } else {
+        categoryNotFound = true;
+      }
+    }
 
     const options = {
       page: parseInt(page, 10),
@@ -22,10 +37,31 @@ const getProducts = async (req, res) => {
       sort: { [sortBy]: order === 'desc' ? -1 : 1 },
       populate: 'category',
     };
+    const products = await Product.paginate(query, options);
+    const start = (page - 1) * perPage + 1;
+    const end = Math.min(page * perPage, products.totalDocs);
 
-    const products = await Product.paginate(query, options)
+    let responseMessage = `Showing ${start} – ${end} of ${products.totalDocs} results for "${category}"`;
+    if (products.docs.length === 0 || categoryNotFound) {
+      const suggestedProducts = await Product.paginate(
+        { ...(search && { name: { $regex: search, $options: 'i' } }) },
+        options
+      );
 
-    res.status(200).json(products);
+      responseMessage = `No results for "${category}". Showing suggested products for "${category}".`
+
+      return res.status(200).json({
+        message: responseMessage,
+        products: suggestedProducts.docs,
+        totalPages: suggestedProducts.totalPages,
+      });
+    }
+
+    res.status(200).json({
+      message: responseMessage,
+      products: products.docs,
+      totalPages: products.totalPages,
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch products' });
   }
@@ -66,12 +102,12 @@ const getProductById = async (req, res) => {
 const getClientProductById = async (req, res) => {
   console.log('getClientProductById');
   const id = req.params.id
-  console.log('getClientProductById id',id);
-  
+  console.log('getClientProductById id', id);
+
   try {
     const product = await Product.findById(id).populate('category').populate('similarProduct');
-    console.log('product',product);
-    
+    console.log('product', product);
+
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -104,11 +140,11 @@ const addProduct = async (req, res) => {
       });
       await product.save();
 
-      if (similarProductArray.length>0) {
-        
+      if (similarProductArray.length > 0) {
+
         similarProductArray?.forEach(proId => {
-           const updateFunction = async() =>{
-            const updateProduct =  await Product.updateOne({ _id: proId }, { $push: { similarProduct: product._id} })
+          const updateFunction = async () => {
+            const updateProduct = await Product.updateOne({ _id: proId }, { $push: { similarProduct: product._id } })
           }
           updateFunction()
         });
@@ -131,7 +167,7 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity,similarProduct } = req?.body
+    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity, similarProduct } = req?.body
 
     const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
@@ -149,23 +185,23 @@ const updateProduct = async (req, res) => {
     }
     if (similarProductArray?.length > 0) {
       const product = await Product.findById(_id);
-      
+
       similarProductArray?.forEach(proId => {
-        const updateFunction = async() =>{
-          
+        const updateFunction = async () => {
+
           if (!product.similarProduct.includes(proId)) {
-            
-         const updateProduct =  await Product.updateOne({ _id: proId }, { $push: { similarProduct: _id} })
+
+            const updateProduct = await Product.updateOne({ _id: proId }, { $push: { similarProduct: _id } })
           }
-       }
-       
-       updateFunction()
-     });
-   }
+        }
+
+        updateFunction()
+      });
+    }
     await Product.updateOne({ _id }, {
-      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images,similarProduct }
+      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct }
     })
-    
+
     res.status(200).json({ message: "Product updated successfully !" });
   } catch (error) {
     console.log(error.message)
