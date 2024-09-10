@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import { useController } from 'context'
 import { setAuth } from 'context'
 import toast from 'react-hot-toast'
-import image from 'assets/images/logo-ct.png'
+import image from 'assets/images/logo.png'
 
 const Login = () => {
     const [controller, dispatch] = useController();
@@ -35,7 +35,7 @@ const Login = () => {
                     "Admin Management Console",
                 image
             }}
-            color='info'
+            color='primary'
         >
             <Box component="form" role="form">
                 <Box mb={2}>
@@ -63,8 +63,8 @@ const Login = () => {
                     <Typography variant="button" color="text" fontWeight="regular">
                         Don&apos;t have an account?{" "}
                         <Typography
-                            component={Link}
-                            to="/authentication/sign-up"
+                            // component={Link}
+                            to="#"
                             variant="button"
                             color="info"
                             fontWeight="medium"

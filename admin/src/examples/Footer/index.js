@@ -30,7 +30,7 @@ function Footer({ company, links }) {
       px={1.5}
       alignSelf="flex-end"
     >
-      <Box
+      {/* <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -64,7 +64,7 @@ function Footer({ company, links }) {
         })}
       >
         {renderLinks()}
-      </Box>
+      </Box> */}
     </Box>
   );
 }

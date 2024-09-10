@@ -173,7 +173,7 @@ function Configurator() {
           <Switch checked={direction === "rtl" ? true : false} onChange={handleDirection} />
         </Box>
 
-        <Box mt={12} textAlign="center">
+        {/* <Box mt={12} textAlign="center">
           <Box
             display="flex"
             justifyContent="center"
@@ -190,7 +190,7 @@ function Configurator() {
               </Typography>
             </Link>
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </ConfiguratorRoot>
   );

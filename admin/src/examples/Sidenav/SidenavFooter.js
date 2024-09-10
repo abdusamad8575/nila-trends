@@ -12,7 +12,7 @@ function SidenavFooter() {
   return (
     <Box opacity={miniSidenav ? 0 : 1} sx={{ transition: "opacity 200ms linear" }}>
       <Box position="relative" textAlign="center">
-        <Box
+        {/* <Box
           width="100%"
           pt={12}
           px={2}
@@ -26,7 +26,7 @@ function SidenavFooter() {
           <Typography color="inherit" variant="caption">
             Please reach at dev@acmeflare.in
           </Typography>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

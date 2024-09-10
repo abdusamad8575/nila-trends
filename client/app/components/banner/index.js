@@ -91,8 +91,14 @@ const FashionLanding = () => {
         {/* Mobile Carousel */}
         <div className="block md:hidden">
           <Carousel>
-            <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
+            {/* <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
               <Image src={'/assets/image.png'} fill />
+            </div> */}
+            <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
+              <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
+                <source src={'/handloom_saree.mov'} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </Carousel>
         </div>
@@ -100,14 +106,18 @@ const FashionLanding = () => {
         <div className="hidden md:block">
           <div className="border-2 border-dashed border-gray-300 p-4">
             <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden">
-              <Image
-                src="/assets/image.png"
+              {/* <Image
+                src="/banner.webp"
                 alt="Fashion model"
                 layout="fill"
                 objectFit="cover"
                 className="object-center"
-              />
-              <div className="absolute w-full h-full items-center flex flex-col">
+              /> */}
+              <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
+                <source src={'/handloom_saree.mov'} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute z-50 w-full h-full items-center flex flex-col">
                 <div className='relative h-full flex items-end justify-center'>
                   <svg width="228" height="49" viewBox="0 0 228 49" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 48.8949H223.277C214.378 48.1282 202.335 42.9388 202 25.9566C201.6 5.67423 189 0 182 0H44C36 0 24 5.43277 24 24.7493C24 44.0658 8 48.8949 0 48.8949Z" fill="white" />

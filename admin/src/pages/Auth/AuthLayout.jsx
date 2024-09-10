@@ -44,7 +44,7 @@ const AuthLayout = ({ color, header, title, description, illustration, children 
                sx={{ overflow: "hidden" }}
             >
                <Box
-                  bgColor={color}
+                  bgColor={'custom'}
                   variant="gradient"
                   width="100%"
                   height="100%"
@@ -52,24 +52,25 @@ const AuthLayout = ({ color, header, title, description, illustration, children 
                   topl={0}
                   left={0}
                   opacity={0.7}
+                  sx={{bgColor:'#000'}}
                />
                <Box position="relative">
-                  {illustration.image && (
+                  {illustration?.image && (
                      <Box>
-                        <img src={illustration.image} width={400} />
+                        <img src={illustration.image} width={500} />
                      </Box>
                   )}
-                  {illustration.title && (
+                  {illustration?.title && (
                      <Box mb={1}>
                         <Typography variant="h4" color="white" fontWeight="bold">
-                           Eco Green
+                           {illustration.title}
                         </Typography>
                      </Box>
                   )}
-                  {illustration.description && (
+                  {illustration?.description && (
                      <Box mb={1}>
                         <Typography variant="body2" color="white">
-                        Admin  Eco Green Console
+                           Admin Management Console
                         </Typography>
                      </Box>
                   )}
