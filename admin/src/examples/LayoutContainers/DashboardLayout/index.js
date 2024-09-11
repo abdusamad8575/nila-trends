@@ -30,7 +30,7 @@ function DashboardLayout({ bgColor, children, ...rest }) {
       })}
     >
       <Box
-        bgColor={background || "info"}
+        bgColor={background || "#D8D4C9"}
         height="300px"
         width="100vw"
         position="absolute"

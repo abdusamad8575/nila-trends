@@ -141,9 +141,9 @@ function Settings() {
             px={1.5}
           >
             &copy; {new Date().getFullYear()}, created by
-            <Link href={`https://www.acmeflare.in/`} target="_blank">
+            <Link href={`https://nilaatrends.com/`} target="_blank">
               <Typography variant="button" fontWeight="medium">
-                &nbsp;Acmeflare Technologies Pvt Ltd&nbsp;
+                &nbsp;Nilaa Trends&nbsp;
               </Typography>
             </Link>
           </Box>

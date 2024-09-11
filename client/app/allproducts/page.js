@@ -5,27 +5,48 @@ import Link from 'next/link';
 import RightBox from './RightBox';
 import Pagination from '@mui/material/Pagination';
 import axios from 'axios';
-   
-const ProductCard = ({ image,category,ProId, title, fit, price, onClick }) => (    
-  <div className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onClick={onClick}>
-    <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" />
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-2 space-x-2">
-        <span className="bg-gray-200 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0">
-          {category}
-        </span>
-        <Link href={`/products/${ProId}`}>
-          <button className="text-[10px] sm:text-xs text-blue-600 px-1.5 py-0.5 whitespace-nowrap">
-            Shop Now
-          </button>
-        </Link>
+
+const ProductCard = ({ image, category, ProId, title, fit, price, onClick }) => (
+  <>
+    <div className="hidden md:block bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onClick={onClick}>
+      <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" />
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-2 space-x-2">
+          <span className="bg-gray-200 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0">
+            {category}
+          </span>
+          <Link href={`/products/${ProId}`}>
+            <button className="text-[10px] sm:text-xs text-blue-600 px-1.5 py-0.5 whitespace-nowrap">
+              Shop Now
+            </button>
+          </Link>
+        </div>
+        <h3 className="mt-2 text-sm sm:text-lg font-semibold">{title}</h3>
+        {/* <p className="text-xs sm:text-sm text-gray-600">Fit • {fit}</p> */}
+        <p className="text-xs sm:text-sm text-gray-600">{fit}</p>
+        <p className="text-xs sm:text-sm text-gray-600">Price • AED:{price}</p>
       </div>
-      <h3 className="mt-2 text-sm sm:text-lg font-semibold">{title}</h3>
-      {/* <p className="text-xs sm:text-sm text-gray-600">Fit • {fit}</p> */}
-      <p className="text-xs sm:text-sm text-gray-600">{fit}</p>
-      <p className="text-xs sm:text-sm text-gray-600">Price • AED:{price}</p>
     </div>
-  </div>
+    <div className="md:hidden bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onClick={onClick}>
+      <Link href={`/products/${ProId}`}>
+        <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" />
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-2 space-x-2">
+            <span className="bg-gray-200 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0">
+              {category}
+            </span>
+            <button className="text-[10px] sm:text-xs text-blue-600 px-1.5 py-0.5 whitespace-nowrap">
+              Shop Now
+            </button>
+          </div>
+          <h3 className="mt-2 text-sm sm:text-lg font-semibold">{title}</h3>
+          {/* <p className="text-xs sm:text-sm text-gray-600">Fit • {fit}</p> */}
+          <p className="text-xs sm:text-sm text-gray-600">{fit}</p>
+          <p className="text-xs sm:text-sm text-gray-600">Price • AED:{price}</p>
+        </div>
+      </Link>
+    </div>
+  </>
 );
 
 const KurtaSetsListing = () => {
@@ -40,8 +61,8 @@ const KurtaSetsListing = () => {
       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         params: { page, search }
       });
-      console.log('products-',data.docs);
-      
+      console.log('products-', data.docs);
+
       setProducts(data.products);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -64,7 +85,7 @@ const KurtaSetsListing = () => {
   const handleProductClick = (product) => {
     setSelectedProduct(product);
   };
-const fixedSelectedProduct = selectedProduct? selectedProduct : products?.[0]
+  const fixedSelectedProduct = selectedProduct ? selectedProduct : products?.[0]
   return (
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
