@@ -10,10 +10,10 @@ export function Providers({children}){
  
   return (
 
-      <NextThemesProvider attribute="class" defaultTheme="dark">
+      // <NextThemesProvider attribute="class" defaultTheme="dark">
       <Provider store={store}>
         {children}
         </Provider>
-      </NextThemesProvider>
+      // </NextThemesProvider>
   )
 }

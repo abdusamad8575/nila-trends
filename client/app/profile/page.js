@@ -1,7 +1,20 @@
+"use client";
 import Image from 'next/image';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import {clearUserDetails } from '../../redux/actions/userActions';
+import { useRouter } from 'next/navigation';
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const router = useRouter()
+
+  const logoutUser = () => {
+    dispatch(clearUserDetails());
+
+    localStorage.removeItem('Tokens');
+    router.push('/')
+  };
   return (
     <div className="w-full min-h-screen flex justify-center items-center md:mt-20 p-4 bg-gray-50">
       {/* Mobile View - Updated to match the provided image */}
@@ -116,7 +129,7 @@ const Profile = () => {
             </div>
 
             <h2 className="text-xl font-bold mt-8 mb-4">Settings</h2>
-            <button className="text-red-500 font-bold">Sign Out</button>
+            <button className="text-red-500 font-bold" onClick={logoutUser}>Sign Out</button>
           </div>
 
           {/* Right Section */}

@@ -11,16 +11,16 @@ import { setUserDetails, clearUserDetails } from '../../../redux/actions/userAct
 
 
 
-const Navbar = () => { 
+const Navbar = () => {
   const dispatch = useDispatch();
 
   const token = localStorage.getItem('Tokens');
-  console.log('token1-',token);
+  console.log('token1-', token);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/auth/user');
-      //  console.log(response.data.data)
+        //  console.log(response.data.data)
         dispatch(setUserDetails(response.data.data));
       } catch (error) {
         console.log('errr', error);
@@ -30,7 +30,7 @@ const Navbar = () => {
     fetchData();
   }, [token]);
   const userDetails = useSelector(state => state.userDetails);
-  console.log('userDetails',userDetails);
+  console.log('userDetails', userDetails);
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme()
@@ -40,7 +40,7 @@ const Navbar = () => {
   }, [theme])
 
   useEffect(() => {
-    const handleScroll = () => {    
+    const handleScroll = () => {
       if (window.scrollY > 20) {
         setIsScrolled(true);
       } else {
@@ -102,25 +102,23 @@ const Navbar = () => {
                 </svg>
               </button>
             </Link>
-            <Link href="">
-              <button>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </button>
-            </Link>
-
             {/* <button onClick={() => setTheme(theme==="dark"?"light":"dark")}>Dark Mode</button> */}
 
-            {/* <button onClick={()=>setOpen(true)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </button> */}
+            {userDetails ?<button onClick={() => setOpen(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </button>:
+            <Link href="/register">
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </button>
+          </Link>}
 
 
-            {/* <Link href={ userDetails ? '/profile' : '/register'}> */}
-            <Link href='/profile'>
+            <Link href={userDetails ? '/profile' : '/register'}>
               <button >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
