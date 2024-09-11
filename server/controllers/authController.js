@@ -1,127 +1,11 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-// const bcrypt = require("bcrypt");
+const fast2sms = require('fast-two-sms');
+const { OAuth2Client } = require('google-auth-library');
 
-// module.exports.signup = async (req, res) => {
-//    const {
-//       username,
-//       password,
-//       email,
-//       phone,
-//    } = req.body;
-
-//    try {
-//       const encryptedPassword = await bcrypt.hash(password, 10);
-//       await User.create({
-//          username,
-//          password: encryptedPassword,
-//          email,
-//          phone,
-//       });
-
-//       const accessToken = jwt.sign(
-//          { _id: userExists._id },
-//          process.env.JWT_ACCESS_SECRET,
-//          {
-//             expiresIn: process.env.JWT_ACCESS_EXPIRY,
-//          }
-//       );
-
-//       const refreshToken = jwt.sign(
-//          { _id: userExists._id },
-//          process.env.JWT_REFRESH_SECRET,
-//          {
-//             expiresIn: process.env.JWT_REFRESH_EXPIRY,
-//          }
-//       );
-
-//       console.log({ accessToken, refreshToken });
-
-//       return res.status(200).json({
-//          message: "Registration successfull",
-//          data: { token: { accessToken, refreshToken }, user }
-//       });
-//    } catch (error) {
-//       return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
-//    }
-// };
-
-// module.exports.signin = async (req, res) => {
-//    const { usernameORemailORPhone, password } = req.body;
-//    try {
-//       const pipeline = [
-//          {
-//             $match: {
-//                $or: [
-//                   { username: usernameORemailORPhone },
-//                   { email: usernameORemailORPhone },
-//                   { phone: usernameORemailORPhone },
-//                ],
-//             },
-//          },
-//          {
-//             $project: {
-//                _id: 1,
-//                username: 1,
-//                email: 1,
-//                phone: 1,
-//                password: 1,
-//                is_admin: 1,
-//                is_verified: 1,
-//                profile: 1,
-//                cart: 1,
-//                wishlist: 1,
-//                wallet: 1,
-//             },
-//          },
-//       ];
-
-//       await User
-//          .aggregate(pipeline)
-//          .exec()  
-//          .then((users) => {
-//             if (users.length === 0) {
-//                console.log("User not found");
-//                return res.status(404).json({ message: "user not found" })
-//             } else {
-//                const user = users[0];
-//                bcrypt.compare(password, user.password, (err, result) => {
-//                   if (err) {
-//                      console.error("Password comparison error:", err);
-//                      return res.status(500).json({ message: err?.message })
-//                   } else if (result) {
-//                      const accessToken = jwt.sign(
-//                         { _id: user._id },
-//                         process.env.JWT_ACCESS_SECRET,
-//                         {
-//                            expiresIn: process.env.JWT_ACCESS_EXPIRY,
-//                         }
-//                      );
-
-//                      const refreshToken = jwt.sign(
-//                         { _id: user._id },
-//                         process.env.JWT_REFRESH_SECRET,
-//                         {
-//                            expiresIn: process.env.JWT_REFRESH_EXPIRY,
-//                         }
-//                      );
-//                      delete user.password;
-//                      return res.status(200).json({
-//                         message: "login successfull",
-//                         data: { token: { accessToken, refreshToken }, user }
-//                      });
-//                   } else {
-//                      console.log(result);
-//                      console.log("Incorrect password");
-//                      return res.status(404).json({ message: "Incorrect password" })
-//                   }
-//                });
-//             }
-//          });
-//    } catch (error) {
-//       return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
-//    }
-// };
+const dotenv = require('dotenv');
+dotenv.config();
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 module.exports.getCurrentUser = async (req, res) => {
    try {
@@ -200,4 +84,45 @@ module.exports.verifyOtp = async (req, res) => {
     message: 'Login successful',
     data: { token: { accessToken, refreshToken }, user }
   });
+};
+
+module.exports.googleLogin = async (req, res) => {   
+  const { tokenId } = req.body;
+  
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    
+    const { email} = ticket.getPayload();
+
+    let user = await User.findOne({ email });     
+    // console.log('user',user);
+    if (!user) {
+      // const encryptedPassword = await bcrypt.hash(email + process.env.JWT_ACCESS_SECRET, 10);
+      // console.log('encryptedPassword',encryptedPassword);
+      user = await User.create({
+        email
+        // password: encryptedPassword,
+      });
+    }
+
+    const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRY,
+    });
+
+    const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: process.env.JWT_REFRESH_EXPIRY,
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      token: { accessToken, refreshToken },
+      user
+    });
+  } catch (error) {
+    console.log( error?.message);
+    return res.status(500).json({ message: error?.message ?? "Something went wrong" });
+  }
 };
