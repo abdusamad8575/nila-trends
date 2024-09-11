@@ -4,10 +4,33 @@ import Link from 'next/link';
 import Cart from '../cart';
 import ModalLayout from '../common/ModalLayout';
 import { useTheme } from 'next-themes';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import axiosInstance from '../../../axios'
+import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
 
 
 
-const Navbar = () => {
+const Navbar = () => { 
+  const dispatch = useDispatch();
+
+  const token = localStorage.getItem('Tokens');
+  console.log('token1-',token);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/auth/user');
+      //  console.log(response.data.data)
+        dispatch(setUserDetails(response.data.data));
+      } catch (error) {
+        console.log('errr', error);
+        dispatch(clearUserDetails());
+      }
+    };
+    fetchData();
+  }, [token]);
+  const userDetails = useSelector(state => state.userDetails);
+  console.log('userDetails',userDetails);
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme()
@@ -17,7 +40,7 @@ const Navbar = () => {
   }, [theme])
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = () => {    
       if (window.scrollY > 20) {
         setIsScrolled(true);
       } else {
@@ -96,7 +119,8 @@ const Navbar = () => {
                 </button> */}
 
 
-            <Link href="">
+            {/* <Link href={ userDetails ? '/profile' : '/register'}> */}
+            <Link href='/profile'>
               <button >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

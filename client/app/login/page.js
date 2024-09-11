@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 const LoginPage = () => {
   return (
@@ -43,7 +44,9 @@ const LoginPage = () => {
         </button>
         <div className="text-center mt-4">
           <span className="text-gray-600">I don&apos;t have a account </span>
-          <a href="#" className="text-[#b5a183] hover:underline">Sign up</a>
+          <Link href="/register">
+          <div className="text-[#b5a183] hover:underline">Sign up</div>
+          </Link>
         </div>
       </div>
     </div>
