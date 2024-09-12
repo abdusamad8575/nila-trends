@@ -10,7 +10,7 @@ router.put('/update-status', updateUserStatus);
 router.use(authorization)
 router.get('/', getUser);
 router.patch('/userDetails', updateUserProfile);
-router.patch('/updateQty', updateQty);
+router.patch('/updateQty', updateQty);    
 router.patch('/addToCart/:id', addToCart);
 router.patch('/removeFromCart/:id', removeFromCart);
 router.patch('/addToWishlist/:id', addToWishlist);

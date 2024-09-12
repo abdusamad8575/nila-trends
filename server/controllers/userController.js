@@ -48,11 +48,12 @@ const getUser = async (req, res) => {
 };
 
 const updateQty = async (req, res) => {
-  try {
+  try {   
     const { _id } = req?.decoded
-    const { qty, productId } = req?.body
+    const { qty, productId,size} = req?.body
+    
     const userData = await User.findById({ _id })
-    await userData.updateCart( productId, qty )
+    await userData.updateCart( productId, qty ,size)
     res.status(201).json({ message: 'Quantity updated to cart' });
   } catch (error) {
     console.log(error);
@@ -69,8 +70,8 @@ const addToCart = async (req, res) => {
     const productId = req?.params?.id
     const userData =await User.findById({ _id })
     const productData =await Product.findById({ _id:productId })
-    userData.addToCart(productData,size)
-    res.status(201).json({ message: 'Product added to cart' });
+    await userData.addToCart(productData,size)
+    res.status(201).json({userData, message: 'Product added to cart' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
@@ -80,11 +81,14 @@ const addToCart = async (req, res) => {
 const removeFromCart = async (req, res) => {
   try {
    const { _id } = req?.decoded
-    // const _id = '66796d0936bb97720a7764f4'
     const productId = req?.params?.id 
+    const {size} = req.body
+    
     const userData = await User.findById({ _id })
-    userData.removefromCart(productId)
-    res.status(201).json({ message: 'Product removed from cart' });
+    
+    await userData.removefromCart(productId,size)
+
+    res.status(201).json({userData,message: 'Product removed from cart' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
