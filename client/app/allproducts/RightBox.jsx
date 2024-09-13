@@ -66,14 +66,14 @@ function RightBox({ product }) {
                 ))}
                 <p className="font-semibold mb-2 mt-4">Price • AED:{product.price}</p>
                 <div className="flex justify-between mb-4">
-                    <Link href={`/products/${product?._id}`}>
+                    {/* <Link href={`/products/${product?._id}`}> */}
                         <button className="bg-black text-white px-3 py-2 sm:px-4 sm:py-2 rounded flex items-center text-xs sm:text-sm"
-                        // onClick={() =>handleAddToCartClick(product)}
+                        onClick={() =>handleAddToCartClick(product)}
                         >
                             <ShoppingCart size={16} className="mr-2" />
                             Add to Cart
                         </button>
-                    </Link>
+                    {/* </Link> */}
                     <Link href={`/products/${product?._id}`}>
                         <button className="bg-gray-200 px-3 py-2 sm:px-4 sm:py-2 rounded text-xs sm:text-sm">Shop Now</button>
                     </Link>

@@ -13,14 +13,14 @@ const Category = require('../models/category')
 
 const getProducts = async (req, res) => {
   try {
-    const { page = 1, perPage = 9, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
+    const { page = 1, perPage = 12, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
     const query = {};
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.name = { $regex: search, $options: 'i' };  
     }
 
     let categoryNotFound = false;
-    if (category) {
+    if (category) {    
       const categoryDoc = await Category.findOne({
         name: { $regex: new RegExp(category, 'i') },
       });
