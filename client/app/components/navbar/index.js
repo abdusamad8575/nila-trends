@@ -188,15 +188,15 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const path = usePathname();
   const userData = useSelector(state => state.userDetails);
-  console.log('navUserDetails', userData);
-
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [cartData, setCartData] = useState([]);
+  const [wishlistData, setWishlistData] = useState([]);
   useEffect(() => {
     if (userData) {
       setCartData(userData?.cart?.item?.length || 0);
+      setWishlistData(userData?.wishlist?.length || 0);
     }
   }, [userData])
 
@@ -217,17 +217,30 @@ const Navbar = () => {
     }
   }, [dispatch, path]);
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const response = await axiosInstance.get('/user/getcarts');
-        setCartData(response?.data?.data?.item?.length || 0);
-      } catch (error) {
-        console.log('errr', error);
-      }
-    };
+  const fetchCartData = async () => {
+    try {
+      const response = await axiosInstance.get('/user/getcarts');
+      setCartData(response?.data?.data?.item?.length || 0);
+    } catch (error) {
+      console.log('errr', error);
+    }
+  };
+  const fetchWishlistData = async () => {
+    try {
+      const response = await axiosInstance.get('/user/getwishlist');
+      
+      setWishlistData(response?.data?.data?.length || 0);
+    } catch (error) {
+      console.log('errr', error);
+    }
+  };
 
-    fetchCartData();
+  
+  useEffect(() => {
+    if(!userData){
+      fetchCartData();
+      fetchWishlistData();
+    }
   }, []);
 
   useEffect(() => {
@@ -268,13 +281,21 @@ const Navbar = () => {
                 </svg>
               </button>
             </Link>
-            <Link href="">
+            
+            {userData ?
+            <button>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            {wishlistData > 0 && <span className="absolute top-2 bg-[#FF5722] text-white text-xs py-[0.1em] px-[0.5em] rounded-full">{wishlistData}</span>}
+          </button> :
+            <Link href="/register">
               <button>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </button>
-            </Link>
+            </Link>}
 
             {userData ? <button onClick={() => setOpen(true)}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -127,7 +127,6 @@ export default function Cart() {
       console.error("Error removing item from wishlist:", error);
 
     }
-
   };
 
    const deliveryCharge = 40

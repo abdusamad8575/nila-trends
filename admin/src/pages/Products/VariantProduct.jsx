@@ -523,11 +523,11 @@ const VariantProduct = () => {
                 {details?.isAvailable ? 'Active' : 'Blocked'}
               </ToggleButton>
             </Grid> */}
-            <Grid item xs={12} sm={12} mt={'auto'}>
+            {/* <Grid item xs={12} sm={12} mt={'auto'}>
               <Grid item xs={12}>
                 <Button onClick={handleSubmit}>Add Variant Product</Button>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
           {/* <Grid item container spacing={2} xs={12} sm={12} md={6}>
             <ImageList details={details?.image} setDetails={setDetails} />
@@ -537,6 +537,12 @@ const VariantProduct = () => {
             <Grid sx={{ width: '100%' }}>
               <ImageList data={details?.image} dispatch={setDetails} />
             </Grid>
+            <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6} mt={'auto'}>
+            <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} variant='contained'>
+            Add Variant Product
+            </Button>
+          </Grid>
           </Grid>
         </Grid>}
     </PageLayout>
