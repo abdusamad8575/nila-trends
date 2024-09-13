@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -84,39 +84,65 @@ const FashionLanding = () => {
     },
     // Add more items here if needed
   ];
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
 
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
   return (
     <div>
       <div className="max-w-7xl mx-auto p-4 mt-16 md:mt-32">
         {/* Mobile Carousel */}
         <div className="block md:hidden">
           <Carousel>
-            {/* <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
-              <Image src={'/assets/image.png'} fill />
-            </div> */}
             <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
+              <Image src={'/assets/banner.png'} fill />
+            </div>
+            {/* <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
               <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
                 <source src={'/handloom_saree.mov'} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            </div>
+            </div> */}
           </Carousel>
         </div>
         {/* Desktop View */}
         <div className="hidden md:block">
           <div className="border-2 border-dashed border-gray-300 p-4">
             <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden">
-              {/* <Image
-                src="/banner.webp"
+              <Image
+                src="/assets/banner.png"
                 alt="Fashion model"
                 layout="fill"
                 objectFit="cover"
                 className="object-center"
-              /> */}
-              <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
-                <source src={'/handloom_saree.mov'} type="video/mp4" />
+              />
+              {/* <video
+                ref={videoRef}
+                className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              >
+                <source
+                  src={
+                    'https://nilaatrends.s3.eu-north-1.amazonaws.com/HandloomSaree.mp4'
+                  }
+                  type="video/mp4"
+                />
                 Your browser does not support the video tag.
               </video>
+              <button
+                onClick={toggleMute}
+                className="absolute bottom-4 left-4 p-2 bg-black bg-opacity-50 text-white rounded"
+              >
+                {isMuted ? 'Unmute' : 'Mute'}
+              </button> */}
               <div className="absolute z-50 w-full h-full items-center flex flex-col">
                 <div className='relative h-full flex items-end justify-center'>
                   <svg width="228" height="49" viewBox="0 0 228 49" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -134,11 +160,14 @@ const FashionLanding = () => {
 
             <div className="grid  md:grid-cols-2 gap-8 mt-8">
               <div className="md:col-span-1">
-                <h1 className="text-4xl font-bold mb-4">
-                  ELEVATE YOUR STYLE WITH NILAA TRENDS
+                <h1 className="text-5xl font-sans mb-4">
+                  &quot;Uplift your trends&quot;
+                </h1>
+                <h1 className="text-2xl font-sans italic mb-4">
+                  Nilaa - The Stories of Threads
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Explore a world of fashion at NiaaTrends, where trends meet affordability. Immerse yourself in the latest styles and seize exclusive promotions.
+                  Explore a world of fashion at NilaaTrends, where trends meet affordability. Immerse yourself in the latest styles and seize exclusive promotions.
                 </p>
               </div>
 

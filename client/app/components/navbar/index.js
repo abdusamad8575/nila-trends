@@ -182,7 +182,7 @@ import { useTheme } from 'next-themes';
 import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../../../axios'
 import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
-import {   usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -204,7 +204,6 @@ const Navbar = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/auth/user');
-        console.warn('Check3', response.data);
         dispatch(setUserDetails(response.data.data));
       } catch (error) {
         console.log('errr', error);
@@ -243,14 +242,15 @@ const Navbar = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+  // useEffect(() => {
+  //   if (typeof window === 'undefined') return;
+  //   const handleScroll = () => {
+  //     setIsScrolled(window.scrollY > 20);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
 
   return (
     <nav
@@ -262,14 +262,14 @@ const Navbar = () => {
         <div className="flex flex-col md:flex-row justify-around items-center py-3">
           {/* Left section */}
           <div className="flex space-x-1 mb-2 md:mb-0">
-            <button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded ">Trends</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded" style={{ border: '2px dashed #cccccc', borderRadius: '8px' }}>Accessories</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-gray-700 text-sm rounded" style={{ border: '2px dashed #cccccc', borderRadius: '8px' }}>Exclusive</button>
+            <button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Trends</button>
+            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Accessories</button>
+            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Exclusive</button>
           </div>
 
           {/* Logo */}
-          <div className="text-2xl font-serif italic mb-2 md:mb-0">
-            <Link href="/">NilaaTrends</Link>
+          <div className="text-xl font-serif italic mb-2 md:mb-0">
+            <Link href="/">Nilaa - The Stories of Threads</Link>
           </div>
 
           {/* Right section */}
@@ -302,7 +302,7 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {cartData > 0 && <span className="absolute top-2 bg-[#FF5722] text-white text-xs py-[0.1em] px-[0.5em] rounded-full">{cartData}</span>}
-            </button> : <Link href="/register">
+            </button> : <Link href="#">
               <button>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -310,7 +310,7 @@ const Navbar = () => {
               </button>
             </Link>}
 
-            <Link href={userData ? '/profile' : '/register'}>
+            <Link href={userData ? '/profile' : '#'}>
               <button>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -322,14 +322,14 @@ const Navbar = () => {
 
         {/* Bottom menu */}
         <div className="flex flex-wrap justify-center py-2 space-x-10 text-sm font-bold bg-[#faf9f3] overflow-x-auto">
-          <Link href="/allproducts/Keralatraditional" className="text-gray-700 hover:text-gray-900">Kerala traditional</Link>
-          <Link href="/allproducts/Kurta" className="text-gray-700 hover:text-gray-900">Kurta</Link>
-          <Link href="/allproducts/kurti" className="text-gray-700 hover:text-gray-900">Kurti set</Link>
-          <Link href="/allproducts/Ethnic wear" className="text-gray-700 hover:text-gray-900">Ethnic wear</Link>
-          <Link href="/allproducts/Feminine" className="text-gray-700 hover:text-gray-900">Feminine</Link>
-          <Link href="/allproducts/Festive wear" className="text-gray-700 hover:text-gray-900">Festive wear</Link>
-          <Link href="/allproducts/Dual flare ears" className="text-gray-700 hover:text-gray-900">Dual flare ears</Link>
-          <Link href="/allproducts/Beach wear" className="text-gray-700 hover:text-gray-900">Beach wear</Link>
+          <Link href="/allproducts/Ethnic Fashion" className="text-gray-700 hover:text-gray-900">Ethnic Fashion</Link>
+          <Link href="/allproducts/Festive Collection" className="text-gray-700 hover:text-gray-900">Festive Collection</Link>
+          <Link href="/allproducts/Daily & Office wear" className="text-gray-700 hover:text-gray-900">Daily / Office wear</Link>
+          <Link href="/allproducts/Home & Night wear" className="text-gray-700 hover:text-gray-900">Home / Night wear</Link>
+          <Link href="/allproducts/Travel Wear" className="text-gray-700 hover:text-gray-900">Travel Wear</Link>
+          <Link href="/allproducts/Jewelry" className="text-gray-700 hover:text-gray-900">Jewelry</Link>
+          <Link href="/allproducts/Hair Acessories" className="text-gray-700 hover:text-gray-900">Hair Acessories</Link>
+          <Link href="/allproducts/Nilaa&apos;s Designer Collection" className="text-gray-700 hover:text-gray-900">Nilaa&apos;s Designer Collection</Link>
         </div>
       </div>
       <ModalLayout open={open} setOpen={setOpen} bgcolor={'#fff'}><Cart /></ModalLayout>
