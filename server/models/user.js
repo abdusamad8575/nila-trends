@@ -56,11 +56,11 @@ const userSchema = mongoose.Schema({
     },
     wishlist: [
         {
-          type: mongoose.Types.ObjectId,
-          ref: "Product",
-          required: true,
+            type: mongoose.Types.ObjectId,
+            ref: "Product",
+            required: true,
         },
-      ],
+    ],
     wallet: {
         type: Number,
         default: 0
@@ -68,8 +68,8 @@ const userSchema = mongoose.Schema({
     coupons: [{
         type: mongoose.Types.ObjectId,
         ref: 'Coupon'
-      }]
-},    
+    }]
+},
     {
         timestamps: true
     })
@@ -81,8 +81,8 @@ userSchema.methods.updateCart = async function (id, qty, size) {
     const index = cart.item.findIndex((objInItems) => {
         return (
             size ? new String(objInItems.productId).trim() === new String(product._id).trim() &&
-            objInItems.size === size : new String(objInItems.productId).trim() == new String(product._id).trim()
-        );    
+                objInItems.size === size : new String(objInItems.productId).trim() == new String(product._id).trim()
+        );
     });
 
     if (index === -1) {
@@ -103,45 +103,45 @@ userSchema.methods.updateCart = async function (id, qty, size) {
 
 userSchema.methods.addToCart = async function (product, size) {
     const wishlist = this.wishlist;
-    const isExist = wishlist.item.findIndex(
-        (objInItems) => new String(objInItems.productId).trim() === new String(product._id).trim()
-    );
-    if (isExist >= 0) {
-        wishlist.item.splice(isExist, 1);
+    const isExist = wishlist.filter((item) => item === product._id);
+    if (isExist.length) {
+        wishlist.filter((item) => item !== product._id);
     }
 
     const cart = this.cart;
+    console.log('cart', cart);
+
     const isExisting = cart.item.findIndex(
         (objInItems) =>
             size ? new String(objInItems.productId).trim() === new String(product._id).trim() &&
-            objInItems.size === size : new String(objInItems.productId).trim() === new String(product._id).trim()
+                objInItems.size === size : new String(objInItems.productId).trim() === new String(product._id).trim()
     );
 
     if (isExisting >= 0) {
         cart.item[isExisting].qty += 1;
     } else {
         size ? cart.item.push({
-            productId: product._id,   
-            qty: 1,
-            size: size || "", 
-            price: product.price,
-        }) : 
-        cart.item.push({
             productId: product._id,
             qty: 1,
+            size: size || "",
             price: product.price,
-        })
+        }) :
+            cart.item.push({
+                productId: product._id,
+                qty: 1,
+                price: product.price,
+            })
     }
     cart.totalPrice += product.price;
     return this.save();
 };
 
-userSchema.methods.removefromCart = async function (cartItemId,size) {
+userSchema.methods.removefromCart = async function (cartItemId, size) {
     const cart = this.cart;
     const isExisting = cart.item.findIndex(
         (objInItems) =>
-            size?  new String(objInItems._id).trim() === new String(cartItemId).trim()&&
-        objInItems.size === size : new String(objInItems._id).trim() === new String(cartItemId).trim()
+            size ? new String(objInItems._id).trim() === new String(cartItemId).trim() &&
+                objInItems.size === size : new String(objInItems._id).trim() === new String(cartItemId).trim()
     );
 
     if (isExisting >= 0) {
@@ -153,37 +153,43 @@ userSchema.methods.removefromCart = async function (cartItemId,size) {
 };
 
 userSchema.methods.addToWishlist = function (product) {
-  
+
     const wishlist = this.wishlist;
-  
+
     const isExisting = wishlist.filter((x) => x == product);
     if (!isExisting.length) {
-      wishlist.push(product);
+        wishlist.push(product);
     }
-  
+
     return this.save();
-  };
-  userSchema.methods.removefromWishlist = async function (id) {
-  
+};
+userSchema.methods.removefromWishlist = async function (id) {
+
     const wishlist = this.wishlist;
-  
+
     this.wishlist = this.wishlist.filter((x) => x.toString() !== id);
-  
+
     return await this.save();
-  };
+};
 
 
 userSchema.statics.getWishlistWithProductsByUserId = async function (userId) {
     try {
-      const user = await this.findById(userId).populate("wishlist");
-      
-      return user?.wishlist?.reverse();
+        const user = await this.findById(userId).populate({
+            path: 'wishlist',
+            populate: {
+                path: 'category', 
+                model: 'Category', 
+            }
+        });
+
+        return user?.wishlist?.reverse();
     } catch (error) {
-      console.error(error);
-      return null;
+        console.error(error);
+        return null;
     }
-  };
-   
+};
+
 
 userSchema.statics.getCartWithProductsByUserId = async function (userId) {
     try {
