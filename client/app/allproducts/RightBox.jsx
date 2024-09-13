@@ -14,36 +14,36 @@ const ColorOption = ({ color }) => (
 
 function RightBox({ product }) {
     const dispatch = useDispatch();
-    if (!product) return null;
-    const userDetails = useSelector(state => state.userDetails);
+    const userDetails = useSelector(state => state?.userDetails);
     const router = useRouter()
-    
+
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
     const [isInStock, setIsInStock] = useState(true);
-    
+    if (!product) return null;
+
     const addCartData = async (proId1) => {
-        console.log('proId1',proId1);
-        
+        console.log('proId1', proId1);
+
         if (!userDetails) {
             router.push('/register');
         } else {
-          try {
-            const urlQuery = `/user/addToCart/${proId1}`;
-            const response =await axiosInstance.patch(urlQuery, { size: selectedSize });
-            dispatch(setUserDetails(response?.data?.userData));
-            
-          } catch (error) {
-            console.error('Error adding to cart:', error);
-          }
-        }
-      };
+            try {
+                const urlQuery = `/user/addToCart/${proId1}`;
+                const response = await axiosInstance.patch(urlQuery, { size: selectedSize });
+                dispatch(setUserDetails(response?.data?.userData));
 
-    const handleSizeSelect = (size,index) => {
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+            }
+        }
+    };
+
+    const handleSizeSelect = (size, index) => {
         setSelectedSize(size);
         setSelectedSizeIndex(index);
-        console.log('product?.sizes',product?.sizes);
-        
+        console.log('product?.sizes', product?.sizes);
+
         const selectedSizeData = product?.sizes?.find((s) => s.sizes === size);
         setIsInStock(selectedSizeData?.quantity > 0);
     };
@@ -53,7 +53,7 @@ function RightBox({ product }) {
         } else {
             alert('please select size')
         }
-      };
+    };
 
     return (
         <div className="lg:col-span-4 side-item hidden md:block cursor-pointer">
@@ -66,28 +66,31 @@ function RightBox({ product }) {
                 ))}
                 <p className="font-semibold mb-2 mt-4">Price • AED:{product.price}</p>
                 <div className="flex justify-between mb-4">
-                    <button className="bg-black text-white px-3 py-2 sm:px-4 sm:py-2 rounded flex items-center text-xs sm:text-sm" 
-                    onClick={() =>handleAddToCartClick(product)}>
-                        <ShoppingCart size={16} className="mr-2" />
-                        Add to Cart
-                    </button>
+                    <Link href={`/products/${product?._id}`}>
+                        <button className="bg-black text-white px-3 py-2 sm:px-4 sm:py-2 rounded flex items-center text-xs sm:text-sm"
+                        // onClick={() =>handleAddToCartClick(product)}
+                        >
+                            <ShoppingCart size={16} className="mr-2" />
+                            Add to Cart
+                        </button>
+                    </Link>
                     <Link href={`/products/${product?._id}`}>
                         <button className="bg-gray-200 px-3 py-2 sm:px-4 sm:py-2 rounded text-xs sm:text-sm">Shop Now</button>
                     </Link>
                 </div>
-                {product.sizes&&<div className="mb-4">
+                {product.sizes && <div className="mb-4">
                     <h3 className="text-sm sm:text-lg font-semibold mb-2">Available Size</h3>
                     <div className="flex space-x-2">
-                        {product.sizes.map((sizeObj,index) => (
-                           sizeObj?.quantity>0 && <button className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm ${selectedSizeIndex === index
+                        {product.sizes.map((sizeObj, index) => (
+                            sizeObj?.quantity > 0 && <button className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm ${selectedSizeIndex === index
                                 ? 'border-[#B17E3E]'
                                 : 'hover:bg-gray-100'
                                 }`} key={index}
-                                onClick={() => handleSizeSelect(sizeObj.sizes,index)}
-                                >
-                                    {console.log('sizeObj?.quantity',sizeObj?.quantity)                                    }
+                                onClick={() => handleSizeSelect(sizeObj.sizes, index)}
+                            >
+                                {console.log('sizeObj?.quantity', sizeObj?.quantity)}
                                 {sizeObj.sizes}
-                                
+
                             </button>
                         ))}
                     </div>
