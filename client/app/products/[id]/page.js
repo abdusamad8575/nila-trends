@@ -10,6 +10,10 @@ import { Carousel } from 'antd';
 import { Roboto, Roboto_Mono, Rochester } from 'next/font/google'
 import ModalLayout from '@/app/components/common/ModalLayout';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import axiosInstance from '../../../axios';
+import { useDispatch } from 'react-redux';
+import { setUserDetails } from '../../../redux/actions/userActions';
 
 const rochester = Rochester({
    subsets: ['latin'],

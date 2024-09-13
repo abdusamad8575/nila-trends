@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import ImageList from './ImageList';
 import { useGetCategory } from 'queries/ProductQuery'
 import Typography from 'components/Typography'
-import { useAddProduct,useGetSimilarProducts } from 'queries/ProductQuery'
+import { useAddProduct, useGetSimilarProducts } from 'queries/ProductQuery'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { Delete } from '@mui/icons-material';
@@ -28,15 +28,16 @@ const AddProduct = () => {
   const [category, setCategory] = useState()
 
   const [product, setProduct] = useState([])
-  const { data:respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
+  const [variantProduct, setVariantProduct] = useState([])
+  const { data: respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
   // console.log('respo',respo);
-  
+
 
   const [isSingleType, setIsSingleType] = useState(false);
   const handleSubmit = () => {
-    
+
     try {
-      
+
       const formData = new FormData();
       details?.image?.forEach((image) => {
         formData.append('images', image, image.name);
@@ -78,6 +79,7 @@ const AddProduct = () => {
 
       });
       product.forEach((product) => formData.append('similarProduct', product._id));
+      variantProduct.forEach((product) => formData.append('variantProduct', product._id));
       AddProduct(formData)
         .then((res) => {
           toast.success(res?.message ?? "Product added");
@@ -151,13 +153,13 @@ const AddProduct = () => {
     setDetails(prevData => ({ ...prevData, sizes: newsizes }));
   };
 
-  useEffect(()=>{
-    if(isSingleType){
-      details?.stock && setDetails(prevData => ({ ...prevData, stock:'' }));
-    }else{
+  useEffect(() => {
+    if (isSingleType) {
+      details?.stock && setDetails(prevData => ({ ...prevData, stock: '' }));
+    } else {
       details?.sizes && setDetails(prevData => ({ ...prevData, sizes: [{ sizes: '', quantity: '' }] }));
     }
-  },[isSingleType])
+  }, [isSingleType])
   return (
     <PageLayout
       title={'Add Product'}
@@ -231,7 +233,7 @@ const AddProduct = () => {
             />
           </Grid>
 
-          {!isSingleType &&<Grid item xs={12} sm={4}>
+          {!isSingleType && <Grid item xs={12} sm={4}>
             <Input
               placeholder="Enter Quantity"
               name="stock"
@@ -296,7 +298,7 @@ const AddProduct = () => {
               placeholder="Item Material"
               id="material"
               name="material"
-              value={details?.material  || ''}
+              value={details?.material || ''}
               onChange={handleChange}
             />
           </Grid>
@@ -348,7 +350,7 @@ const AddProduct = () => {
               Add Feature
             </Button>
           </Grid>
-          
+
           <Grid item xs={12}>
             {details?.spec?.map((spec, index) => (
               <Box key={index} display="flex" alignItems="center">
@@ -374,7 +376,7 @@ const AddProduct = () => {
           </Grid>
 
 
-          
+
           <Grid item xs={12} sm={6}>
             <Input
               placeholder="MRP (Maximum Retail Price)"
@@ -413,43 +415,82 @@ const AddProduct = () => {
           </Grid>
 
           <Grid item xs={12}>
-                  <Autocomplete
-                     id="Product-select"
-                     multiple
-                     options={respo?.data || []}
-                     value={product}
-                     onChange={(event, newValue) => {
-                        setProduct(newValue);
-                     }}
-                     autoHighlight
-                     getOptionLabel={(option) => option.name}
-                     renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                           <img
-                              loading="lazy"
-                              width="20"
-                              src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
-                           />
-                           <Typography color="inherit" variant="caption">
-                              {option?.name} <br />
-                              {option?.brand}
-                           </Typography>
-                           <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
-                              {option?.isAvailable ? 'available' : 'NA'}
-                           </Typography>
-                        </Box>
-                     )}
-                     renderInput={(params) => (
-                        <TextField
-                           {...params}
-                           placeholder="Choose Similar product"
-                           inputProps={{
-                              ...params.inputProps,
-                           }}
-                        />
-                     )}
+            <Autocomplete
+              id="Product-select"
+              multiple
+              options={respo?.data || []}
+              value={variantProduct}
+              onChange={(event, newValue) => {
+                setVariantProduct(newValue);
+              }}
+              autoHighlight
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  <img
+                    loading="lazy"
+                    width="20"
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
                   />
-               </Grid>
+                  <Typography color="inherit" variant="caption">
+                    {option?.name} <br />
+                    {option?.brand}
+                  </Typography>
+                  <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                    {option?.isAvailable ? 'available' : 'NA'}
+                  </Typography>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Choose Variant product"
+                  inputProps={{
+                    ...params.inputProps,
+                  }}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Autocomplete
+              id="Product-select"
+              multiple
+              options={respo?.data || []}
+              value={product}
+              onChange={(event, newValue) => {
+                setProduct(newValue);
+              }}
+              autoHighlight
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  <img
+                    loading="lazy"
+                    width="20"
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
+                  />
+                  <Typography color="inherit" variant="caption">
+                    {option?.name} <br />
+                    {option?.brand}
+                  </Typography>
+                  <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                    {option?.isAvailable ? 'available' : 'NA'}
+                  </Typography>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Choose Similar product"
+                  inputProps={{
+                    ...params.inputProps,
+                  }}
+                />
+              )}
+            />
+          </Grid>
 
 
 

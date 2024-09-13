@@ -126,7 +126,7 @@ userSchema.methods.addToCart = async function (product, size) {
         cart.item[isExisting].qty += 1;
     } else {
         size ? cart.item.push({
-            productId: product._id,
+            productId: product._id,   
             qty: 1,
             size: size || "", 
             price: product.price,

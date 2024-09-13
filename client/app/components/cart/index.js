@@ -1,21 +1,18 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import axiosInstance from '../../../axios'
 import { FaTrash } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
 
 
 export default function Cart() {
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.userDetails);
   const [cartData, setCartData] = useState([])
   const [salePriceTotal, setSalePriceTotal] = useState(0)
   const [proPriceTotal, setProPriceTotal] = useState(0)
- 
-
   const [loadingIndex, setLoadingIndex] = useState(null);
-
 
 
   const calculateTotalSalePrice = (items) => {
@@ -54,7 +51,7 @@ export default function Cart() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [userData])
 
 
 

@@ -73,6 +73,12 @@ const productSchema = new mongoose.Schema({
     reviews: {
         type: Array   
     },
+    variantProduct: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product',
+        }
+      ],
     similarProduct: [
         {
           type: mongoose.Schema.Types.ObjectId,

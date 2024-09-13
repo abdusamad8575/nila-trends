@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { ShoppingCart } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../axios';
 import { useDispatch } from 'react-redux';
@@ -75,10 +75,10 @@ function RightBox({ product }) {
                         <button className="bg-gray-200 px-3 py-2 sm:px-4 sm:py-2 rounded text-xs sm:text-sm">Shop Now</button>
                     </Link>
                 </div>
-                {product.sizes&&<div className="mb-4">
+                {product?.sizes?.length>0&&<div className="mb-4">
                     <h3 className="text-sm sm:text-lg font-semibold mb-2">Available Size</h3>
                     <div className="flex space-x-2">
-                        {product.sizes.map((sizeObj,index) => (
+                        {product?.sizes.map((sizeObj,index) => (
                            sizeObj?.quantity>0 && <button className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm ${selectedSizeIndex === index
                                 ? 'border-[#B17E3E]'
                                 : 'hover:bg-gray-100'
