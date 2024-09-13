@@ -54,18 +54,13 @@ const userSchema = mongoose.Schema({
             default: 0
         }
     },
-    wishlist: {
-        item: [{
-            productId: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Product',
-                required: true
-            },
-            price: {
-                type: Number
-            },
-        }]
-    },
+    wishlist: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+      ],
     wallet: {
         type: Number,
         default: 0
@@ -126,7 +121,7 @@ userSchema.methods.addToCart = async function (product, size) {
         cart.item[isExisting].qty += 1;
     } else {
         size ? cart.item.push({
-            productId: product._id,
+            productId: product._id,   
             qty: 1,
             size: size || "", 
             price: product.price,
@@ -158,31 +153,37 @@ userSchema.methods.removefromCart = async function (cartItemId,size) {
 };
 
 userSchema.methods.addToWishlist = function (product) {
-    const wishlist = this.wishlist
-    const isExisting = wishlist.item.findIndex(objInItems => {
-        return new String(objInItems.productId).trim() == new String(product._id).trim()
-    })
-    if (isExisting >= 0) {
-
-    } else {
-        wishlist.item.push({
-            productId: product._id,
-            price: product.price
-        })
+  
+    const wishlist = this.wishlist;
+  
+    const isExisting = wishlist.filter((x) => x == product);
+    if (!isExisting.length) {
+      wishlist.push(product);
     }
-    return this.save()
-}
-userSchema.methods.removefromWishlist = async function (productId) {
-    const wishlist = this.wishlist
-    const isExisting = wishlist.item.findIndex(objInItems => new String(objInItems.productId).trim() === new String(productId).trim())
-    if (isExisting >= 0) {
-        const prod = await Product.findById(productId)
-        wishlist.item.splice(isExisting, 1)
-        return this.save()
+  
+    return this.save();
+  };
+  userSchema.methods.removefromWishlist = async function (id) {
+  
+    const wishlist = this.wishlist;
+  
+    this.wishlist = this.wishlist.filter((x) => x.toString() !== id);
+  
+    return await this.save();
+  };
+
+
+userSchema.statics.getWishlistWithProductsByUserId = async function (userId) {
+    try {
+      const user = await this.findById(userId).populate("wishlist");
+      
+      return user?.wishlist?.reverse();
+    } catch (error) {
+      console.error(error);
+      return null;
     }
-
-}
-
+  };
+   
 
 userSchema.statics.getCartWithProductsByUserId = async function (userId) {
     try {

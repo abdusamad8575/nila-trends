@@ -92,7 +92,7 @@ const getAdminProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const data = await Product.findOne({ _id: req.params.id }).populate('category').populate('similarProduct')
+    const data = await Product.findOne({ _id: req.params.id }).populate('category').populate('similarProduct').populate('variantProduct')
     res.status(200).json({ data, message: 'product found successfully' });
   } catch (error) {
     console.log(error.message);
@@ -106,13 +106,13 @@ const getClientProductById = async (req, res) => {
 
   try {
     const product = await Product.findById(id)
-    .populate('category')
-    .populate({
-      path: 'similarProduct',
-      populate: {
-        path: 'category',
-      },
-    });
+      .populate('category')
+      .populate({
+        path: 'similarProduct',
+        populate: {
+          path: 'category',
+        },
+      });
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -126,23 +126,86 @@ const getClientProductById = async (req, res) => {
 const addProduct = async (req, res) => {
   try {
     console.log(req.files);
-    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct } = req?.body
+    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct,variantProduct } = req?.body
 
-
-    const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
+    const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
+    const sizeValue = [];
+    if (sizes) {
+      const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
 
-    const quantityArray = Array.isArray(sizeQuantity) ? sizeQuantity : [sizeQuantity];
+      const quantityArray = Array.isArray(sizeQuantity) ? sizeQuantity : [sizeQuantity];
 
-    const sizesInside = sizesArray.map((sizes, index) => ({
-      sizes,
-      quantity: quantityArray[index]
-    }));
-    const sizeValue = sizesInside[0]?.sizes ? sizesInside : undefined;
+      const sizesInside = sizesArray.map((sizes, index) => ({
+        sizes,
+        quantity: quantityArray[index]
+      }));
+      sizeValue = sizesInside[0]?.sizes ? sizesInside : undefined;
+    }
+
     if (req.files.length != 0) {
       const product = new Product({
-        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct,
+        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct,variantProduct,
         image: req.files.map((x) => x.filename),
+      });
+      await product.save();
+
+      if (variantProductArray.length > 0) {
+
+        variantProductArray?.forEach(proId => {
+          const updateFunction = async () => {
+            const updateProduct = await Product.updateOne({ _id: proId }, { $push: { variantProduct: product._id } })
+          }
+          updateFunction()
+        });
+      }
+      if (product) {
+        await Category.updateOne({ _id: category }, { $push: { products: product._id } })
+        res.status(200).json({ message: "Product added successfully !" });
+
+      } else {
+        res.status(400).json({ message: "Something went wrong !" });
+      }
+    } else {
+      res.status(400).json({ message: "failed only jpg ,jpeg, webp & png file supported !" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error?.message ?? "Something went wrong !" });
+  }
+};
+const addVariantProduct = async (req, res) => {
+  try {
+    // console.log(req.files.length);
+    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct,variantProduct,image } = req?.body
+    console.log('category',category);
+    
+    
+    const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
+    const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
+    const sizeValue = [];
+    if (sizes) {
+      const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
+
+      const quantityArray = Array.isArray(sizeQuantity) ? sizeQuantity : [sizeQuantity];
+
+      const sizesInside = sizesArray.map((sizes, index) => ({
+        sizes,
+        quantity: quantityArray[index]
+      }));
+      sizeValue = sizesInside[0]?.sizes ? sizesInside : undefined;
+    }
+
+    const images = JSON.parse(image) ?? []
+    if (req?.files?.length != 0) {
+      req?.files?.map((x) => images.push(x.filename))
+    }
+
+    if (images) {
+      const product = new Product({
+        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct,variantProduct,
+        // image: req.files.map((x) => x.filename),
+        image: images,
       });
       await product.save();
 
@@ -151,6 +214,15 @@ const addProduct = async (req, res) => {
         similarProductArray?.forEach(proId => {
           const updateFunction = async () => {
             const updateProduct = await Product.updateOne({ _id: proId }, { $push: { similarProduct: product._id } })
+          }
+          updateFunction()
+        });
+      }
+      if (variantProductArray.length > 0) {
+
+        variantProductArray?.forEach(proId => {
+          const updateFunction = async () => {
+            const updateProduct = await Product.updateOne({ _id: proId }, { $push: { variantProduct: product._id } })
           }
           updateFunction()
         });
@@ -173,10 +245,11 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity, similarProduct } = req?.body
+    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity, similarProduct,variantProduct } = req?.body
 
     const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
+    const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
     const quantityArray = Array.isArray(sizeQuantity) ? sizeQuantity : [sizeQuantity];
 
     const sizesInside = sizesArray.map((sizes, index) => ({
@@ -204,8 +277,23 @@ const updateProduct = async (req, res) => {
         updateFunction()
       });
     }
+    if (variantProductArray?.length > 0) {
+      const product = await Product.findById(_id);
+
+      variantProductArray?.forEach(proId => {
+        const updateFunction = async () => {
+
+          if (!product.variantProduct.includes(proId)) {
+
+            const updateProduct = await Product.updateOne({ _id: proId }, { $push: { variantProduct: _id } })
+          }
+        }
+
+        updateFunction()
+      });
+    }
     await Product.updateOne({ _id }, {
-      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct }
+      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct,variantProduct }
     })
 
     res.status(200).json({ message: "Product updated successfully !" });
@@ -251,6 +339,7 @@ module.exports = {
   getClientProductById,
   updateProduct,
   addProduct,
+  addVariantProduct,
   deleteProduct,
   getAdminProducts,
   getTagProducts,

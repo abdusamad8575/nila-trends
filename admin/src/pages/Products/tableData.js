@@ -55,6 +55,7 @@ const TableData = () => {
     { name: "status", align: "center" },
     { name: "createdon", align: "center" },
     { name: "Lastupdated", align: "center" },
+    { name: "variant", align: "center" },
     { name: "action", align: "center" },
   ]
 
@@ -73,6 +74,14 @@ const TableData = () => {
       <Typography variant="caption" color="secondary" fontWeight="medium">
         {new Date(item?.updatedAt).toDateString()}
       </Typography>
+    ),
+    variant: (
+      <Link to={`/products/variantProduct/${item?._id}`}>
+        {/* <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small">
+          more_vert
+        </Icon> */}
+        <Button>Add Variant</Button>
+      </Link>
     ),
     action: (
       <Link to={`/products/editProduct/${item?._id}`}>

@@ -13,6 +13,7 @@ import {
   getTagProducts,
   getSimilarProducts,
   updateProduct,
+  addVariantProduct,
   getCoupon, getCouponById, addCoupon, updateCoupon, deletecoupons, couponStatus,getCoinCoupon
 } from "./productUrls";
 
@@ -146,6 +147,19 @@ const useUpdateProduct = () => {
     },
   });
 };
+const useAddVariantProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => addVariantProduct(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_products");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
 const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
@@ -255,6 +269,7 @@ export {
   useAddCategory,
   useAddProduct,
   useUpdateProduct,
+  useAddVariantProduct,
   useDeleteProduct,
   useGetCoupon, useAddCoupon, useGetCouponById, useUpdateCouponStatus, useUpdateCoupon, useDeletecoupons,useGetCoinCoupen
 };

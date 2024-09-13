@@ -4,12 +4,12 @@ import PageLayout from 'layouts/PageLayout';
 import React, { useEffect, useState } from 'react';
 import Typography from 'components/Typography';
 import toast from 'react-hot-toast';
-import { useGetProductById, useUpdateProduct, useDeleteProduct,useGetSimilarProducts } from 'queries/ProductQuery';
+import { useGetProductById, useAddVariantProduct, useDeleteProduct, useGetSimilarProducts } from 'queries/ProductQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageList from './ImageList';
 import { Delete } from '@mui/icons-material';
 
-const EditProduct = () => {
+const VariantProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [details, setDetails] = useState({});
@@ -19,15 +19,15 @@ const EditProduct = () => {
 
   const [product, setProduct] = useState([])
   const [variantProduct, setVariantProduct] = useState([])
-  const { data:respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
+  const { data: respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
 
 
   const [isSingleType, setIsSingleType] = useState(false);
 
   useEffect(() => {
     if (data?.data) {
-      console.log('data?.data',data?.data);
-      
+      console.log('data?.data', data?.data);
+
       data?.data?.similarProduct && setProduct(data?.data?.similarProduct)
       data?.data?.variantProduct && setVariantProduct(data?.data?.variantProduct)
       setDetails(data.data);
@@ -36,7 +36,7 @@ const EditProduct = () => {
     }
   }, [data]);
 
-  const { mutateAsync: updateProduct, isLoading: loading } = useUpdateProduct();
+  const { mutateAsync: addVariantProduct, isLoading: loading } = useAddVariantProduct();
   const { mutateAsync: deleteProduct, isLoading: deleting } = useDeleteProduct();
 
   const handleChange = (e) => {
@@ -53,11 +53,15 @@ const EditProduct = () => {
           formData.append('images', image, image.name);
         }
       });
+      // details?.image?.forEach((image) => {
+      //   formData.append('images', image, image.name);
+      // });
       for (const key in details) {
-        if (details.hasOwnProperty(key) && key !== "image" && key !== "feature" && key !== "spec" && key !== "sizes" && key !== "fitAndCare" && key !== "similarProduct" && key !== "variantProduct") {
+        if (details.hasOwnProperty(key) && key !== "_id" && key !== "category" && key !== "image" && key !== "feature" && key !== "spec" && key !== "sizes" && key !== "fitAndCare" && key !== "similarProduct" && key !== "variantProduct") {
           formData.append(key, details[key]);
         }
       }
+      formData.append('category', details?.category?._id);
       // formData.append('tags', JSON.stringify(selectedTags));
       product.forEach((product) => formData.append('similarProduct', product._id));
       variantProduct.forEach((product) => formData.append('variantProduct', product._id));
@@ -92,10 +96,10 @@ const EditProduct = () => {
 
       });
 
-      updateProduct(formData)
+      addVariantProduct(formData)
         .then((res) => {
           if (res) {
-            toast.success(res?.message ?? "Product updated successfully");
+            toast.success(res?.message ?? "Product Added successfully");
             navigate('/products');
           }
         })
@@ -107,18 +111,18 @@ const EditProduct = () => {
     }
   };
 
-  const handleDelete = () => {
-    deleteProduct(details)
-      .then((res) => {
-        if (res) {
-          toast.success(res?.message ?? "Product deleted successfully");
-          navigate('/products');
-        }
-      })
-      .catch((err) => {
-        toast.error(err?.message ?? "Something went wrong");
-      });
-  };
+  // const handleDelete = () => {
+  //   deleteProduct(details)
+  //     .then((res) => {
+  //       if (res) {
+  //         toast.success(res?.message ?? "Product deleted successfully");
+  //         navigate('/products');
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err?.message ?? "Something went wrong");
+  //     });
+  // };
 
 
   const handleFitAndCareChange = (index, value) => {
@@ -177,15 +181,17 @@ const EditProduct = () => {
     const newsizes = details.sizes.filter((_, i) => i !== index);
     setDetails(prevData => ({ ...prevData, sizes: newsizes }));
   };
-  useEffect(()=>{
-    if(isSingleType){
-      details?.stock && setDetails(prevData => ({ ...prevData, stock:'' }));
-    }else{
+  useEffect(() => {
+    if (isSingleType) {
+      details?.stock && setDetails(prevData => ({ ...prevData, stock: '' }));
+    } else {
       details?.sizes && setDetails(prevData => ({ ...prevData, sizes: [{ sizes: '', quantity: '' }] }));
     }
-  },[isSingleType])
+  }, [isSingleType])
+  console.log('details12', details);
+
   return (
-    <PageLayout title={'Edit Product'}>
+    <PageLayout title={'Variant Product'}>
       {isLoading ? <Typography fontSize={14} sx={{ paddingX: 5 }}>loading...</Typography> :
         <Grid container spacing={5} display={'flex'} direction={'row'} p={8}>
           <Grid item container spacing={2} xs={12} sm={12} md={6} py={5}>
@@ -288,39 +294,39 @@ const EditProduct = () => {
 
 
             <Grid item xs={12}>
-            <Input
-              required
-              placeholder="Item Material"
-              id="material"
-              name="material"
-              value={details?.material  || ''}
-              onChange={handleChange}
-            />
-          </Grid>
+              <Input
+                required
+                placeholder="Item Material"
+                id="material"
+                name="material"
+                value={details?.material || ''}
+                onChange={handleChange}
+              />
+            </Grid>
 
 
             <Grid item xs={12}>
-            {details?.fitAndCare?.map((fitAndCare, index) => (
-              <Box key={index} display="flex" alignItems="center">
-                <TextField
-                  placeholder={`Fit & Care ${index + 1}`}
-                  value={fitAndCare}
-                  onChange={(e) => handleFitAndCareChange(index, e.target.value)}
-                  fullWidth
-                  margin="normal"
-                  required
-                />
-                {details.fitAndCare.length > 1 && (
-                  <IconButton onClick={() => handleRemoveFitAndCare(index)}>
-                    <Delete />
-                  </IconButton>
-                )}
-              </Box>
-            ))}
-            <Button onClick={handleAddFitAndCare} variant="contained" color="primary" fullWidth className="mt-4">
-              Add Fit & Care
-            </Button>
-          </Grid>
+              {details?.fitAndCare?.map((fitAndCare, index) => (
+                <Box key={index} display="flex" alignItems="center">
+                  <TextField
+                    placeholder={`Fit & Care ${index + 1}`}
+                    value={fitAndCare}
+                    onChange={(e) => handleFitAndCareChange(index, e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                  {details.fitAndCare.length > 1 && (
+                    <IconButton onClick={() => handleRemoveFitAndCare(index)}>
+                      <Delete />
+                    </IconButton>
+                  )}
+                </Box>
+              ))}
+              <Button onClick={handleAddFitAndCare} variant="contained" color="primary" fullWidth className="mt-4">
+                Add Fit & Care
+              </Button>
+            </Grid>
 
             <Grid item xs={12}>
               {details?.feature?.map((feature, index) => (
@@ -367,7 +373,7 @@ const EditProduct = () => {
               <Button onClick={handleAddspec} variant="contained" color="primary" fullWidth className="mt-4">
                 Add specification
               </Button>
-            </Grid>           
+            </Grid>
             <Grid item xs={12} sm={6}>
               <Input
                 placeholder="MRP (Maximum Retail Price)"
@@ -464,46 +470,46 @@ const EditProduct = () => {
                 )}
               />
             </Grid>
-
             <Grid item xs={12}>
-                  <Autocomplete
-                     id="Product-select"
-                     multiple
-                     options={respo?.data || []}
-                     value={product}
-                     onChange={(event, newValue) => {
-                        setProduct(newValue);
-                     }}
-                     autoHighlight
-                     getOptionLabel={(option) => option.name}
-                     renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                           <img
-                              loading="lazy"
-                              width="20"
-                              src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
-                           />
-                           <Typography color="inherit" variant="caption">
-                              {option?.name} <br />
-                              {option?.brand}
-                           </Typography>
-                           <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
-                              {option?.isAvailable ? 'available' : 'NA'}
-                           </Typography>
-                        </Box>
-                     )}
-                     renderInput={(params) => (
-                        <TextField
-                           {...params}
-                           placeholder="Choose Similar product"
-                           inputProps={{
-                              ...params.inputProps,
-                           }}
-                        />
-                     )}
+              <Autocomplete
+                id="Product-select"
+                multiple
+                options={respo?.data || []}
+                value={product}
+                onChange={(event, newValue) => {
+                  setProduct(newValue);
+                }}
+                autoHighlight
+                getOptionLabel={(option) => option.name}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <img
+                      loading="lazy"
+                      width="20"
+                      src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
+                    />
+                    <Typography color="inherit" variant="caption">
+                      {option?.name} <br />
+                      {option?.brand}
+                    </Typography>
+                    <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                      {option?.isAvailable ? 'available' : 'NA'}
+                    </Typography>
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Choose Similar product"
+                    inputProps={{
+                      ...params.inputProps,
+                    }}
                   />
-               </Grid>
-            <Grid item xs={12} sm={6}>
+                )}
+              />
+            </Grid>
+
+            {/* <Grid item xs={12} sm={6}>
               <Typography variant="caption">
                 Product status &nbsp;
               </Typography>
@@ -516,14 +522,12 @@ const EditProduct = () => {
               >
                 {details?.isAvailable ? 'Active' : 'Blocked'}
               </ToggleButton>
-            </Grid>
-            <Grid item xs={12} sm={12} mt={'auto'}>
+            </Grid> */}
+            {/* <Grid item xs={12} sm={12} mt={'auto'}>
               <Grid item xs={12}>
-                <Button onClick={handleSubmit}>UPDATE PRODUCT</Button>
-
-                {/* <Button color="secondary" onClick={handleDelete}>DELETE PRODUCT</Button> */}
+                <Button onClick={handleSubmit}>Add Variant Product</Button>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
           {/* <Grid item container spacing={2} xs={12} sm={12} md={6}>
             <ImageList details={details?.image} setDetails={setDetails} />
@@ -533,10 +537,16 @@ const EditProduct = () => {
             <Grid sx={{ width: '100%' }}>
               <ImageList data={details?.image} dispatch={setDetails} />
             </Grid>
+            <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6} mt={'auto'}>
+            <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} variant='contained'>
+            Add Variant Product
+            </Button>
+          </Grid>
           </Grid>
         </Grid>}
     </PageLayout>
   );
 };
 
-export default EditProduct;
+export default VariantProduct;

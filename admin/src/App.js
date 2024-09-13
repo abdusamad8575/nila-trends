@@ -32,6 +32,7 @@ import EditBanner from "pages/Banner/EditBanner";
 import EditBlog from "pages/Tags/EditBlog";
 import AddCoupon from "pages/Coupon/AddCoupon";
 import EditCoupon from "pages/Coupon/EditCoupon";
+import VariantProduct from "pages/Products/VariantProduct";
 
 export default function App() {
   const [controller, dispatch] = useController();
@@ -112,6 +113,7 @@ export default function App() {
                 <Route path="/category/editCategory/:id" element={<EditCategory />} />
                 <Route path="/products/addProducts" element={<AddProduct />} />
                 <Route path="/products/editProduct/:id" element={<EditProduct />} />
+                <Route path="/products/variantProduct/:id" element={<VariantProduct />} />
                 <Route path="/orders/editOrder/:id" element={<EditOrder />} />
                 <Route path="/coupon/addCoupon" element={<AddCoupon />} />
                 <Route path="/coupon/editCoupon/:id" element={<EditCoupon />} />
@@ -144,6 +146,7 @@ export default function App() {
               <Route path="/category/addCategory" element={<AddCategory />} />
               <Route path="/category/editCategory/:id" element={<EditCategory />} />
               <Route path="/products/addProducts" element={<AddProduct />} />
+              <Route path="/products/variantProduct/:id" element={<VariantProduct />} />
               <Route path="/banners/addBanner" element={<AddBanner />} />
               <Route path="/products/editProduct/:id" element={<EditProduct />} />
               <Route path="/orders/editOrder/:id" element={<EditOrder />} />
