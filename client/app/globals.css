@@ -50,3 +50,13 @@ a {
   background-color: #f3f4f6; /* Background of the scrollbar track */
   border-radius: 10px; /* Rounded corners for the track */
 }
+
+.custom-carousel .slick-dots li button {
+  background-color: #a79b8d; /* Change this to your desired color */
+  height: 5px;
+}
+
+/* Active dot color */
+.custom-carousel .slick-dots li.slick-active button {
+  background-color: #8b8174; /* Change this to your desired active color */
+}
