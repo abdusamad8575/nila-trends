@@ -250,9 +250,9 @@ const Navbar = () => {
         <div className="flex flex-col md:flex-row justify-around items-center py-3">
           {/* Left section */}
           <div className="flex space-x-1 mb-2 md:mb-0">
-            <button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Trends</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Accessories</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Exclusive</button>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Trends</button></Link>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Accessories</button></Link>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Exclusive</button></Link>
           </div>
 
           {/* Logo */}
