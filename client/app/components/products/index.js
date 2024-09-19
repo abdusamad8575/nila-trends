@@ -28,6 +28,7 @@ const Lookbook = () => {
 
       <div className='w-full h-full grid grid-flow-col grid-rows-2 md:grid-rows-1 grid-cols-2 md:grid-cols-4 gap-3'>
         {lookbookItems.map((x, index) => (
+          <Link href='/allproducts'>
           <div key={index} className=' border-gray-200 rounded-2xl border border-inherit border-opacity-95 shadow-sm h-[15vh] md:h-[23vh] relative flex overflow-hidden justify-center'>
             <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
               <source src={x.video} type="video/mp4" /> Your browser does not support the video tag. </video>
@@ -36,6 +37,7 @@ const Lookbook = () => {
               <div className={scheherazade_New.className}> <p className='text-white text-xl md:text-3xl text-center'>{x.title2}</p></div>
             </div>
           </div>
+          </Link>ṁ
         ))}
       </div>
     </div>
