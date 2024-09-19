@@ -135,17 +135,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <Box sx={(theme) => navbarRow(theme, { isMini })}>
             <Box pr={1}>
-              <Input
+              {/* <Input
                 placeholder="Type here..."
                 startAdornment={
                   <Icon fontSize="small" style={{ marginRight: "6px" }}>
                     search
                   </Icon>
                 }
-              />
+              /> */}
             </Box>
-            {/* <Box color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+            <Box color={light ? "white" : "inherit"}>
+              {/* <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
@@ -162,7 +162,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     Sign in
                   </Typography>
                 </IconButton>
-              </Link>
+              </Link> */}
               <IconButton
                 size="small"
                 color={light && transparentNavbar ? "white" : "dark"}
@@ -171,15 +171,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon>{miniSidenav ? "menu_open" : "menu"}</Icon>
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="small"
                 color={light && transparentNavbar ? "white" : "dark"}
                 sx={navbarIconButton}
                 onClick={handleConfiguratorOpen}
               >
                 <Icon>settings</Icon>
-              </IconButton>
-              <IconButton
+              </IconButton> */}
+              {/* <IconButton
                 size="small"
                 color={light && transparentNavbar ? "white" : "dark"}
                 sx={navbarIconButton}
@@ -189,9 +189,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <Icon>notifications</Icon>
-              </IconButton>
+              </IconButton> */}
               {renderMenu()}
-            </Box> */}
+            </Box>
           </Box>
         )}
       </Toolbar>
