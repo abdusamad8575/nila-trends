@@ -8,12 +8,13 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Carousel } from 'antd';
 import { Roboto, Roboto_Mono, Rochester } from 'next/font/google'
-import ModalLayout from '@/app/components/common/ModalLayout';
+import ModalLayout from '../../components/common/ModalLayout';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../../axios';
 import { useDispatch } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
+import { setCheckout } from '../../../redux/actions/storeActions';
 
 const rochester = Rochester({
    subsets: ['latin'],
@@ -42,7 +43,8 @@ const ProductPage = () => {
    const [selectedSize, setSelectedSize] = useState(0)
    const [selectedColor, setSelectedColor] = useState(0)
    const [product, setProduct] = useState(null);
-
+   const dispatch = useDispatch()
+   const handleCheckout = () => dispatch(setCheckout(true))
    const fetchProduct = async () => {
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/client/${id}`)
          .then((response) => {
@@ -192,7 +194,7 @@ const ProductPage = () => {
                      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.875 0.125L13.25 0.125C13.4158 0.125 13.5747 0.190848 13.6919 0.308058C13.8092 0.425269 13.875 0.58424 13.875 0.75V10.125C13.875 10.4702 13.5952 10.75 13.25 10.75C12.9048 10.75 12.625 10.4702 12.625 10.125V2.25888L1.19194 13.6919C0.947864 13.936 0.552136 13.936 0.308058 13.6919C0.0639806 13.4479 0.0639806 13.0521 0.308058 12.8081L11.7411 1.375L3.875 1.375C3.52982 1.375 3.25 1.09518 3.25 0.75C3.25 0.404822 3.52982 0.125 3.875 0.125Z" fill="white" />
                   </svg>
                </button>
-               <button onClick={() => setOpen(true)} className='w-1/2 bg-[#AE9B84] text-white rounded-md p-2 md:p-3'>Shop Now</button>
+               <button onClick={handleCheckout} className='w-1/2 bg-[#AE9B84] text-white rounded-md p-2 md:p-3'>Shop Now</button>
             </div>
          </div>
          <ModalLayout open={open} setOpen={setOpen} bgcolor={'#fff'}>
