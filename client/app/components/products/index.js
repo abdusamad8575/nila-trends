@@ -29,8 +29,8 @@ const Lookbook = () => {
 
       <div className='w-full h-full grid grid-flow-col grid-rows-2 md:grid-rows-1 grid-cols-2 md:grid-cols-4 gap-3'>
         {lookbookItems.map((x, index) => (
-          <Link href='/allproducts'>
-          <div key={index} className=' border-gray-200 rounded-2xl border border-inherit border-opacity-95 shadow-sm h-[15vh] md:h-[23vh] relative flex overflow-hidden justify-center'>
+          <Link key={index} href='/allproducts'>
+          <div className=' border-gray-200 rounded-2xl border border-inherit border-opacity-95 shadow-sm h-[15vh] md:h-[23vh] relative flex overflow-hidden justify-center'>
             <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
               <source src={x.video} type="video/mp4" /> Your browser does not support the video tag. </video>
             <div className='absolute w-full h-full flex flex-col items-center justify-end z-10 pb-5 md:pb-10 bg-gradient-to-b  from-transparent to-[#000000a1]'>

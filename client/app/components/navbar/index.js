@@ -182,14 +182,18 @@ import { useTheme } from 'next-themes';
 import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../../../axios'
 import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
-import { usePathname } from 'next/navigation';
+import { setCart, setCheckout, setProfile } from '../../../redux/actions/storeActions';
+import { usePathname, useRouter } from 'next/navigation';
+import Checkout from '../checkout';
+import Profile from '../profile';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const path = usePathname();
   const userData = useSelector(state => state.userDetails);
+  const storeData = useSelector(state => state.storeDetails);
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [cartData, setCartData] = useState([]);
   const [wishlistData, setWishlistData] = useState([]);
@@ -251,6 +255,9 @@ const Navbar = () => {
   //   window.addEventListener('scroll', handleScroll);
   //   return () => window.removeEventListener('scroll', handleScroll);
   // }, []);
+  const handleCart = (state) => dispatch(setCart(state))
+  const handleCheckout = (state) => dispatch(setCheckout(state))
+  const handleProfile = (state) => dispatch(setProfile(state))
 
   return (
     <nav
@@ -262,9 +269,9 @@ const Navbar = () => {
         <div className="flex flex-col md:flex-row justify-around items-center py-3">
           {/* Left section */}
           <div className="flex space-x-1 mb-2 md:mb-0">
-            <button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Trends</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Accessories</button>
-            <button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Exclusive</button>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#c2b280] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Trends</button></Link>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Accessories</button></Link>
+            <Link href='/allproducts'><button className="px-3 py-1 bg-[#f2f2f2] text-white text-sm rounded animate-shimmer items-center border border-[#F5DCB5] bg-[linear-gradient(110deg,#c2b280,45%,#FEE5C0,55%,#c2b280)] bg-[length:200%_100%] transition-colors focus:outline-none focus:ring-1 focus:ring-yellow-600 focus:ring-offset-2">Exclusive</button></Link>
           </div>
 
           {/* Logo */}
@@ -300,7 +307,7 @@ const Navbar = () => {
                 </button>
               </Link>}
 
-            {userData ? <button onClick={() => setOpen(true)}>
+            {userData ? <button onClick={handleCart}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
@@ -313,13 +320,18 @@ const Navbar = () => {
               </button>
             </Link>}
 
-            <Link href={userData ? '/profile' : '/register'}>
+            <Link className='md:hidden' href={userData ? '/profile' : '/register'}>
               <button>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </button>
             </Link>
+            <button className='hidden md:block' onClick={userData ? () => handleProfile(true) : () => router.push('/register')}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -335,7 +347,9 @@ const Navbar = () => {
           <Link href="/allproducts/Nilaa&apos;s Designer Collection" className="text-gray-700 hover:text-gray-900">Nilaa&apos;s Designer Collection</Link>
         </div>
       </div>
-      <ModalLayout open={open} setOpen={setOpen} bgcolor={'#fff'}><Cart /></ModalLayout>
+      <ModalLayout open={storeData?.cart} setOpen={handleCart} bgcolor={'#fff'}><Cart /></ModalLayout>
+      <ModalLayout open={storeData?.checkout} setOpen={handleCheckout} bgcolor={'#fff'} width='500px'><Checkout /></ModalLayout>
+      <ModalLayout open={storeData?.profile} setOpen={handleProfile} bgcolor={'#fff'}><Profile /></ModalLayout>
     </nav>
   );
 };
