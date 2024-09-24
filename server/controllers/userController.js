@@ -54,7 +54,7 @@ const updateQty = async (req, res) => {
     
     const userData = await User.findById({ _id })
     await userData.updateCart( productId, qty ,size)
-    res.status(201).json({ message: 'Quantity updated to cart' });
+    res.status(201).json({userData,message: 'Quantity updated to cart' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })

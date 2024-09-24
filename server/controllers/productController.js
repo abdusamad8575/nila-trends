@@ -1,15 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category')
 
-// const getProducts = async (req, res) => {
-//   try {
-//     const data = await Product.find().sort({ createdAt: -1 })
-//     res.status(200).json({ data })
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).json({ message: error?.message ?? "Something went wrong !" });
-//   }
-// };
 
 const getProducts = async (req, res) => {
   try {
@@ -130,7 +121,7 @@ const addProduct = async (req, res) => {
 
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
     const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
-    const sizeValue = [];
+    let sizeValue = [];
     if (sizes) {
       const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
 
@@ -183,7 +174,7 @@ const addVariantProduct = async (req, res) => {
     
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
     const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
-    const sizeValue = [];
+    let sizeValue = [];
     if (sizes) {
       const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
 
@@ -344,5 +335,4 @@ module.exports = {
   getAdminProducts,
   getTagProducts,
   getSimilrProducts
-
 }  

@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import SectionCard from './SectionCard';
-import axios from 'axios';
+import axiosInstance from '../../../axios';
 import { Scheherazade_New } from 'next/font/google';
+import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserDetails } from '../../../redux/actions/userActions';
 
 const scheherazade_New = Scheherazade_New({
    subsets: ['latin'],
-   weight: '400',  // Specify the available weight
+   weight: '400', 
    display: 'swap',
 })
 
 const Index = () => {
+   const router = useRouter();
+   const dispatch = useDispatch();
+  const userData = useSelector(state => state.userDetails);
    const [products, setProducts] = useState([]);
+   const [wishlistItems, setWishlistItems] = useState([]);
    const fetchProducts = async () => {
       try {
-         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+         const { data } = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
          console.log('products-', data.docs);
 
          setProducts(data.products);
@@ -23,8 +30,45 @@ const Index = () => {
       }
    };
 
-   useEffect(() => {
+   
+   const isInWishlist = (productId) => {
+    
+      if (wishlistItems === undefined) {
+        return false;
+      }
+      return wishlistItems.some((item) => item?._id === productId);
+    };
+  
+    const fetchWishlist = async () => {
+      try {
+        const wishlistResponse = await axiosInstance.get('/user/getwishlist');
+        setWishlistItems(wishlistResponse?.data?.data);
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+      }
+    };
+  
+    const toggleWishlist = async (proId) => {
+      if (!userData) {
+        router.push('/register');
+      } else {
+        try {
+          if (isInWishlist(proId)) {
+            const response =await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
+            dispatch(setUserDetails(response?.data?.userData));
+          } else {
+            const response =await axiosInstance.patch(`/user/addToWishlist/${proId}`);
+            dispatch(setUserDetails(response?.data?.userData));
+          }
+          await fetchWishlist();
+        } catch (error) {
+          console.error('Error toggling wishlist:', error);
+        }
+      }
+    };
+    useEffect(() => {
       fetchProducts();
+      fetchWishlist();
    }, []);
 
    return (
@@ -43,6 +87,8 @@ const Index = () => {
                      title={product.name}
                      fit={product.fitAndCare[0] || 'Regular'}
                      price={product.sale_rate}
+                     onWishlistClick={() => toggleWishlist(product._id)}
+                     isInWishlist={isInWishlist(product._id)}
                   />
                ))}
             </div>
@@ -61,6 +107,8 @@ const Index = () => {
                      title={product.name}
                      fit={product.fitAndCare[0] || 'Regular'}
                      price={product.sale_rate}
+                     onWishlistClick={() => toggleWishlist(product._id)}
+                     isInWishlist={isInWishlist(product._id)}
                   />
                ))}
             </div>

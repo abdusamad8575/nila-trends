@@ -1,13 +1,82 @@
+"use client";
 import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Input } from 'antd'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import axiosInstance from '../../../axios'
+import { useSelector } from 'react-redux';
 
 function Checkout() {
+
+  const storeData = useSelector(state => state.storeDetails);
+  const checkoutProduct = storeData?.checkoutProduct
+
   const [DeliveryInstruction, setDeliveryInstruction] = useState(false)
   const [DeliveryAddress, setDeliveryAddress] = useState(false)
   const [coupon, setCoupon] = useState(null);
   const [addCoupon, setAddCoupon] = useState(false);
   const inputRef = useRef()
+
+  const [cartData, setCartData] = useState([])
+  const [salePriceTotal, setSalePriceTotal] = useState(0)
+  const [proPriceTotal, setProPriceTotal] = useState(0)
+
+  const calculateTotalSalePrice = (items) => {
+    let totalSalePrice = 0;
+
+    items.forEach((item) => {
+      totalSalePrice += item?.productId?.sale_rate * item?.qty;
+    });
+    return totalSalePrice;
+  };
+  const calculateTotalProPrice = (items) => {
+    let totalSalePrice = 0;
+    items.forEach((item) => {
+      totalSalePrice += item?.productId?.price * item?.qty;
+    });
+    return totalSalePrice;
+  };
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get(`/user/getcarts`);
+      setCartData(response?.data?.data)
+      const items = response?.data?.data?.item;
+      const filteredItems = items.filter((obj) => {
+        return obj.productId.isAvailable != false
+      })
+      const totalSalePrice = calculateTotalSalePrice(filteredItems);
+      setSalePriceTotal(totalSalePrice)
+      const totalProPrice = calculateTotalProPrice(filteredItems);
+      setProPriceTotal(totalProPrice)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  useEffect(() => {
+    if (checkoutProduct) {
+      const newCartItem = {
+        item: [{
+          productId: checkoutProduct?.product,
+          size: checkoutProduct?.selectedSize,
+          price: checkoutProduct?.product?.price,
+          qty: 1,
+        }]
+      };
+      setCartData(newCartItem);
+      const items = newCartItem?.item;
+      const filteredItems = items.filter((obj) => {
+        return obj.productId.isAvailable != false
+      })
+      const totalSalePrice = calculateTotalSalePrice(filteredItems);
+      setSalePriceTotal(totalSalePrice)
+      const totalProPrice = calculateTotalProPrice(filteredItems);
+      setProPriceTotal(totalProPrice)
+    } else {
+      setCartData([])
+      fetchData()
+    }
+  }, [storeData])
 
   const handleCoupon = () => {
     if (inputRef.current) {
@@ -22,16 +91,44 @@ function Checkout() {
     setDeliveryInstruction(!DeliveryInstruction);
   }
 
+  const deliveryCharge = 40
+  const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
+  const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
+
+
   return (
     <div className='flex flex-col gap-3 p-4'>
       <h2 className='font-bold text-lg pt-16 md:pt-1'>Proceed to Checkout</h2>
       <hr className='border-dashed ' />
+      <div className="space-y-4">
+        <h3 className='font-bold text-sm pt-10 md:pt-1'>Delivery Items</h3>
+        <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto max-h-32">
+          {cartData?.item?.slice().reverse().map((item, index) => (
+            <div key={item?._id} className="flex items-center justify-between space-x-4">
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item?.productId?.image[0]}`}
+                alt="Product"
+                className="w-16 h-16 object-cover rounded-lg"
+              />
+              <div className="flex-grow text-left">
+                <h4 className="font-semibold text-sm">{item?.productId?.name}</h4>
+                {item?.size && <p className="text-gray-500 text-xs">Size • {item?.size}</p>}
+                <p className="text-gray-500 text-xs">Quantity  • {item?.qty}</p>
+                <p className="text-gray-500 text-xs">AED • {item?.productId?.sale_rate}</p>
+              </div>
+            </div>
+
+          ))}
+        </div>
+
+      </div>
+      <hr className='border-dashed ' />
       <div className="flex flex-col gap-1">
-        <div className="flex flex-row justify-between"> <p>Subtotal</p><p>$<span>66</span></p>  </div>
-        <div className="flex flex-row justify-between"> <p>Delivery Charge</p><p>$<span>66</span></p> </div>
-        {coupon && <div className="flex flex-row justify-between"> <p>Coupon discount</p><p>$<span>20</span></p> </div>}
+        <div className="flex flex-row justify-between"> <p>Subtotal</p><p>AED:<span>{(salePriceTotal).toFixed(2)}</span></p>  </div>
+        <div className="flex flex-row justify-between"> <p>Delivery Charge</p><p>AED:<span>{includedDeliveryCharge ? deliveryCharge : 'Free'}</span></p> </div>
+        {coupon && <div className="flex flex-row justify-between"> <p>Coupon discount</p><p>AED:<span>20</span></p> </div>}
         <hr className='border-dashed ' />
-        <div className="flex flex-row justify-between"> <p>Total Charge</p><p>$<span>77</span></p> </div>
+        <div className="flex flex-row justify-between"> <p>Total Charge</p><p>AED:<span>{lastTotal}</span></p> </div>
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">

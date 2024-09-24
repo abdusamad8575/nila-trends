@@ -160,7 +160,6 @@ const OTPPage = () => {
         number: fullPhoneNumber,
         otp: enteredOtp,
       });
-      console.log('response-', response.data);
       localStorage.setItem(
         "Tokens",
         JSON.stringify({ access: response.data.data.token.accessToken, refresh: response.data.data.token.refreshToken })
@@ -275,14 +274,3 @@ const OTPPage = () => {
 };
 
 export default OTPPage;
-
-// "use Client"
-// import React from 'react'
-
-// const page = () => {
-//   return (
-//     <div>page</div>
-//   )
-// }
-
-// export default page

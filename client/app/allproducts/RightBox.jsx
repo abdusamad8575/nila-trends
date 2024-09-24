@@ -23,7 +23,6 @@ function RightBox({ product }) {
     if (!product) return null;
 
     const addCartData = async (proId1) => {
-        console.log('proId1', proId1);
 
         if (!userDetails) {
             router.push('/register');

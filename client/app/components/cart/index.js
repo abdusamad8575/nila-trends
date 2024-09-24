@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import axiosInstance from '../../../axios'
 import { FaTrash } from 'react-icons/fa';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
+import { setCheckout,setCart,setCheckoutProduct } from '../../../redux/actions/storeActions';
 
 
 export default function Cart() {
@@ -45,7 +46,7 @@ export default function Cart() {
       setProPriceTotal(totalProPrice)
     } catch (error) {
       console.log(error)
-    } 
+    }
 
   }
 
@@ -81,6 +82,8 @@ export default function Cart() {
 
     try {
       const response = await axiosInstance.patch(`/user/updateQty`, { qty: newQty, productId: item?.productId?._id, size: item.size });
+      dispatch(setUserDetails(response?.data?.userData));
+      dispatch(setCart(true))
       await fetchData();
     } catch (error) {
       console.log(error);
@@ -105,6 +108,7 @@ export default function Cart() {
       const response = await axiosInstance.patch(urlQuery, { size: itemId?.size });
       if (response?.data?.userData) {
         dispatch(setUserDetails(response?.data?.userData));
+        dispatch(setCart(true))
       }
       const updatedCartItems = cartData.item.filter((item) => item?._id !== itemId?._id);
       const updatedTotalPrice = updatedCartItems.reduce((acc, item) => acc + (item?.price * item?.qty), 0);
@@ -129,9 +133,14 @@ export default function Cart() {
     }
   };
 
-   const deliveryCharge = 40
+  const handleCheckout = () => {
+    dispatch(setCheckoutProduct(null))
+    dispatch(setCheckout(true))
+}
+
+  const deliveryCharge = 40
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
-  const lastTotal = includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal;deliveryCharge
+  const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
 
   return (
     <div className=" flex justify-center items-center p-4 ">
@@ -171,7 +180,7 @@ export default function Cart() {
                   />
                   <div className="flex-grow text-left">
                     <h4 className="font-semibold text-sm">{item?.productId?.name}</h4>
-                    <p className="text-gray-500 text-xs">Size • {item?.size}</p>
+                    {item?.size && <p className="text-gray-500 text-xs">Size • {item?.size}</p>}
                     <p className="text-gray-500 text-xs">AED • {item?.productId?.sale_rate}</p>
                   </div>
                   <div className="flex items-center">
@@ -217,15 +226,15 @@ export default function Cart() {
               <h3 className="text-lg font-semibold mb-4">Cart totals</h3>
               <div className="flex justify-between">
                 <p>Subtotal</p>
-                <p>AED -{salePriceTotal}</p>
+                <p>AED - {(salePriceTotal).toFixed(2)}</p>
               </div>
               <div className="flex justify-between">
                 <p>Delivery Charge</p>
-                <p>{includedDeliveryCharge ? deliveryCharge :'Free'}</p>
+                <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
               </div>
               <div className="flex justify-between font-semibold text-lg">
                 <p>Total</p>
-                <p>AED -{lastTotal}</p>
+                <p>AED - {lastTotal}</p>
               </div>
               <p className="mt-4 text-sm text-gray-500">
                 🚚 3 days delivery
@@ -242,7 +251,7 @@ export default function Cart() {
                 <label htmlFor="singlePack" className="text-sm">Get All these items in single pack</label>
               </div>
 
-              <button className="mt-4 w-full bg-black text-white py-2 rounded-lg">
+              <button className="mt-4 w-full bg-black text-white py-2 rounded-lg" onClick={handleCheckout}>
                 Proceed To Checkout
               </button>
             </div>

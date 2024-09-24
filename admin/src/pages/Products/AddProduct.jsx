@@ -26,6 +26,7 @@ const AddProduct = () => {
     setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const [category, setCategory] = useState()
+  const [disable,setDisable] = useState(false)
 
   const [product, setProduct] = useState([])
   const [variantProduct, setVariantProduct] = useState([])
@@ -37,7 +38,36 @@ const AddProduct = () => {
   const handleSubmit = () => {
 
     try {
-
+      
+       if (!details?.name) {
+        return toast.error("name is required")
+      }
+       if (!details?.subheading) {
+        return toast.error("name is subheading")
+      }
+      if (!category?._id) {
+        return toast.error("category is required")
+      }
+      if (!details?.image) {
+        return toast.error("image is required")
+      }
+      if (!details?.stock) {
+        if(details?.sizes[0].sizes){
+          
+        }else{
+          return toast.error("sizes or stock is required")
+        }
+      }
+      if (!details?.price) {
+        return toast.error("MRP (Maximum Retail Price) is required")
+      }
+      if (!details?.sale_rate) {
+        return toast.error("Sale Rate is required")
+      }
+      if (!details?.description) {
+        return toast.error("description is required")
+      }
+      setDisable(true)
       const formData = new FormData();
       details?.image?.forEach((image) => {
         formData.append('images', image, image.name);
@@ -83,12 +113,15 @@ const AddProduct = () => {
       AddProduct(formData)
         .then((res) => {
           toast.success(res?.message ?? "Product added");
+          setDisable(false)
           navigat('/products')
         })
         .catch((err) => {
           toast.error(err?.message ?? "Something went wrong");
+          setDisable(false)
         });
     } catch (error) {
+      setDisable(false)
       console.error(error)
     }
   }
@@ -501,7 +534,7 @@ const AddProduct = () => {
           </Grid>
           <Grid item xs={12} sm={8}></Grid>
           <Grid item xs={12} sm={4} mt={'auto'}>
-            <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} variant='contained'>
+            <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} disabled={disable} variant='contained'>
               Add Product
             </Button>
           </Grid>
