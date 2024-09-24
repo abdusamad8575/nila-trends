@@ -1,4 +1,4 @@
-const initialState = { cart: true };;
+const initialState = { cart: true ,checkoutProduct: null};;
 
 const storeReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -8,6 +8,8 @@ const storeReducer = (state = initialState, action) => {
             return { ...state, checkout: action.payload };
         case 'SET_PROFILE':
             return { ...state, profile: action.payload };
+        case 'SET_CHECKOUT_PRODUCT':
+            return { ...state, checkoutProduct: action.payload };
         default: {
             console.warn(action);
             console.warn(state);

@@ -13,3 +13,10 @@ export const setProfile = (state) => ({
     type: 'SET_PROFILE',
     payload: state,
 });
+
+export const setCheckoutProduct = (state) => {
+    return {
+       type: 'SET_CHECKOUT_PRODUCT',
+       payload: state,
+    };
+ };
