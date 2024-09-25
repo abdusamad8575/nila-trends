@@ -7,22 +7,22 @@ const getCoupons = async (req, res) => {
  
   try {
     const today = new Date();
-    const coupons = await Coupon.find({ coincoupon: false}).sort({ createdAt: -1 });
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
     res.status(200).json({ data: coupons })
   } catch (error) {
     res.status(400).json({ message: error?.message ?? "Something went wrong !" });
   }
 };
 
-const getCoinCoupons =async (req, res) =>{
+const getClientCoupons = async (req, res) => {
   try {
     const today = new Date();
-    const coupons = await Coupon.find({ coincoupon: true});
-    res.status(200).json({ data: coupons })       
+    const coupons = await Coupon.find({ status: true, validity: { $gte: today } });
+    res.status(200).json({ data: coupons })
   } catch (error) {
-    res.status(400).json({ message: error?.message ?? "Something went wrong !" });
+    res.status(400).json({ message: error?.message });
   }
-};
+} 
 
 const addCoupon = async (req, res) => {
   try {
@@ -129,19 +129,11 @@ const getCouponById = async (req, res) => {
   }
 }
 
-const getClientCoupons = async (req, res) => {
-  try {
-    const today = new Date();
-    const coupons = await Coupon.find({ status: true, validity: { $gte: today } });
-    res.json(coupons);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}   
+  
 const validateCoupon = async (req, res) => {
   console.log('validateCoupon');  
-  const {  couponId,userDetails,totalAmountToPay } = req.body;
-  console.log('couponId, userId, subtotal',couponId,userDetails,totalAmountToPay );  
+  const {  couponId,userDetails,salePriceIncludingDeliveryCharge } = req.body;
+  console.log('couponId, userId, subtotal',couponId,userDetails,salePriceIncludingDeliveryCharge );  
   const id=userDetails?._id 
   const coupon = await Coupon.findOne({ _id: couponId, status: true });
   try {
@@ -151,9 +143,9 @@ const validateCoupon = async (req, res) => {
       // console.log("user undonn nokkunnu-",user);
       if (user.coupons.includes(couponId)) {  
         console.log("just check coupon alredy used");
-        res.json({ valid: false, message: 'This coupon alredy used' });   
+        res.json({ valid: false, message: 'This coupon alredy used' });        
       } else {
-        if (totalAmountToPay < coupon.minValue) {         
+        if (salePriceIncludingDeliveryCharge < coupon.minValue) {         
           res.json({ valid: false, message: `Coupon can be applied only to orders above ${coupon.minValue}` });
         } else {
 
@@ -178,6 +170,5 @@ module.exports = {
   getCouponById,
   getClientCoupons,
   validateCoupon,
-  getCoinCoupons
 
 }

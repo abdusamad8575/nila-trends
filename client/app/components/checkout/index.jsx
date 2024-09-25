@@ -1,24 +1,100 @@
 "use client";
 import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
-import { Input } from 'antd'
+import { Input, Radio } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import axiosInstance from '../../../axios'
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch} from 'react-redux';
+import { setUserDetails } from '../../../redux/actions/userActions';
+import { useRouter } from 'next/navigation';
+
+const deliveryAddressArray = [
+  {
+    firstname: 'ragu',
+    lastname: 'nadh',
+    country: 'India',
+    address_line_1: 'Manzil1',
+    address_line_2: 'Thadatharikathu Veedu',
+    city: 'Chullimanoor',
+    state: 'Kerala',
+    zip:'695541',
+    mobile: '8569321456'
+  },
+  {
+    firstname: 'sabu',
+    lastname: 'mon',
+    country: 'India',
+    address_line_1: 'Manzil1',
+    address_line_2: 'Thadatharikathu Veedu',
+    city: 'Chullimanoor',
+    state: 'Kerala',
+    zip:'695541',
+    mobile: '8569321456'
+  },
+  {
+    firstname: 'abhi',
+    lastname: 'ram',
+    country: 'India',
+    address_line_1: 'Manzil1',
+    address_line_2: 'Thadatharikathu Veedu',
+    city: 'Chullimanoor',
+    state: 'Kerala',
+    zip:'695541',
+    mobile: '8569321456'
+  },
+  {
+    firstname: 'edu',
+    lastname: 'kriskna',
+    country: 'India',
+    address_line_1: 'Manzil1',
+    address_line_2: 'Thadatharikathu Veedu',
+    city: 'Chullimanoor',
+    state: 'Kerala',
+    zip:'695541',
+    mobile: '8569321456'
+  },
+  
+]
 
 function Checkout() {
-
+  const dispatch = useDispatch();
+  const router = useRouter()
   const storeData = useSelector(state => state.storeDetails);
+  const userDetails = useSelector(state => state.userDetails);
   const checkoutProduct = storeData?.checkoutProduct
 
   const [DeliveryInstruction, setDeliveryInstruction] = useState(false)
-  const [DeliveryAddress, setDeliveryAddress] = useState(false)
+  const [DeliveryAddress, setDeliveryAddress] = useState('')
   const [coupon, setCoupon] = useState(null);
   const [addCoupon, setAddCoupon] = useState(false);
   const inputRef = useRef()
 
+  const [coupons, setCoupons] = useState([]);
+  const [appliedCoupon, setAppliedCoupon] = useState('');
+  const [appliedCouponDetails, setAppliedCouponDetails] = useState('');
+  const [discount, setDiscount] = useState(0);
+
+
+
+  const fetchCoupons = async () => {
+    try {
+      const { data } = await axiosInstance.get('/coupons/client');
+      setCoupons(data.data);
+    } catch (error) {
+      console.error('Failed to fetch coupons', error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchCoupons();
+  }, [userDetails]);
+
+
   const [cartData, setCartData] = useState([])
   const [salePriceTotal, setSalePriceTotal] = useState(0)
   const [proPriceTotal, setProPriceTotal] = useState(0)
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("COD");
 
   const calculateTotalSalePrice = (items) => {
     let totalSalePrice = 0;
@@ -54,6 +130,12 @@ function Checkout() {
   }
 
   useEffect(() => {
+    setAppliedCoupon('')
+    setAppliedCouponDetails('')
+    setDiscount(0)
+    setCoupon(null)
+    setAddCoupon(false)
+    setDeliveryAddress('')
     if (checkoutProduct) {
       const newCartItem = {
         item: [{
@@ -78,14 +160,49 @@ function Checkout() {
     }
   }, [storeData])
 
-  const handleCoupon = () => {
-    if (inputRef.current) {
-      setAddCoupon(false);
-      setCoupon(inputRef.current.value)
+  const handleCoupon = async (couponCode) => {
+    try {
+      setDiscount(0)
+      if (inputRef.current) {
+        setAddCoupon(false);
+        setCoupon(inputRef.current.value)
+      }
+      let useCoupon;
+
+      if (couponCode) {
+        useCoupon = coupons?.filter((coupon) => {
+
+          if (coupon.code === couponCode) {
+            setAppliedCoupon(coupon?.code);
+            setAppliedCouponDetails(coupon);
+            return coupon
+          }
+
+        })
+        useCoupon[0] ? '' : alert('your coupon code is not existed')
+      }
+      if (useCoupon) {
+        const couponId = useCoupon[0]?._id;
+
+        const { data } = await axiosInstance.post('/coupons/validate-coupon', {
+          couponId,
+          userDetails,
+          salePriceIncludingDeliveryCharge,
+        });
+
+        if (data.valid) {
+          setDiscount(data.discount);
+        } else {
+          alert(data.message);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to apply coupon', error);
     }
-  }
-  const handleDeliveryAddress = () => {
-    setDeliveryAddress(!DeliveryAddress);
+  };
+
+  const handleDeliveryAddress = (details) => {
+    setDeliveryAddress(details);
   }
   const handleDeliveryInstruction = () => {
     setDeliveryInstruction(!DeliveryInstruction);
@@ -93,8 +210,69 @@ function Checkout() {
 
   const deliveryCharge = 40
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
-  const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
+  const salePriceIncludingDeliveryCharge = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
+  const maximumDiscountPrice = ((appliedCouponDetails?.maxValue < ((salePriceIncludingDeliveryCharge * discount) / 100)) ? appliedCouponDetails?.maxValue : ((salePriceIncludingDeliveryCharge * discount) / 100)).toFixed(2)
+  const lastTotal = discount > 0
+    ? salePriceIncludingDeliveryCharge - maximumDiscountPrice : salePriceIncludingDeliveryCharge;
 
+  const handlePaymentMethodChange = (e) => {
+    setSelectedPaymentMethod(e.target.value);
+  };
+  
+
+  const handlePaymentSuccess = async () => {
+
+    const mappedItems = await cartData?.item?.map((item) => ({
+      product_id: item.productId._id,
+      qty: item.qty,
+      price: item.productId.sale_rate,
+      size: item?.size
+    }));
+
+    const totalPrice = mappedItems.reduce(
+      (total, item) => total + item.qty * item.price,
+      0
+    );
+
+    const productsOrderData = {
+      item: mappedItems,
+      totalPrice,
+    };
+
+
+
+    const response = await axiosInstance.post(`/orders`, {
+      payment_mode: selectedPaymentMethod,
+      amount: lastTotal,
+      address: DeliveryAddress,
+      products: productsOrderData,
+      couponId: appliedCouponDetails._id,
+    });
+    
+    dispatch(setUserDetails(response.data.user));
+    alert('Your order has been placed!')
+    router.push('/')
+  };
+
+  const handleProceedToPayment = () => {
+    if (!DeliveryAddress) {
+      alert("Please select a delivery address.");
+      return;
+    }
+
+    if (!selectedPaymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    if (selectedPaymentMethod === "COD") {
+      handlePaymentSuccess();
+    } else if (selectedPaymentMethod === "SamsungPay") {
+      alert('pay the Samsung Pay')
+    } else if (selectedPaymentMethod === "ApplePay") {
+      alert('pay the Apple Pay')
+    }
+  };
 
   return (
     <div className='flex flex-col gap-3 p-4'>
@@ -126,24 +304,24 @@ function Checkout() {
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between"> <p>Subtotal</p><p>AED:<span>{(salePriceTotal).toFixed(2)}</span></p>  </div>
         <div className="flex flex-row justify-between"> <p>Delivery Charge</p><p>AED:<span>{includedDeliveryCharge ? deliveryCharge : 'Free'}</span></p> </div>
-        {coupon && <div className="flex flex-row justify-between"> <p>Coupon discount</p><p>AED:<span>20</span></p> </div>}
+        {coupon && <div className="flex flex-row justify-between"> <p>Coupon discount</p><p>AED:<span>{maximumDiscountPrice}</span></p> </div>}
         <hr className='border-dashed ' />
         <div className="flex flex-row justify-between"> <p>Total Charge</p><p>AED:<span>{lastTotal}</span></p> </div>
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
           <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>3 - 7</span> days delivery</p> </div>
-          <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label>
+          {/* <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label> */}
         </div>
         <div className="flex flex-row justify-between"> <p>Your addresses</p> </div>
-        {DeliveryAddress ? <p className='font-semibold'>Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</p> :
+        {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.firstname},${DeliveryAddress?.lastname},${DeliveryAddress?.address_line_1},${DeliveryAddress?.address_line_2},${DeliveryAddress?.city},${DeliveryAddress?.state},${DeliveryAddress?.country},${DeliveryAddress?.zip},${DeliveryAddress?.mobile}`}</p> :
           <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto h-24">
             <ul className="w-full text-sm font-medium ">
-              {Array.from({ length: 5 }).map((_, index) => (
+              {deliveryAddressArray.map((details, index) => (
                 <li key={index} className="w-full">
-                  <div className="flex items-start gap-3" onClick={handleDeliveryAddress}>
+                  <div className="flex items-start gap-3" key={index} onClick={() => handleDeliveryAddress(details)}>
                     <input id={`checkbox-${index}`} type="checkbox" value="" className="cursor-pointer w-4 h-4 mt-1 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                    <label htmlFor={`checkbox-${index}`} className="w-full text-sm font-medium cursor-pointer">Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India</label>
+                    <label htmlFor={`checkbox-${index}`} className="w-full text-sm font-medium cursor-pointer">{`${details?.firstname},${details?.lastname},${details?.address_line_1},${details?.address_line_2},${details?.city},${details?.state},${details?.country},${details?.zip},${details?.mobile}`}</label>
                   </div>
                 </li>
               ))}
@@ -160,12 +338,12 @@ function Checkout() {
       </div>
       {addCoupon && (
         <div className='flex mt-1 bg-black rounded-lg'>
-          <input ref={inputRef} className="w-full border rounded-lg h-8 outline-none" placeholder="   Add a Coupon Code" />
-          <button onClick={handleCoupon} className='bg-[#1F1F1F] text-white rounded-md px-3'>apply</button>
+          <input ref={inputRef} onChange={(e) => setAppliedCoupon(e.target.value)} className="w-full border rounded-lg h-8 outline-none" value={appliedCoupon} placeholder="   Add a Coupon Code" />
+          <button onClick={() => handleCoupon(appliedCoupon)} className='bg-[#1F1F1F] text-white rounded-md px-3'>apply</button>
         </div>)}
       {DeliveryInstruction && (<Input className='rounded-lg' placeholder="Add a delivery Instruction" />)}
       <hr className='border-dashed' />
-      {coupon && <div className='flex gap-2'>
+      {discount > 0 && <div className='flex gap-2'>
         <div
           onClick={handleDeliveryInstruction}
           className="bg-[#FBFFFF] bg-gradient-to-tr to-[#FBFFFF] from-[#EAC4A2] border-dashed rounded-full border-2 border-gray-300 px-2 w-1/3"
@@ -175,10 +353,24 @@ function Checkout() {
         <span className='text-green-500 text-sm'>coupon applied <CheckOutlined /></span>
       </div>}
 
+      <hr className="border-dashed " />
+      <div className="flex flex-row gap-2 pb-10 md:pb-1">
+        <div className="flex-1">
+          <p className="font-bold text-sm">Payment Options</p>
+          <div className="flex flex-col">
+            <Radio.Group onChange={handlePaymentMethodChange} value={selectedPaymentMethod} >
+              <Radio value="COD">Cash on Delivery (COD)</Radio>
+              <Radio value="SamsungPay">Samsung Pay</Radio>
+              <Radio value="ApplePay">Apple Pay</Radio>
+            </Radio.Group>
+          </div>
+        </div>
+      </div>
+
       <div className="flex pt-2 h-full">
         <p className=" w-full text-xs font-medium ">Review the order carefully, by proceeding will redirect to secure payment gateway page.</p>
       </div>
-      <button className='bg-[#1F1F1F] text-white py-2 rounded-lg'>Proceed To Payment</button>
+      <button onClick={handleProceedToPayment} className='bg-[#1F1F1F] text-white py-2 rounded-lg'>Proceed To Payment</button>
     </div>
   )
 }
