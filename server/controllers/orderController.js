@@ -31,7 +31,7 @@ const getOrders = async (req, res) => {
 //       .populate('products.item.product_id', 'name category price image');
 
 //       console.log('order datas:-',data);
-      
+
 
 //     res.status(200).json({ data });
 //   } catch (error) {
@@ -59,7 +59,7 @@ const getOrders = async (req, res) => {
 
 //     const data = await Order.paginate(query, options);
 //     console.log('s data',{data});
-    
+
 
 //     res.status(200).json(data);
 //   } catch (error) {
@@ -84,7 +84,7 @@ const getAdminOrders = async (req, res) => {
         { path: 'products.item.product_id', select: 'name category price image' },
       ],
     };
-    
+
     const result = await Order.paginate(query, options);
 
     let filteredData = result.docs;
@@ -101,7 +101,7 @@ const getAdminOrders = async (req, res) => {
     res.status(200).json({
       data: filteredData,
       totalDocs: filteredData.length,
-      totalResults: result.totalDocs, 
+      totalResults: result.totalDocs,
       page: result.page,
       totalPages: result.totalPages,
     });
@@ -115,9 +115,9 @@ const getAdminOrders = async (req, res) => {
 const getUserOrders = async (req, res) => {
   try {
     const { _id } = req?.decoded
-    const data = await Order.find({ userId:_id }).populate('products.item.product_id') // Populate all fields in products
-    .populate('address')
-    .sort({ createdAt: -1 });
+    const data = await Order.find({ userId: _id }).populate('products.item.product_id') // Populate all fields in products
+      .populate('address')
+      .sort({ createdAt: -1 });
     res.status(200).json({ data })
   } catch (error) {
     console.log(error);
@@ -127,16 +127,16 @@ const getUserOrders = async (req, res) => {
 
 const getOrderById = async (req, res) => {
   try {
-      const orderId = req.params.orderId;
-      console.log(orderId);
-      const data = await Order.findById(orderId)
-          .populate('products.item.product_id')
-        
-     // console.log(data);
-      res.status(200).json({ data });
+    const orderId = req.params.orderId;
+    console.log(orderId);
+    const data = await Order.findById(orderId)
+      .populate('products.item.product_id')
+
+    // console.log(data);
+    res.status(200).json({ data });
   } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
+    console.log(error);
+    return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
   }
 };
 
@@ -144,43 +144,53 @@ const getOrderById = async (req, res) => {
 const createOrder = async (req, res) => {
   const { _id } = req?.decoded
 
-  const {  payment_mode, amount, address, products,useCoinDiscount,couponId } = req?.body
-  console.log('useCoinDiscount,couponId',useCoinDiscount,couponId);
-  
+  const { payment_mode, amount, address, products, couponId } = req?.body
+  console.log('payment_mode, amount, address, products,couponId', payment_mode, amount, address, products, couponId);
 
-  console.log('addrr',address)
   try {
-    const data = await Order.create({ userId:_id, payment_mode, amount, address, products })
-    console.log('prod qty findings ',products.item)
+    const data = await Order.create({ userId: _id, payment_mode, amount, address, products })
+    console.log('prod qty findings ', products.item)
 
-// Remove cart items from the user after order creation
-const user = await User.findById(_id);
-user.cart.item = []; // Clear the cart items
-user.cart.totalPrice = 0; // Reset total price to zero
-if(useCoinDiscount){
-  user.wallet = user.wallet-20; 
-}
-if (couponId) {
-  if (user.coupons.includes(couponId)) {
-    return res.status(400).json({ message: "Coupon already used" });
-  } else {
-    user.coupons.push(couponId);
-  }
-}
-await user.save(); // Save the user with cleared cart
 
-for (const item of products.item) {
-  const product = await Product.findById(item.product_id);
+    const user = await User.findById(_id);
+    user.cart.item = [];
+    user.cart.totalPrice = 0;
 
-  if (product) {
-    // Reduce the product stock by the ordered quantity
-    product.stock -= item.qty;
-    await product.save();
-  }
-  
-}
+    if (couponId) {
+      if (user.coupons.includes(couponId)) {
+        return res.status(400).json({ message: "Coupon already used" });
+      } else {
+        user.coupons.push(couponId);
+      }
+    }
+    await user.save();
 
-    res.status(201).json({ data, message: 'Order placed successfully' });
+    for (const item of products.item) {
+      const product = await Product.findById(item.product_id);
+
+      if (product) {
+        if (product.sizes && product.sizes.length > 0) {
+          const sizeToUpdate = product.sizes.find(size => size.sizes === item.size);
+
+          if (sizeToUpdate && sizeToUpdate.quantity >= item.qty) {
+            sizeToUpdate.quantity -= item.qty;
+          } else {
+            return res.status(400).json({ message: `Insufficient stock for size: ${item.size}` });
+          }
+        } else {
+          if (product.stock >= item.qty) {
+            product.stock -= item.qty;
+          } else {
+            return res.status(400).json({ message: "Insufficient stock for the product" });
+          }
+        }
+
+        await product.save();
+      }
+
+    }
+
+    res.status(201).json({ user, message: 'Order placed successfully' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
@@ -191,7 +201,7 @@ const updateOrder = async (req, res) => {
   const { _id, status } = req?.body
   try {
     const data = await Order.updateOne({ _id },
-      { $set: { status }})
+      { $set: { status } })
     res.status(201).json({ data, message: 'Order updated successfully' });
   } catch (error) {
     console.log(error);
@@ -199,7 +209,7 @@ const updateOrder = async (req, res) => {
   }
 }
 const getReviewOrders = async (req, res) => {
-  try {   
+  try {
     const { userId, productId } = req.params;
     console.log(' userId, productId', userId, productId);
 
@@ -214,7 +224,7 @@ const getReviewOrders = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   const { orderId, newStatus } = req.body;
   console.log(orderId, newStatus);
-  
+
   try {
     const order = await Order.findById(orderId);
     if (!order) {
@@ -231,12 +241,12 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 module.exports = {
-    getOrders,
-    getUserOrders,
-    createOrder,
-    updateOrder,
-    getOrderById,
-    getReviewOrders,
-    getAdminOrders,
-    updateOrderStatus
-  }
+  getOrders,
+  getUserOrders,
+  createOrder,
+  updateOrder,
+  getOrderById,
+  getReviewOrders,
+  getAdminOrders,
+  updateOrderStatus
+}

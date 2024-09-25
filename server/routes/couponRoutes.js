@@ -6,9 +6,8 @@ const { getCoupons,addCoupon,updateCoupon,deleteCoupon,updateCouponStatus,
 const { upload } = require('../middlewares/multer');
 
 router.get('/', getCoupons);
-router.get('/coincoupon', getCoinCoupons);
 router.get('/client', getClientCoupons);
-router.post('/validate-coupon', validateCoupon);
+router.post('/validate-coupon', validateCoupon);   
 
  router.get('/:id', getCouponById);
 router.post('/',upload.single('image'), addCoupon);
