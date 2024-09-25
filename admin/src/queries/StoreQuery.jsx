@@ -5,6 +5,11 @@ import {
     getBlogsById,
     editBlogs,
     deleteBlogs,
+    addSection,
+    editSection,
+    deleteSection,
+    getSection,
+    getSectionById,
     addBanners,
     editBanners,
     deleteBanners,
@@ -64,6 +69,64 @@ const useDeleteBlogs = () => {
     return useMutation((data) => deleteBlogs(data), {
         onSuccess: (data) => {
             queryClient.invalidateQueries("get_blogs");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useGetSection = (data) => {
+    return useQuery(["get_section", data], () => getSection(data), {
+        staleTime: 3000,
+        keepPreviousData: true,
+        // refetchOnWindowFocus: false,
+    });
+};
+
+const useGetSectionById = (data) => {
+    return useQuery(["get_section", data], () => getSectionById(data), {
+        staleTime: 3000,
+        keepPreviousData: true,
+        // refetchOnWindowFocus: false,
+    });
+};
+
+const useAddSection = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => addSection(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_section");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useEditSection = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => editSection(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_section");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useDeleteSection = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => deleteSection(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_section");
             return data;
         },
         onError: (data) => {
@@ -156,6 +219,11 @@ export {
     useAddBlogs,
     useEditBlogs,
     useDeleteBlogs,
+    useGetSection,
+    useGetSectionById,
+    useAddSection,
+    useEditSection,
+    useDeleteSection,
     useGetBanners,
     useGetBannersById,
     useAddBanners,

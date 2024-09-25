@@ -10,6 +10,7 @@ import Settings from "pages/Settings";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import Box from "components/Box";
+import Sections from "pages/Sections";
 
 const routes = [
   // {
@@ -67,6 +68,14 @@ const routes = [
     route: "/banners",
     icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-album-2" />,
     component: <Banner />,
+  },
+  {
+    type: "route",
+    name: "Sections",
+    key: "sections",
+    route: "/sections",
+    icon: <Box component="i" color="info" fontSize="14px" className="ni ni-single-copy-04" />,
+    component: <Sections />,
   },
   {
     type: "route",
