@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const router = Router();
 const authorization = require("../middlewares/authorization");
-const { getOrders, getUserOrders, createOrder, updateOrder,getOrderById,getReviewOrders,getAdminOrders,updateOrderStatus } = require('../controllers/orderController');
+const { getOrders, getUserOrders, createOrder, updateOrder,getOrderById,getReviewOrders,getAdminOrders,updateOrderStatus,getClientOrders} = require('../controllers/orderController');
 
 router.get('/', authorization, getOrders);
+router.get('/client', authorization, getClientOrders);
 router.get('/adminfetch', getAdminOrders);
 router.get('/getuserorders', authorization, getUserOrders);
 router.post('/', authorization, createOrder);
