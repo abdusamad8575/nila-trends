@@ -5,55 +5,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import axiosInstance from '../../../axios'
 import { useSelector,useDispatch} from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
+import { setProfile } from '../../../redux/actions/storeActions';
 import { useRouter } from 'next/navigation';
-
-const deliveryAddressArray = [
-  {
-    firstname: 'ragu',
-    lastname: 'nadh',
-    country: 'India',
-    address_line_1: 'Manzil1',
-    address_line_2: 'Thadatharikathu Veedu',
-    city: 'Chullimanoor',
-    state: 'Kerala',
-    zip:'695541',
-    mobile: '8569321456'
-  },
-  {
-    firstname: 'sabu',
-    lastname: 'mon',
-    country: 'India',
-    address_line_1: 'Manzil1',
-    address_line_2: 'Thadatharikathu Veedu',
-    city: 'Chullimanoor',
-    state: 'Kerala',
-    zip:'695541',
-    mobile: '8569321456'
-  },
-  {
-    firstname: 'abhi',
-    lastname: 'ram',
-    country: 'India',
-    address_line_1: 'Manzil1',
-    address_line_2: 'Thadatharikathu Veedu',
-    city: 'Chullimanoor',
-    state: 'Kerala',
-    zip:'695541',
-    mobile: '8569321456'
-  },
-  {
-    firstname: 'edu',
-    lastname: 'kriskna',
-    country: 'India',
-    address_line_1: 'Manzil1',
-    address_line_2: 'Thadatharikathu Veedu',
-    city: 'Chullimanoor',
-    state: 'Kerala',
-    zip:'695541',
-    mobile: '8569321456'
-  },
-  
-]
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -67,6 +20,7 @@ function Checkout() {
   const [coupon, setCoupon] = useState(null);
   const [addCoupon, setAddCoupon] = useState(false);
   const inputRef = useRef()
+  const [addresses, setAddresses] = useState([]);
 
   const [coupons, setCoupons] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState('');
@@ -88,6 +42,18 @@ function Checkout() {
   useEffect(() => {
     fetchCoupons();
   }, [userDetails]);
+
+  const fetchAddresses = async () => {
+    try {
+      const res = await axiosInstance.get('/address');
+      setAddresses(res?.data?.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAddresses();
+  }, [storeData]);
 
 
   const [cartData, setCartData] = useState([])
@@ -206,7 +172,9 @@ function Checkout() {
   }
   const handleDeliveryInstruction = () => {
     setDeliveryInstruction(!DeliveryInstruction);
+    
   }
+  const handleProfile = (state) => dispatch(setProfile(state))
 
   const deliveryCharge = 40
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
@@ -317,14 +285,14 @@ function Checkout() {
         {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.firstname},${DeliveryAddress?.lastname},${DeliveryAddress?.address_line_1},${DeliveryAddress?.address_line_2},${DeliveryAddress?.city},${DeliveryAddress?.state},${DeliveryAddress?.country},${DeliveryAddress?.zip},${DeliveryAddress?.mobile}`}</p> :
           <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto h-24">
             <ul className="w-full text-sm font-medium ">
-              {deliveryAddressArray.map((details, index) => (
+              {addresses?.length > 0 ? addresses.map((details, index) => (
                 <li key={index} className="w-full">
                   <div className="flex items-start gap-3" key={index} onClick={() => handleDeliveryAddress(details)}>
                     <input id={`checkbox-${index}`} type="checkbox" value="" className="cursor-pointer w-4 h-4 mt-1 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
                     <label htmlFor={`checkbox-${index}`} className="w-full text-sm font-medium cursor-pointer">{`${details?.firstname},${details?.lastname},${details?.address_line_1},${details?.address_line_2},${details?.city},${details?.state},${details?.country},${details?.zip},${details?.mobile}`}</label>
                   </div>
                 </li>
-              ))}
+              )) : <p className="text-red-500  flex justify-center">address not font . please add the address then comeback checkout and select the address </p>}
             </ul>
           </div>}
       </div>
@@ -332,8 +300,9 @@ function Checkout() {
         <div onClick={() => setAddCoupon(!addCoupon)} className="bg-gray-100 border-dashed rounded-full border-2 border-gray-300 cursor-pointer">
           <p className='text-center text-sm px-5'> Add coupon <span>{addCoupon ? <CloseOutlined /> : <PlusOutlined />}</span></p>
         </div>
-        <div onClick={handleDeliveryInstruction} className="bg-gray-100 border-dashed rounded-full border-2 border-gray-300 px-2 w-58 cursor-pointer">
-          <p className='text-center  text-sm'> Add delivery Instruction  <span>{DeliveryInstruction ? <CloseOutlined /> : <PlusOutlined />}</span></p>
+        <div onClick={userDetails ? () => handleProfile(true) : () => router.push('/register')} className="bg-gray-100 border-dashed rounded-full border-2 border-gray-300 px-2 w-58 cursor-pointer">
+          {/* <p className='text-center  text-sm'> Add Address <span>{DeliveryInstruction ? <CloseOutlined /> : <PlusOutlined />}</span></p> */}
+          <p className='text-center  text-sm'> Add Address <span> <PlusOutlined /></span></p>
         </div>
       </div>
       {addCoupon && (
@@ -341,7 +310,7 @@ function Checkout() {
           <input ref={inputRef} onChange={(e) => setAppliedCoupon(e.target.value)} className="w-full border rounded-lg h-8 outline-none" value={appliedCoupon} placeholder="   Add a Coupon Code" />
           <button onClick={() => handleCoupon(appliedCoupon)} className='bg-[#1F1F1F] text-white rounded-md px-3'>apply</button>
         </div>)}
-      {DeliveryInstruction && (<Input className='rounded-lg' placeholder="Add a delivery Instruction" />)}
+      {/* {DeliveryInstruction && (<Input className='rounded-lg' placeholder="Add a delivery Instruction" />)} */}
       <hr className='border-dashed' />
       {discount > 0 && <div className='flex gap-2'>
         <div

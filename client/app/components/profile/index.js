@@ -188,7 +188,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '../../../axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { clearUserDetails } from '../../../redux/actions/userActions';
 import dayjs from 'dayjs';
 import { FaPencilAlt } from 'react-icons/fa';
@@ -198,6 +198,7 @@ const Profile = () => {
   const router = useRouter()
 
   const [user, setUser] = useState(null);
+  const userDetails = useSelector(state => state.userDetails);
   const [profileImage, setProfileImage] = useState(null);
   const [previewImage, setPreviewImage] = useState('/assets/avatar.png');
   const [addresses, setAddresses] = useState([]);
@@ -212,7 +213,7 @@ const Profile = () => {
     axiosInstance.get(`/orders/client?status=${selectedStatus}`)
       .then((res) => setOrders(res?.data?.data))
       .catch((error) => console.error(error));
-  }, [selectedStatus]);
+  }, [selectedStatus,userDetails]);
   // useEffect(() => {
   //   axiosInstance.get('/user')
   //     .then((res) => setUser(res?.data?.data))
@@ -335,9 +336,9 @@ const Profile = () => {
   };
 
 
-  console.log('addresses', addresses);
-  console.log('orders', orders);
-  console.log('user', user);
+  // console.log('addresses', addresses);
+  // console.log('orders', orders);
+  // console.log('user', user);
 
   return (
     <div className="w-full flex justify-center items-center md:mt-1 p-4 bg-gray-50">
@@ -533,7 +534,7 @@ const Profile = () => {
               ))}
             </div>
             <div className="space-y-4">
-              {orders.map((order) => (
+              {orders?.map((order) => (
                 <div key={order._id} className="bg-gray-100 rounded-lg p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -758,7 +759,7 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {orders.map((order) => (
+                  {orders?.map((order) => (
                     <div key={order._id} className="bg-gray-100 rounded-lg p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div>

@@ -56,16 +56,15 @@ function RightBox({ product }) {
 
     return (
         <div className="lg:col-span-4 side-item hidden md:block cursor-pointer">
-            {/* <div className="lg:col-span-4 side-item hidden md:block cursor-pointer" onClick={()=>router.push(`/products/${product?._id}`)}> */}
             <div className="sticky top-24 bg-white rounded-lg overflow-hidden shadow-md p-4">
                 <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`} alt={product.name} className="w-full h-full object-cover mb-4" />
                 <h2 className="text-sm sm:text-lg font-semibold mb-2">{product.name}</h2>
                 {product?.feature.map((fea, index) => (
-                    < p key={index} className="text-xs sm:text-sm text-gray-600 mb-1">{fea}</p>
+                    < p key={index} className="text-xs sm:text-sm text-gray-600 mb-1">{fea}</p>    
                 ))}
                 <p className="font-semibold mb-2 mt-4">Price • AED:{product.price}</p>
                 <div className="flex justify-between mb-4">
-                    {/* <Link href={`/products/${product?._id}`}> */}
+                    {/* <Link href={`/products/${product?._id}`}> */}  
                         <button className="bg-black text-white px-3 py-2 sm:px-4 sm:py-2 rounded flex items-center text-xs sm:text-sm"
                         onClick={() =>handleAddToCartClick(product)}
                         >
