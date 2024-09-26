@@ -12,61 +12,23 @@ const getOrders = async (req, res) => {
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 };
-// const getAdminOrders = async (req, res) => {
-//   try {
-//     const { page = 1, perPage = 10, sortBy = 'createdAt', order = 'desc', search = '' } = req.query;
-//     const query = search ? { name: { $regex: search, $options: 'i' } } : {};
-
-//     const options = {
-//       page: parseInt(page, 10),
-//       limit: parseInt(perPage, 10),
-//       sort: { [sortBy]: order === 'desc' ? -1 : 1 }
-//     };
-
-
-//     // const data = await Order.find().sort({ createdAt: -1 })
-//     const data = await Order.paginate(query, options)
-//       .populate('userId', 'username email')
-//       .populate('address', 'firstname lastname address_line_1 address_line_2 zip mobile city state')
-//       .populate('products.item.product_id', 'name category price image');
-
-//       console.log('order datas:-',data);
-
-
-//     res.status(200).json({ data });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
-//   }
-// };
-
-
-// const getAdminOrders = async (req, res) => {
-//   try {
-//     const { page = 1, perPage = 10, sortBy = 'createdAt', order = 'desc', search = '' } = req.query;
-//     const query = search ? { userId: { $regex: search, $options: 'i' } } : {};
-
-//     const options = {
-//       page: parseInt(page, 10),
-//       limit: parseInt(perPage, 10),
-//       sort: { [sortBy]: order === 'desc' ? -1 : 1 },
-//       populate: [
-//         { path: 'userId', select: 'username email' },
-//         { path: 'address', select: 'firstname lastname address_line_1 address_line_2 zip mobile city state' },
-//         { path: 'products.item.product_id', select: 'name category price image' },
-//       ],
-//     };
-
-//     const data = await Order.paginate(query, options);
-//     console.log('s data',{data});
-
-
-//     res.status(200).json(data);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
-//   }
-// };
+const getClientOrders = async (req, res) => {
+  console.log('getClientOrders');
+  
+  try {
+    const { _id } = req?.decoded
+    const { status } = req.query;
+    console.log('status',status);
+    const data = await Order.find({ userId: _id ,status }).populate('products.item.product_id')
+    .populate('address')
+    .sort({ createdAt: -1 });   
+    console.log('order data',data);
+    res.status(200).json({ data })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
+  }
+};
 
 const getAdminOrders = async (req, res) => {
   try {
@@ -248,5 +210,6 @@ module.exports = {
   getOrderById,
   getReviewOrders,
   getAdminOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getClientOrders
 }

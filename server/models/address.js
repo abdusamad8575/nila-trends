@@ -13,6 +13,10 @@ const addressSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String,
+        required: true
+    },
     country: {
         type: String,
         required: true
@@ -23,7 +27,6 @@ const addressSchema = new mongoose.Schema({
     },
     address_line_2: {
         type: String,
-        required: true
     },
 
     city: {

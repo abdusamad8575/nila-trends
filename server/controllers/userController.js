@@ -39,11 +39,32 @@ const getUser = async (req, res) => {
   
   try {
     const { _id } = req?.decoded
-    const data = await User.find({ _id })
+    const data = await User.findById({ _id })    
     res.status(200).json({ data })
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
+  }
+};
+const updateUser = async (req, res) => {
+  
+  try {
+    // const { _id } = req?.decoded
+    // const { email, username, phone } = req.body;
+    // const updatedUser = await User.findByIdAndUpdate(_id, { email, username, phone }, { new: true });
+    // res.json(updatedUser);
+    const { _id } = req?.decoded;
+    const { email, username, phone } = req.body;
+    const updatedData = { email, username, phone };
+
+    if (req.file) {
+      updatedData.profile = `${req.file.filename}`;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(_id, updatedData, { new: true });
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -240,6 +261,7 @@ module.exports = {
     updateUserProfile,
     getCartDetailsByUserId,
     updateUserStatus,
-    getWishLists
+    getWishLists,
+    updateUser
     
   }
