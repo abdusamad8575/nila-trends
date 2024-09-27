@@ -26,7 +26,7 @@ const AddProduct = () => {
     setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const [category, setCategory] = useState()
-  const [disable,setDisable] = useState(false)
+  const [disable, setDisable] = useState(false)
 
   const [product, setProduct] = useState([])
   const [variantProduct, setVariantProduct] = useState([])
@@ -38,11 +38,11 @@ const AddProduct = () => {
   const handleSubmit = () => {
 
     try {
-      
-       if (!details?.name) {
+
+      if (!details?.name) {
         return toast.error("name is required")
       }
-       if (!details?.subheading) {
+      if (!details?.subheading) {
         return toast.error("name is subheading")
       }
       if (!category?._id) {
@@ -52,9 +52,9 @@ const AddProduct = () => {
         return toast.error("image is required")
       }
       if (!details?.stock) {
-        if(details?.sizes[0].sizes){
-          
-        }else{
+        if (details?.sizes[0].sizes) {
+
+        } else {
           return toast.error("sizes or stock is required")
         }
       }
@@ -275,7 +275,7 @@ const AddProduct = () => {
             />
           </Grid>}
 
-          <Grid item xs={12} ml={2} container >
+          <Grid item xs={12} ml={2} container alignItems="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -284,9 +284,9 @@ const AddProduct = () => {
                   name="isSingleType"
                 />
               }
-              label="this product is cloth"
+              label="Add Sizes"
             />
-
+            <Typography variant="caption">( check if product have size variants )</Typography>
           </Grid>
           {isSingleType && <Grid item xs={12} >
             <Grid container direction="row">

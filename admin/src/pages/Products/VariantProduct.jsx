@@ -29,7 +29,8 @@ const VariantProduct = () => {
       console.log('data?.data', data?.data);
 
       data?.data?.similarProduct && setProduct(data?.data?.similarProduct)
-      data?.data?.variantProduct && setVariantProduct(data?.data?.variantProduct)
+      data?.data?.variantProduct && setVariantProduct([...data?.data?.variantProduct, data?.data])
+
       setDetails(data.data);
       // setSelectedTags(data.data.tags || []);
       data?.data.sizes.length > 0 && setIsSingleType(true);
@@ -242,7 +243,7 @@ const VariantProduct = () => {
               />
             </Grid>}
 
-            <Grid item xs={12} ml={2} container >
+            <Grid item xs={12} ml={2} container alignItems="center">
               <FormControlLabel
                 control={
                   <Checkbox
@@ -251,9 +252,9 @@ const VariantProduct = () => {
                     name="isSingleType"
                   />
                 }
-                label="this product is cloth"
+                label="Add Sizes"
               />
-
+              <Typography variant="caption">( check if product have size variants )</Typography>
             </Grid>
             {isSingleType && <Grid item xs={12} >
               <Grid container direction="row">
@@ -538,11 +539,11 @@ const VariantProduct = () => {
               <ImageList data={details?.image} dispatch={setDetails} />
             </Grid>
             <Grid item xs={12} sm={6}></Grid>
-          <Grid item xs={12} sm={6} mt={'auto'}>
-            <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} variant='contained'>
-            Add Variant Product
-            </Button>
-          </Grid>
+            <Grid item xs={12} sm={6} mt={'auto'}>
+              <Button sx={{ mr: 0, width: '100%' }} onClick={handleSubmit} variant='contained'>
+                Add Variant Product
+              </Button>
+            </Grid>
           </Grid>
         </Grid>}
     </PageLayout>
