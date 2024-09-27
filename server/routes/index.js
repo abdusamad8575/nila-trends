@@ -7,6 +7,7 @@ const categoryRoutes = require('./categoryRoutes');
 const addressRoutes = require('./addressRoutes');
 const bannerRoutes = require('./bannerRoutes');
 const blogRoutes = require('./blogRoutes');
+const tagRoutes = require('./tagRoutes');
 const sectionRoutes = require('./sectionRoutes');
 const couponRoutes = require('./couponRoutes');
 
@@ -20,6 +21,7 @@ router.use('/v1/products', productRoutes);
 router.use('/v1/orders', orderRoutes);
 router.use('/v1/address', addressRoutes);
 router.use('/v1/banners', bannerRoutes);
+router.use('/v1/tags', tagRoutes);
 router.use('/v1/blogs', blogRoutes);
 router.use('/v1/section', sectionRoutes);
 
