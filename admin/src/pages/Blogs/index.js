@@ -3,12 +3,12 @@ import Button from "components/Button";
 import { Link } from "react-router-dom";
 import TableData from "./tableData";
 
-function Tags() {
+function Blogs() {
   return (
     <PageLayout
-      title={'Tags'}
+      title={'Blogs'}
       action={
-        <Button component={Link} to={`/tags/addTags`}>Add Tags</Button>
+        <Button component={Link} to={`/blogs/addBlog`}>Add Blog</Button>
       }
     >
       <TableData/>
@@ -16,4 +16,4 @@ function Tags() {
   );
 }
 
-export default Tags;
+export default Blogs;

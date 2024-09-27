@@ -1,5 +1,10 @@
 import request from "utils/request";
 
+const addTags = async (data) => request(`/tags`, 'POST', data)
+const editTags = async (data) => request(`/tags`, 'PATCH', data)
+const deleteTags = async (data) => request(`/tags/${data?._id}`, 'DELETE', data)
+const getTags = async (data) => request(`/tags?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
+const getTagsById = async (data) => request(`/tags/${data?.id}`, 'GET', data)
 const addBlogs = async (data) => request(`/blogs`, 'POST', data)
 const editBlogs = async (data) => request(`/blogs`, 'PATCH', data)
 const deleteBlogs = async (data) => request(`/blogs/${data?._id}`, 'DELETE', data)
@@ -32,6 +37,11 @@ const getUsers = async ({ page, perPage, sortBy, order, search }) => {
 };
 
 export {  
+    addTags,
+    editTags,
+    deleteTags,
+    getTags,
+    getTagsById,
     addBlogs,
     editBlogs,
     deleteBlogs,

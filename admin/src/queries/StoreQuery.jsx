@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+    addTags,
+    editTags,
+    deleteTags,
+    getTags,
+    getTagsById,
     getBlogs,
     addBlogs,
     getBlogsById,
@@ -69,6 +74,64 @@ const useDeleteBlogs = () => {
     return useMutation((data) => deleteBlogs(data), {
         onSuccess: (data) => {
             queryClient.invalidateQueries("get_blogs");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useGetTags = (data) => {
+    return useQuery(["get_tags", data], () => getTags(data), {
+        staleTime: 3000,
+        keepPreviousData: true,
+        // refetchOnWindowFocus: false,
+    });
+};
+
+const useGetTagsById = (data) => {
+    return useQuery(["get_tags", data], () => getTagsById(data), {
+        staleTime: 3000,
+        keepPreviousData: true,
+        // refetchOnWindowFocus: false,
+    });
+};
+
+const useAddTags = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => addTags(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_tags");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useEditTags = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => editTags(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_tags");
+            return data;
+        },
+        onError: (data) => {
+            return data;
+        },
+    });
+};
+
+const useDeleteTags = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation((data) => deleteTags(data), {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("get_tags");
             return data;
         },
         onError: (data) => {
@@ -214,6 +277,11 @@ const useGetUser = (params) => {
     });
   };
 export {
+    useGetTags,
+    useGetTagsById,
+    useAddTags,
+    useEditTags,
+    useDeleteTags,
     useGetBlogs,
     useGetBlogsById,
     useAddBlogs,

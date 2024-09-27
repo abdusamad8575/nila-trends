@@ -1,23 +1,15 @@
-import { Alert, Box, Button, Grid, ToggleButton, Typography, Autocomplete, TextField } from "@mui/material";
-import React, { useEffect, useState } from 'react'
+import { Alert, Box, Button, Grid, ToggleButton, Typography } from "@mui/material";
+import React, { useState } from 'react'
 import PageLayout from 'layouts/PageLayout';
 import toast from "react-hot-toast";
 import Input from "components/Input";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEditBlogs, useGetBlogsById, useDeleteBlogs } from "queries/StoreQuery";
-import { useGetTagProducts } from 'queries/ProductQuery'
+import { useAddBlogs } from "queries/StoreQuery";
+import { useNavigate } from "react-router-dom";
+import TextEditor from "./TextEditor";
 
-const EditBlog = () => {
-   const { id } = useParams();
-   const [product, setProduct] = useState([])
-   const navigate = useNavigate()
-   const { data: res, isLoading } = useGetBlogsById({ id });
-   const { data:respo } = useGetTagProducts({ pageNo: 1, pageCount: 100 });
-   useEffect(() => {
-      res?.data?.product && setProduct(res?.data?.product)
-      setData(res?.data)
-   }, [res])
+const AddBlog = () => {
    const [data, setData] = useState({})
+   const navigate = useNavigate()
    const fileInputRef = React.useRef(null);
    const handleFileSelect = () => {
       fileInputRef.current.click();
@@ -31,21 +23,8 @@ const EditBlog = () => {
    const handleChange = (e) => {
       setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
    };
-   const { mutateAsync: editBlogs, isLoading: updating } = useEditBlogs()
-   const { mutateAsync: deleteBlog, isLoading: deleting } = useDeleteBlogs()
+   const { mutateAsync: addBlogs, isLoading } = useAddBlogs()
 
-   const handleDelete = () => {
-      deleteBlog(data)
-         .then((res) => {
-            if (res) {
-               toast.success(res?.message ?? "Blog deleted Successfully");
-               navigate('/tags')
-            }
-         })
-         .catch((err) => {
-            toast.error(err?.message ?? "Something went wrong");
-         });
-   };
    const handleSubmit = () => {
       try {
          if (!data?.title) {
@@ -54,8 +33,8 @@ const EditBlog = () => {
          if (!data?.subtitle) {
             return toast.error("subtitle is required")
          }
-         if (!product.length) {
-            return toast.error("product is required")
+         if (!data?.url) {
+            return toast.error("url is required")
          }
          if (!data?.description) {
             return toast.error("description is required")
@@ -65,17 +44,16 @@ const EditBlog = () => {
          }
          const formData = new FormData();
          for (const key in data) {
-            if (data.hasOwnProperty(key) && key !== "image" &&  key !== "product") {
+            if (data.hasOwnProperty(key) && key !== "image") {
                formData.append(key, data[key]);
             }
          }
-         product.forEach((product) => formData.append('product', product._id));
-         typeof (data.image) == 'object' && formData.append("image", data.image, data?.image?.name);
-         editBlogs(formData)
+         typeof (data.image) == 'object' && formData.append("image", data?.image, data?.image?.name);
+         addBlogs(formData)
             .then((res) => {
                if (res) {
-                  toast.success(res?.message ?? "Tags added Successfully");
-                  navigate('/tags')
+                  toast.success(res?.message ?? "Blog added Successfully");
+                  navigate('/blogs')
                }
             })
             .catch((err) => {
@@ -86,20 +64,19 @@ const EditBlog = () => {
          console.error(error)
       }
    }
-   
    return (
       <PageLayout
-         title={'Edit Tags'}
+         title={'Add Blog'}
       >
          <Box sx={{ flexGrow: 1 }} display={'flex'} justifyContent={'center'}>
-            <Grid container spacing={2} maxWidth={600} py={5}>
+            <Grid container spacing={2} maxWidth={600} py={5} px={1}>
                <Grid item xs={12} sm={6}>
                   <Input
                      required
-                     placeholder="Tags Title"
+                     placeholder="Blog Title"
                      id="title"
                      name="title"
-                     label="Tags Title"
+                     label="Blog Title"
                      value={data?.title || ''}
                      onChange={handleChange}
                      fullWidth
@@ -110,10 +87,10 @@ const EditBlog = () => {
                <Grid item xs={12} sm={6}>
                   <Input
                      required
-                     placeholder="Tags SubTitle"
+                     placeholder="Blog SubTitle"
                      id="subtitle"
                      name="subtitle"
-                     label="Tags Subtitle"
+                     label="Blog Subtitle"
                      value={data?.subtitle || ''}
                      onChange={handleChange}
                      fullWidth
@@ -121,47 +98,23 @@ const EditBlog = () => {
                      variant="outlined"
                   />
                </Grid>
-               <Grid item xs={12} sm={8}>
-                  <Autocomplete
-                     id="Product-select"
-                     multiple
-                     options={respo?.data || []}
-                     value={product}
-                     onChange={(event, newValue) => {
-                        setProduct(newValue);
-                     }}
-                     autoHighlight
-                     getOptionLabel={(option) => option.name}
-                     renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                           <img
-                              loading="lazy"
-                              width="20"
-                              src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
-                           />
-                           <Typography color="inherit" variant="caption">
-                              {option?.name} <br />
-                              {option?.brand}
-                           </Typography>
-                           <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
-                              {option?.isAvailable ? 'available' : 'NA'}
-                           </Typography>
-                        </Box>
-                     )}
-                     renderInput={(params) => (
-                        <TextField
-                           {...params}
-                           placeholder="Choose a product"
-                           inputProps={{
-                              ...params.inputProps,
-                           }}
-                        />
-                     )}
+               <Grid item xs={12} sm={6}>
+                  <Input
+                     required
+                     placeholder="Blog Target (url)"
+                     id="url"
+                     name="url"
+                     label="Blog Target (url)"
+                     value={data?.url || ''}
+                     onChange={handleChange}
+                     fullWidth
+                     autoComplete="Blog Action (url)"
+                     variant="outlined"
                   />
                </Grid>
                <Grid item xs={12} sm={6}>
                   <Typography variant="caption">
-                  Tags status &nbsp;
+                     Blog status &nbsp;
                   </Typography>
                   <ToggleButton
                      value={data?.status}
@@ -174,20 +127,8 @@ const EditBlog = () => {
                   </ToggleButton>
                </Grid>
 
-               <Grid item xs={12}>
-                  <Input
-                     id="description"
-                     name="description"
-                     placeholder="Tags Description"
-                     label="Tags Description *"
-                     value={data?.description || ''}
-                     onChange={handleChange}
-                     fullWidth
-                     autoComplete="Description"
-                     multiline
-                     rows={4}
-                     helperText="Short Description (about 10-20 words)"
-                  />
+               <Grid item xs={12} mb={12}>
+                  <TextEditor value={data?.description || ''} onChange={handleChange} />
                </Grid>
 
                <Grid item xs={12} >
@@ -259,13 +200,12 @@ const EditBlog = () => {
                   </Box>
                </Grid>
                <Grid item xs={12}>
-                  <Button onClick={handleSubmit}>Update Tags</Button>
-                  <Button color="secondary" onClick={handleDelete}>Delete Tags</Button>
+                  <Button onClick={handleSubmit} disabled={isLoading}>Add Blog</Button>
                </Grid>
                <Grid item xs={12}>
                   <Alert color="primary" severity="info" sx={{ mt: 3, fontSize: 13 }}>
                      <ul style={{ margin: "0", padding: "0" }}>
-                        <li>Make your thumbnail 1280 by 720 pixels (4:5 ratio)</li>
+                        <li> Make your thumbnail 1280 by 720 pixels (4:5 ratio)</li>
                         <li>Ensure that your thumbnail is less than 2MB</li>
                         <li>Use a JPG, PNG, or JPEG file format</li>
                      </ul>
@@ -278,4 +218,4 @@ const EditBlog = () => {
    )
 }
 
-export default EditBlog
+export default AddBlog

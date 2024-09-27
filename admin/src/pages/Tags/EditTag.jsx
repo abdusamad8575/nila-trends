@@ -1,17 +1,23 @@
 import { Alert, Box, Button, Grid, ToggleButton, Typography, Autocomplete, TextField } from "@mui/material";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageLayout from 'layouts/PageLayout';
 import toast from "react-hot-toast";
 import Input from "components/Input";
-import { useAddBlogs } from "queries/StoreQuery";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEditTags, useGetTagsById, useDeleteTags } from "queries/StoreQuery";
 import { useGetTagProducts } from 'queries/ProductQuery'
 
-const AddBlog = () => {
-   const [datas, setData] = useState({})
-   const { data, isLoading } = useGetTagProducts({ pageNo: 1, pageCount: 100 });
+const EditTag = () => {
+   const { id } = useParams();
    const [product, setProduct] = useState([])
    const navigate = useNavigate()
+   const { data: res, isLoading } = useGetTagsById({ id });
+   const { data:respo } = useGetTagProducts({ pageNo: 1, pageCount: 100 });
+   useEffect(() => {
+      res?.data?.product && setProduct(res?.data?.product)
+      setData(res?.data)
+   }, [res])
+   const [data, setData] = useState({})
    const fileInputRef = React.useRef(null);
    const handleFileSelect = () => {
       fileInputRef.current.click();
@@ -25,34 +31,47 @@ const AddBlog = () => {
    const handleChange = (e) => {
       setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
    };
-   const { mutateAsync: addBlogs, isLoading: loading } = useAddBlogs()
+   const { mutateAsync: editTags, isLoading: updating } = useEditTags()
+   const { mutateAsync: deleteTag, isLoading: deleting } = useDeleteTags()
 
+   const handleDelete = () => {
+      deleteTag(data)
+         .then((res) => {
+            if (res) {
+               toast.success(res?.message ?? "Tag deleted Successfully");
+               navigate('/tags')
+            }
+         })
+         .catch((err) => {
+            toast.error(err?.message ?? "Something went wrong");
+         });
+   };
    const handleSubmit = () => {
       try {
-         if (!datas?.title) {
+         if (!data?.title) {
             return toast.error("title is required")
          }
-         if (!datas?.subtitle) {
+         if (!data?.subtitle) {
             return toast.error("subtitle is required")
          }
          if (!product.length) {
             return toast.error("product is required")
          }
-         if (!datas?.description) {
+         if (!data?.description) {
             return toast.error("description is required")
          }
-         if (!datas?.image) {
+         if (!data?.image) {
             return toast.error("image is required")
          }
          const formData = new FormData();
-         for (const key in datas) {
-            if (datas.hasOwnProperty(key) && key !== "image") {
-               formData.append(key, datas[key]);
+         for (const key in data) {
+            if (data.hasOwnProperty(key) && key !== "image" &&  key !== "product") {
+               formData.append(key, data[key]);
             }
          }
-         typeof (datas.image) == 'object' && formData.append("image", datas?.image, datas?.image?.name);
          product.forEach((product) => formData.append('product', product._id));
-         addBlogs(formData)
+         typeof (data.image) == 'object' && formData.append("image", data.image, data?.image?.name);
+         editTags(formData)
             .then((res) => {
                if (res) {
                   toast.success(res?.message ?? "Tags added Successfully");
@@ -68,11 +87,9 @@ const AddBlog = () => {
       }
    }
    
-
-   
    return (
       <PageLayout
-         title={'Add Tags'}
+         title={'Edit Tags'}
       >
          <Box sx={{ flexGrow: 1 }} display={'flex'} justifyContent={'center'}>
             <Grid container spacing={2} maxWidth={600} py={5}>
@@ -83,7 +100,7 @@ const AddBlog = () => {
                      id="title"
                      name="title"
                      label="Tags Title"
-                     value={datas?.title || ''}
+                     value={data?.title || ''}
                      onChange={handleChange}
                      fullWidth
                      autoComplete="Title"
@@ -97,20 +114,18 @@ const AddBlog = () => {
                      id="subtitle"
                      name="subtitle"
                      label="Tags Subtitle"
-                     value={datas?.subtitle || ''}
+                     value={data?.subtitle || ''}
                      onChange={handleChange}
                      fullWidth
                      autoComplete="Subtitle"
                      variant="outlined"
                   />
                </Grid>
-
-
                <Grid item xs={12} sm={8}>
                   <Autocomplete
                      id="Product-select"
                      multiple
-                     options={data?.data || []}
+                     options={respo?.data || []}
                      value={product}
                      onChange={(event, newValue) => {
                         setProduct(newValue);
@@ -144,21 +159,18 @@ const AddBlog = () => {
                      )}
                   />
                </Grid>
-
-
-
                <Grid item xs={12} sm={6}>
                   <Typography variant="caption">
-                     Tags status &nbsp;
+                  Tags status &nbsp;
                   </Typography>
                   <ToggleButton
-                     value={datas?.status}
-                     selected={datas?.status}
+                     value={data?.status}
+                     selected={data?.status}
                      onChange={() => {
-                        setData(prev => ({ ...prev, status: !datas?.status }))
+                        setData(prev => ({ ...prev, status: !data?.status }))
                      }}
                   >
-                     {datas?.status ? 'Active' : 'Blocked'}
+                     {data?.status ? 'Active' : 'Blocked'}
                   </ToggleButton>
                </Grid>
 
@@ -168,7 +180,7 @@ const AddBlog = () => {
                      name="description"
                      placeholder="Tags Description"
                      label="Tags Description *"
-                     value={datas?.description || ''}
+                     value={data?.description || ''}
                      onChange={handleChange}
                      fullWidth
                      autoComplete="Description"
@@ -196,10 +208,10 @@ const AddBlog = () => {
                      }}
                      onClick={handleFileSelect}
                   >
-                     {datas?.image ? (
+                     {data?.image ? (
                         <img
                            style={{ width: 240, height: 192, padding: 22 }}
-                           src={typeof (datas?.image) == 'object' ? URL.createObjectURL(datas.image) : `${process.env.REACT_APP_API_URL}/uploads/${datas.image}`}
+                           src={typeof (data?.image) == 'object' ? URL.createObjectURL(data.image) : `${process.env.REACT_APP_API_URL}/uploads/${data.image}`}
                         />
                      ) : (
                         <React.Fragment>
@@ -247,12 +259,13 @@ const AddBlog = () => {
                   </Box>
                </Grid>
                <Grid item xs={12}>
-                  <Button onClick={handleSubmit}>Add Tags</Button>
+                  <Button onClick={handleSubmit} disabled={updating}>Update Tags</Button>
+                  <Button color="secondary" onClick={handleDelete} disabled={deleting}>Delete Tags</Button>
                </Grid>
                <Grid item xs={12}>
                   <Alert color="primary" severity="info" sx={{ mt: 3, fontSize: 13 }}>
                      <ul style={{ margin: "0", padding: "0" }}>
-                        <li> Make your thumbnail 1280 by 720 pixels (4:5 ratio)</li>
+                        <li>Make your thumbnail 1280 by 720 pixels (4:5 ratio)</li>
                         <li>Ensure that your thumbnail is less than 2MB</li>
                         <li>Use a JPG, PNG, or JPEG file format</li>
                      </ul>
@@ -265,4 +278,4 @@ const AddBlog = () => {
    )
 }
 
-export default AddBlog
+export default EditTag

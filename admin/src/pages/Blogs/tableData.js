@@ -2,12 +2,12 @@
 import Box from "components/Box";
 import Typography from "components/Typography";
 import Table from "examples/Tables/Table";
+import { useGetBlogs } from "queries/StoreQuery";
 import { Avatar, Icon } from "@mui/material";
 import Badge from "components/Badge";
 import { Link } from "react-router-dom";
-import { useGetTags } from "queries/StoreQuery";
 
-function Tags({ image, name, desc }) {
+function Blogs({ image, name, desc }) {
   return (
     <Box display="flex" alignItems="center" px={1} py={0.5}>
       <Box mr={2}>
@@ -18,7 +18,7 @@ function Tags({ image, name, desc }) {
           {name}
         </Typography>
         <Typography variant="caption" color="secondary">
-          {desc}
+          {desc?.substring(0, 80)}
         </Typography>
       </Box>
     </Box>
@@ -26,9 +26,10 @@ function Tags({ image, name, desc }) {
 }
 
 const TableData = () => {
-  const { data, isLoading } = useGetTags({ pageNo: 1, pageCount: 100 });
+  const { data, isLoading } = useGetBlogs({ pageNo: 1, pageCount: 100 });
   const columns = [
-    { name: "tags", align: "left" },
+    { name: "Blogs", align: "left" },
+    { name: "url", align: "center" },
     { name: "status", align: "center" },
     { name: "createdon", align: "center" },
     { name: "Lastupdated", align: "center" },
@@ -36,8 +37,12 @@ const TableData = () => {
   ]
 
   const rows = data?.data?.map(item => ({
-    tags: <Tags image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`} name={item?.title} desc={item?.subtitle} />,
-    
+    Blogs: <Blogs image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`} name={item?.title} desc={item?.subtitle} />,
+    url: (
+      <Typography variant="caption" color="secondary" fontWeight="medium">
+        <a href={item?.url}>{item?.url}</a>
+      </Typography>
+    ),
     status: (
       <Badge variant="gradient" badgeContent={item?.status ? 'Available' : 'Unavailable'} color={item?.status ? "success" : 'secondary'} size="xs" container />
     ),
@@ -52,7 +57,7 @@ const TableData = () => {
       </Typography>
     ),
     action: (
-      <Link to={`/tags/editTags/${item?._id}`}>
+      <Link to={`/blogs/editBlog/${item?._id}`}>
         <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small">
           more_vert
         </Icon>
