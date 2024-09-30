@@ -4,45 +4,27 @@ import React, { useEffect, useState } from 'react'
 import RightBox from '../RightBox'
 import { Pagination } from '@mui/material'
 import { Filter, Search } from 'lucide-react'
-import axios from 'axios'
-import Link from 'next/link'
-
-const ProductCard = ({ image, category, ProId, title, fit, price, onClick }) => (
-  <div className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onClick={onClick}>
-    <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" />
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-2 space-x-2">
-        <span className="bg-gray-200 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0">
-          {category}
-        </span>
-        <Link href={`/products/${ProId}`}>
-          <button className="text-[10px] sm:text-xs text-blue-600 px-1.5 py-0.5 whitespace-nowrap">
-            Shop Now
-          </button>
-        </Link>
-      </div>
-      <h3 className="mt-2 text-sm sm:text-lg font-semibold">{title}</h3>
-      {/* <p className="text-xs sm:text-sm text-gray-600">Fit • {fit}</p> */}
-      <p className="text-xs sm:text-sm text-gray-600">{fit}</p>
-      <p className="text-xs sm:text-sm text-gray-600">Price • AED:{price}</p>
-    </div>
-  </div>
-);
+import axiosInstance from '../../../axios'
+import ProductCard from '@/app/components/products/ProductCard'
+import { setUserDetails } from '@/redux/actions/userActions'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Filters = () => {
   const param = useParams()
   const category = param?.slug?.replace(/%20/g, ' ');
-  console.log(category);
+  const dispatch = useDispatch()
+  const userData = useSelector(state => state.userDetails);
   const [message, setMessage] = useState()
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   const fetchProducts = async (page = 1, search = '') => {
     try {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+      const { data } = await axiosInstance.get(`/products`, {
         params: { page, search }
       });
       console.log('products-', data.products);
@@ -56,7 +38,7 @@ const Filters = () => {
   };
   const fetchFilters = async (page = 1, search = '') => {
     try {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products?category=${category}`, {
+      const { data } = await axiosInstance.get(`/products?category=${category}`, {
         params: { page, search }
       });
       console.log('products-', data.docs);
@@ -86,6 +68,46 @@ const Filters = () => {
   const handleProductClick = (product) => {
     setSelectedProduct(product);
   };
+  const isInWishlist = (productId) => {
+
+    if (wishlistItems === undefined) {
+      return false;
+    }
+    return wishlistItems.some((item) => item?._id === productId);
+  };
+
+  const fetchWishlist = async () => {
+    try {
+      const wishlistResponse = await axiosInstance.get('/user/getwishlist');
+      setWishlistItems(wishlistResponse?.data?.data);
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+    }
+  };
+
+  const toggleWishlist = async (proId) => {
+    if (!userData) {
+      router.push('/register');
+    } else {
+      try {
+        if (isInWishlist(proId)) {
+          const response = await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
+          dispatch(setUserDetails(response?.data?.userData));
+        } else {
+          const response = await axiosInstance.patch(`/user/addToWishlist/${proId}`);
+          dispatch(setUserDetails(response?.data?.userData));
+        }
+        await fetchWishlist();
+      } catch (error) {
+        console.error('Error toggling wishlist:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchWishlist();
+  }, []);
+
   const fixedSelectedProduct = selectedProduct ? selectedProduct : products[0]
   return (
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
@@ -117,8 +139,11 @@ const Filters = () => {
                 category={product?.category?.name}
                 title={product.name}
                 fit={product.fitAndCare[0] || 'Regular'}
-                price={product.sale_rate}
+                price={product.price}
+                sale_rate={product.sale_rate}
                 onClick={() => handleProductClick(product)}
+                onWishlistClick={() => toggleWishlist(product._id)}
+                isInWishlist={isInWishlist(product._id)}
               />
             ))}
           </div>

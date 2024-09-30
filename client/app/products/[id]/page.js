@@ -227,7 +227,7 @@ const ProductPage = () => {
 
             {/* Price displayed only on mobile */}
             <div className={`block md:hidden ${styles.mobilePrice}`}>
-               <p className={`${roboto_mono.className} pb-2 text-sm`}>Price &bull; AED {product.sale_rate}</p>
+               <p className={`${roboto_mono.className} pb-2 text-xs sm:text-sm text-gray-600`}>Price • <span className='line-through'>AED {product?.price}</span> &bull; <strong>AED {product?.sale_rate}</strong></p>
             </div>
 
             <div className={`${roboto.className} flex items-center gap-2 text-sm md:text-md w-full md:w-1/5`}>

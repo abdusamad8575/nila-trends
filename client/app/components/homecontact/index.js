@@ -38,8 +38,8 @@ const WardrobeSection = () => {
             </div>
           </div>
         </div>
-        <Carousel autoplay className='custom-carousel' >
-          <div className="text-center pb-10">
+        <Carousel autoplay autoplaySpeed={10000} arrows className='custom-carousel bg-[#e9e2da] rounded-lg' >
+          <div className="text-center pb-10 px-10">
             <svg className="w-6 h-6 text-stone-500 mx-auto my-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
             </svg>
@@ -48,7 +48,7 @@ const WardrobeSection = () => {
               There comes a moment when everything aligns. Follow your instincts, and you&apos;ll feel mother nature&apos;s gentle embrace, sweeping away all the negativity and revealing a path uniquely yours. In that precious instant, you will connect deeply with yourself, and your inner voice will softly say, &quot;This is the time I&apos;ve longed for—to create my own journey and embrace my honesty.&quot;
             </p>
           </div>
-          <div className="text-center pb-10">
+          <div className="text-center pb-10 px-10">
             <svg className="w-6 h-6 text-stone-500 mx-auto my-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
             </svg>
@@ -95,6 +95,12 @@ const WardrobeSection = () => {
               </svg>
               <span className="sr-only">Facebook</span>
             </Link>
+            {/* <Link target='_blank' href="#" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer hover:text-blue-700">
+              <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path fill="currentColor" d="M12.186 8.672 18.743.947h-2.927l-5.005 5.9-4.44-5.9H0l7.434 9.876-6.986 8.23h2.927l5.434-6.4 4.82 6.4H20L12.186 8.672Zm-2.267 2.671L8.544 9.515 3.2 2.42h2.2l4.312 5.719 1.375 1.828 5.731 7.613h-2.2l-4.699-6.237Z" />
+              </svg>
+              <span className="sr-only">Twitter</span>
+            </Link> */}
             <Link target='_blank' href="#" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer hover:text-blue-700">
               <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd" />
@@ -116,7 +122,7 @@ const WardrobeSection = () => {
               </svg>
               <span className="sr-only">Tiktok</span>
             </Link>
-            <Link target='_blank' href="https://www.instagram.com/nilaa.trends/?igsh=MWUzNHcxbmZudm5vbw%3D%3D" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer  hover:text-blue-700">
+            <Link target='_blank' href="https://www.instagram.com/nilaa.trends?igsh=MWUzNHcxbmZudm5vbw==" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer  hover:text-blue-700">
               <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd" />
               </svg>

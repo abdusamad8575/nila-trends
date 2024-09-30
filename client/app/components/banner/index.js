@@ -5,65 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Carousel } from 'antd';
 
-// CarouselItem Component
-const CarouselItem = ({ src, alt, title, subtitle, discount }) => (
-  <div className="relative h-[400px] w-full rounded-xl overflow-hidden">
-    <Image
-      src={src}
-      alt={alt}
-      layout="fill"
-      objectFit="cover"
-      className="object-center"
-    />
-    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 flex flex-col justify-end p-6 text-white">
-      <h2 className="text-4xl font-bold mb-2">{title}</h2>
-      <p className="text-xl mb-4">{subtitle}</p>
-      {/* {discount && (
-        <div className="bg-yellow-400 text-black font-bold py-2 px-4 rounded-full inline-block">
-          {discount}
-        </div>
-      )} */}
-    </div>
-  </div>
-);
-
-// Carousel Component
-// const Carousel = ({ items }) => {
-//   const [currentIndex, setCurrentIndex] = useState(0);
-
-//   const goToNext = () => {
-//     setCurrentIndex((prevIndex) =>
-//       prevIndex === items.length - 1 ? 0 : prevIndex + 1
-//     );
-//   };
-
-//   return (
-//     <div className="relative">
-//       <div className="overflow-hidden rounded-xl">
-//         <div
-//           className="flex transition-transform duration-500"
-//           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-//         >
-//           {items.map((item, index) => (
-//             <CarouselItem key={index} {...item} />
-//           ))}
-//         </div>
-//       </div>
-//       <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-//         {items.map((_, index) => (
-//           <button
-//             key={index}
-//             className={`h-2 w-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-white/50'
-//               }`}
-//             onClick={() => setCurrentIndex(index)}
-//           />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// StatBox Component
 const StatBox = ({ number, text }) => (
   <div className="text-center border border-dashed border-gray-300 p-4">
     <div className="text-2xl font-bold">{number}</div>
@@ -72,18 +13,7 @@ const StatBox = ({ number, text }) => (
 );
 
 const FashionLanding = () => {
-  // Define carousel items
   const router = useRouter()
-  const carouselItems = [
-    {
-      src: '/assets/image.png',
-      alt: 'Onam celebration',
-      title: 'Happy Onam',
-      subtitle: 'Traditional Elegance Meets Modern Flair',
-      discount: 'DISCOUNT Up to 50% Off'
-    },
-    // Add more items here if needed
-  ];
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -99,29 +29,35 @@ const FashionLanding = () => {
         {/* Mobile Carousel */}
         <div className="block md:hidden">
           <Carousel>
-            <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
-              <Image src={'/assets/banner.png'} fill />
-            </div>
             {/* <div onClick={() => router.push('/allproducts')} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
-              <video className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
-                <source src={'/handloom_saree.mov'} type="video/mp4" />
+              <Image src={'/assets/banner.png'} fill />
+            </div> */}
+            <div className='bg-[#f5ebd5] border-rose-50 border-opacity-50 w-full h-[25vh] relative flex overflow-hidden justify-center' >
+              <video ref={videoRef} className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover " autoPlay loop muted playsInline >
+                <source src={'https://d2o83l9a5alywg.cloudfront.net/handloomsaree.mov'} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            </div> */}
+              <button
+                onClick={toggleMute}
+                className="absolute bottom-4 left-4 p-2 bg-black bg-opacity-50 text-white rounded"
+              >
+                {isMuted ? 'Unmute' : 'Mute'}
+              </button>
+            </div>
           </Carousel>
         </div>
         {/* Desktop View */}
         <div className="hidden md:block">
           <div className="border-2 border-dashed border-gray-300 p-4">
             <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden">
-              <Image
+              {/* <Image
                 src="/assets/banner.png"
                 alt="Fashion model"
                 layout="fill"
                 objectFit="cover"
                 className="object-center"
-              />
-              {/* <video
+              /> */}
+              <video
                 ref={videoRef}
                 className="top-0 left-0 w-auto h-full min-w-full min-h-full object-cover"
                 autoPlay
@@ -131,7 +67,7 @@ const FashionLanding = () => {
               >
                 <source
                   src={
-                    'https://nilaatrends.s3.eu-north-1.amazonaws.com/HandloomSaree.mp4'
+                    'https://d2o83l9a5alywg.cloudfront.net/handloomsaree.mov'
                   }
                   type="video/mp4"
                 />
@@ -142,7 +78,7 @@ const FashionLanding = () => {
                 className="absolute bottom-4 left-4 p-2 bg-black bg-opacity-50 text-white rounded"
               >
                 {isMuted ? 'Unmute' : 'Mute'}
-              </button> */}
+              </button>
               <div className="absolute z-50 w-full h-full items-center flex flex-col">
                 <div className='relative h-full flex items-end justify-center'>
                   <svg width="228" height="49" viewBox="0 0 228 49" fill="none" xmlns="http://www.w3.org/2000/svg">

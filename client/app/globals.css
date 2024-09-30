@@ -60,3 +60,29 @@ a {
 .custom-carousel .slick-dots li.slick-active button {
   background-color: #8b8174; /* Change this to your desired active color */
 }
+
+.custom-carousel .slick-prev,
+.custom-carousel .slick-next,
+.custom-carousel .slick-prev:hover,
+.custom-carousel .slick-next:hover,
+.custom-carousel .slick-prev:focus,
+.custom-carousel .slick-next:focus {
+  font-size: inherit;
+  color: currentColor !important;
+}
+
+.custom-carousel .slick-prev::before {
+  color: currentColor !important;
+}
+
+.slick-arrow.slick-prev {
+  font-size: 20px !important;
+}
+
+.custom-carousel .slick-next::before {
+  color: currentColor !important;
+}
+
+.slick-arrow.slick-next {
+  font-size: 20px !important;
+}
