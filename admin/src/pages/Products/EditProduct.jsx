@@ -252,7 +252,7 @@ const EditProduct = () => {
             {isSingleType && <Grid item xs={12} >
               <Grid container direction="row">
                 {details?.sizes?.map((sizes, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Grid item xs={12} sm={6} md={12} lg={6} key={index}>
                     <Box key={index} display="flex" alignItems="center">
                       <TextField
                         // label={`sizes ${index + 1}`}
