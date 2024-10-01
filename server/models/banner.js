@@ -15,7 +15,12 @@ const bannerSchema = mongoose.Schema({
     description: {
         type: String,
     },
-    image: {
+    type: {
+        type: String,
+        enum: ["image", "video"],
+        required: true
+    },
+    src: {
         type: String,
         required: true
     },
@@ -24,8 +29,8 @@ const bannerSchema = mongoose.Schema({
         default: true
     }
 },
-{
-    timestamps: true
-})
+    {
+        timestamps: true
+    })
 
 module.exports = mongoose.model('Banner', bannerSchema)

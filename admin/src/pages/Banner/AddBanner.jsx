@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Grid, ToggleButton, Typography } from "@mui/material";
+import { Alert, Box, Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, ToggleButton, Typography } from "@mui/material";
 import React, { useState } from 'react'
 import PageLayout from 'layouts/PageLayout';
 import toast from "react-hot-toast";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAddBanners } from "queries/StoreQuery";
 
 const AddBanner = () => {
-   const [data, setData] = useState({})
+   const [data, setData] = useState({ type: "image" })
    const navigate = useNavigate()
    const fileInputRef = React.useRef(null);
    const handleFileSelect = () => {
@@ -38,8 +38,8 @@ const AddBanner = () => {
          if (!data?.description) {
             return toast.error("description is required")
          }
-         if (!data?.image) {
-            return toast.error("image is required")
+         if (!data?.image && !data?.src) {
+            return toast.error("image/video is required")
          }
          const formData = new FormData();
          for (const key in data) {
@@ -47,13 +47,14 @@ const AddBanner = () => {
                formData.append(key, data[key]);
             }
          }
-         typeof (data.image) == 'object' && formData.append("image", data?.image, data?.image?.name);
+         data?.type === "image" && typeof (data.image) == 'object' && formData.append("image", data?.image, data?.image?.name);
          addBanners(formData)
             .then((res) => {
                if (res) {
                   toast.success(res?.message ?? "Banner added Successfully");
                   navigate('/banners')
-               }            })
+               }
+            })
             .catch((err) => {
                toast.error(err?.message ?? "Something went wrong");
             });
@@ -112,7 +113,7 @@ const AddBanner = () => {
                </Grid>
                <Grid item xs={12} sm={6}>
                   <Typography variant="caption">
-                  Banner status &nbsp;
+                     Banner status &nbsp;
                   </Typography>
                   <ToggleButton
                      value={data?.status}
@@ -140,77 +141,103 @@ const AddBanner = () => {
                      helperText="Short Description (about 10-20 words)"
                   />
                </Grid>
-
+               <Grid item xs={12} container alignItems="center">
+                  <FormControl>
+                     <Typography variant="caption">Choose Banner File Type</Typography>
+                     <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="type"
+                        value={data?.type ?? "image"}
+                        onChange={handleChange}
+                        sx={{ ml: 2 }}
+                     >
+                        <FormControlLabel value="image" control={<Radio />} label="Image" />
+                        <FormControlLabel value="video" control={<Radio />} label="Video" />
+                     </RadioGroup>
+                     <Typography variant="caption">For video files upload to an external cdn and paste the src here</Typography>
+                  </FormControl>
+               </Grid>
                <Grid item xs={12} >
-                  <Box
-                     sx={{
-                        width: 200,
-                        height: 110,
-                        cursor: "pointer",
-                        backgroundColor: "#D3D3D3",
-                        "&:hover": {
-                           backgroundColor: "#424242",
-                           opacity: [0.9, 0.8, 0.7],
-                        },
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                     }}
-                     onClick={handleFileSelect}
-                  >
-                     {data?.image ? (
-                        <img
-                           style={{ width: 240, height: 192, padding: 22 }}
-                           src={typeof (data?.image) == 'object' ? URL.createObjectURL(data.image) : `${process.env.REACT_APP_API_URL}/uploads/${data.image}`}
+                  {data?.type === "video" ? <Input
+                     placeholder="Banner Video Source (url)"
+                     id="src"
+                     name="src"
+                     label="Banner Video Source (url)"
+                     value={data?.src || ''}
+                     onChange={handleChange}
+                     fullWidth
+                     autoComplete="Banner Action (url)"
+                     variant="outlined"
+                  /> :
+                     <Box
+                        sx={{
+                           width: 200,
+                           height: 110,
+                           cursor: "pointer",
+                           backgroundColor: "#D3D3D3",
+                           "&:hover": {
+                              backgroundColor: "#424242",
+                              opacity: [0.9, 0.8, 0.7],
+                           },
+                           display: "flex",
+                           alignItems: "center",
+                           justifyContent: "center",
+                           flexDirection: "column",
+                        }}
+                        onClick={handleFileSelect}
+                     >
+                        {data?.image ? (
+                           <img
+                              style={{ width: 240, height: 192, padding: 22 }}
+                              src={typeof (data?.image) == 'object' && URL.createObjectURL(data.image)}
+                           />
+                        ) : (
+                           <React.Fragment>
+                              <svg
+                                 width="56"
+                                 height="56"
+                                 viewBox="0 0 56 56"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                              >
+                                 <path
+                                    d="M20.9994 51.3346H34.9994C46.666 51.3346 51.3327 46.668 51.3327 35.0013V21.0013C51.3327 9.33464 46.666 4.66797 34.9994 4.66797H20.9994C9.33268 4.66797 4.66602 9.33464 4.66602 21.0013V35.0013C4.66602 46.668 9.33268 51.3346 20.9994 51.3346Z"
+                                    stroke="#CDCDCD"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                 />
+                                 <path
+                                    d="M21.0007 23.3333C23.578 23.3333 25.6673 21.244 25.6673 18.6667C25.6673 16.0893 23.578 14 21.0007 14C18.4233 14 16.334 16.0893 16.334 18.6667C16.334 21.244 18.4233 23.3333 21.0007 23.3333Z"
+                                    stroke="#CDCDCD"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                 />
+                                 <path
+                                    d="M6.23047 44.2186L17.7338 36.4953C19.5771 35.2586 22.2371 35.3986 23.8938 36.8219L24.6638 37.4986C26.4838 39.0619 29.4238 39.0619 31.2438 37.4986L40.9505 29.1686C42.7705 27.6053 45.7105 27.6053 47.5305 29.1686L51.3338 32.4353"
+                                    stroke="#CDCDCD"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                 />
+                              </svg>
+                              <Typography sx={{ mt: 1, fontSize: 13 }}>
+                                 Upload Thumbnail
+                              </Typography>
+                           </React.Fragment>
+                        )}
+                        <input
+                           ref={fileInputRef}
+                           type="file"
+                           accept="image/*"
+                           style={{ display: "none" }}
+                           onChange={handleFileChange}
                         />
-                     ) : (
-                        <React.Fragment>
-                           <svg
-                              width="56"
-                              height="56"
-                              viewBox="0 0 56 56"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                           >
-                              <path
-                                 d="M20.9994 51.3346H34.9994C46.666 51.3346 51.3327 46.668 51.3327 35.0013V21.0013C51.3327 9.33464 46.666 4.66797 34.9994 4.66797H20.9994C9.33268 4.66797 4.66602 9.33464 4.66602 21.0013V35.0013C4.66602 46.668 9.33268 51.3346 20.9994 51.3346Z"
-                                 stroke="#CDCDCD"
-                                 strokeWidth="3"
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                              />
-                              <path
-                                 d="M21.0007 23.3333C23.578 23.3333 25.6673 21.244 25.6673 18.6667C25.6673 16.0893 23.578 14 21.0007 14C18.4233 14 16.334 16.0893 16.334 18.6667C16.334 21.244 18.4233 23.3333 21.0007 23.3333Z"
-                                 stroke="#CDCDCD"
-                                 strokeWidth="3"
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                              />
-                              <path
-                                 d="M6.23047 44.2186L17.7338 36.4953C19.5771 35.2586 22.2371 35.3986 23.8938 36.8219L24.6638 37.4986C26.4838 39.0619 29.4238 39.0619 31.2438 37.4986L40.9505 29.1686C42.7705 27.6053 45.7105 27.6053 47.5305 29.1686L51.3338 32.4353"
-                                 stroke="#CDCDCD"
-                                 strokeWidth="3"
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                              />
-                           </svg>
-                           <Typography sx={{ mt: 1, fontSize: 13 }}>
-                              Upload Thumbnail
-                           </Typography>
-                        </React.Fragment>
-                     )}
-                     <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                     />
-                  </Box>
+                     </Box>}
                </Grid>
                <Grid item xs={12}>
-                  <Button onClick={handleSubmit}>Add Banner</Button>
+                  <Button onClick={handleSubmit} disabled={isLoading}>Add Banner</Button>
                </Grid>
                <Grid item xs={12}>
                   <Alert color="primary" severity="info" sx={{ mt: 3, fontSize: 13 }}>

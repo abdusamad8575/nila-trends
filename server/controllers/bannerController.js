@@ -11,14 +11,24 @@ const getBanners = async (req, res) => {
   }
 };
 
+const getStoreBanners = async (req, res) => {
+  try {
+    const data = await Banner.find({ status: true })
+    res.status(200).json({ data })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error?.message ?? 'Something went wrong' })
+  }
+};
+
 const addBanner = async (req, res) => {
   try {
-    const { title, subtitle, url, description, status } = req?.body
+    const { title, subtitle, url, description, type, src, status } = req?.body
     const image = req?.file?.filename
-    if (!image) {
-      return res.status(404).json({ message: 'Image not found' });
+    if (!image && !src) {
+      return res.status(404).json({ message: 'Image/video not found' });
     }
-    const data = new Banner({ title, subtitle, url, image, description, status })
+    const data = new Banner({ title, subtitle, url, type, src, ...(image && { src: image }), description, status })
     await data.save()
     res.status(201).json({ data, message: 'Banner created successfully' });
   } catch (error) {
@@ -42,15 +52,15 @@ const getBannerById = async (req, res) => {
 }
 
 const updateBanner = async (req, res) => {
-  const { _id, title, subtitle, url, description, status } = req.body;
+  const { _id, title, subtitle, url, description, type, src, status } = req.body;
   const image = req?.file?.filename;
   try {
     const data = await Banner.findById(_id);
     if (!data) {
       return res.status(404).json({ message: 'Banner not found' });
     }
-    if (image) {
-      fs.unlink(`public/uploads/${data?.image}`, (err) => {
+    if (image && data?.type === "image") {
+      fs.unlink(`public/uploads/${data?.src}`, (err) => {
         if (err) {
           console.error('Error deleting image:', err);
           return;
@@ -59,7 +69,7 @@ const updateBanner = async (req, res) => {
       });
     }
     await Banner.updateOne({ _id }, {
-      $set: { title, subtitle, url, description, status, ...(image && { image }) }
+      $set: { title, subtitle, url, type, src, ...(image && { src: image }), description, status }
     })
     res.status(200).json({ data, message: 'Banner updated successfully' });
   } catch (error) {
@@ -75,13 +85,15 @@ const deleteBanner = async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Banner not found' });
     }
-    fs.unlink(`public/uploads/${data?.image}`, (err) => {
-      if (err) {
-        console.error('Error deleting image:', err);
-        return;
-      }
-      console.log('Image deleted successfully.');
-    });
+    if (data?.src && data?.type === "image") {
+      fs.unlink(`public/uploads/${data?.src}`, (err) => {
+        if (err) {
+          console.error('Error deleting image:', err);
+          return;
+        }
+        console.log('Image deleted successfully.');
+      });
+    }
     res.status(200).json({ message: 'Banner deleted successfully' });
   } catch (error) {
     console.log(error);
@@ -91,6 +103,7 @@ const deleteBanner = async (req, res) => {
 
 module.exports = {
   getBanners,
+  getStoreBanners,
   addBanner,
   getBannerById,
   updateBanner,

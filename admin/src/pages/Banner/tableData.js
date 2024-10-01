@@ -18,7 +18,7 @@ function Banners({ image, name, desc }) {
           {name}
         </Typography>
         <Typography variant="caption" color="secondary">
-          {desc}
+          {desc?.substring(0, 50)}
         </Typography>
       </Box>
     </Box>
@@ -37,10 +37,10 @@ const TableData = () => {
   ]
 
   const rows = data?.data?.map(item => ({
-    Banners: <Banners image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`} name={item?.title} desc={item?.subtitle} />,
+    Banners: <Banners image={`${process.env.REACT_APP_API_URL}/uploads/${item?.src}`} name={item?.title} desc={item?.subtitle} />,
     url: (
       <Typography variant="caption" color="secondary" fontWeight="medium">
-        <a href={item?.url}>{(item?.url).slice(0,50)}</a>
+        <a href={item?.url}>{(item?.url).slice(0, 50)}</a>
       </Typography>
     ),
     status: (
