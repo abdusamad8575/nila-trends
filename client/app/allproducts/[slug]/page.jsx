@@ -1,5 +1,5 @@
 "use client"
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import RightBox from '../RightBox'
 import { Pagination } from '@mui/material'
@@ -21,7 +21,7 @@ const ProductListing = () => {
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [wishlistItems, setWishlistItems] = useState([]);
-
+  const router = useRouter()
   const fetchFilters = async (page = 1, search = '') => {
     try {
       const { data } = await axiosInstance.get(`/products?category=${category}`, {
@@ -98,7 +98,7 @@ const ProductListing = () => {
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8 first-item">
-        <div className="flex items-center mb-4">
+          <div className="flex items-center mb-4">
             <Filters />
           </div>
           <div className='w-full pb-5 text-sm'>{message}</div>
