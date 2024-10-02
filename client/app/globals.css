@@ -34,7 +34,7 @@ a {
 
 /* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 2px; /* Width of the scrollbar */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {

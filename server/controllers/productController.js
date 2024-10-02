@@ -7,11 +7,11 @@ const getProducts = async (req, res) => {
     const { page = 1, perPage = 12, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
     const query = {};
     if (search) {
-      query.name = { $regex: search, $options: 'i' };  
+      query.name = { $regex: search, $options: 'i' };
     }
 
     let categoryNotFound = false;
-    if (category) {    
+    if (category) {
       const categoryDoc = await Category.findOne({
         name: { $regex: new RegExp(category, 'i') },
       });
@@ -26,7 +26,10 @@ const getProducts = async (req, res) => {
       page: parseInt(page, 10),
       limit: parseInt(perPage, 10),
       sort: { [sortBy]: order === 'desc' ? -1 : 1 },
-      populate: 'category',
+      populate: [
+        { path: 'category' },
+        { path: 'variantProduct' }
+      ]
     };
     const products = await Product.paginate(query, options);
     const start = (page - 1) * perPage + 1;
@@ -103,7 +106,8 @@ const getClientProductById = async (req, res) => {
         populate: {
           path: 'category',
         },
-      });
+      })
+      .populate('variantProduct')
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -117,7 +121,7 @@ const getClientProductById = async (req, res) => {
 const addProduct = async (req, res) => {
   try {
     console.log(req.files);
-    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct,variantProduct } = req?.body
+    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct, variantProduct } = req?.body
 
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
     const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
@@ -136,7 +140,7 @@ const addProduct = async (req, res) => {
 
     if (req.files.length != 0) {
       const product = new Product({
-        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct,variantProduct,
+        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct, variantProduct,
         image: req.files.map((x) => x.filename),
       });
       await product.save();
@@ -168,10 +172,10 @@ const addProduct = async (req, res) => {
 const addVariantProduct = async (req, res) => {
   try {
     // console.log(req.files.length);
-    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct,variantProduct,image } = req?.body
-    console.log('category',category);
-    
-    
+    const { name, subheading, category, brand, price, stock, discount, material, sale_rate, description, feature, spec, sizes, sizeQuantity, fitAndCare, similarProduct, variantProduct, image } = req?.body
+    console.log('category', category);
+
+
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
     const variantProductArray = Array.isArray(variantProduct) ? variantProduct : [variantProduct];
     let sizeValue = [];
@@ -194,7 +198,7 @@ const addVariantProduct = async (req, res) => {
 
     if (images) {
       const product = new Product({
-        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct,variantProduct,
+        name, subheading, category, brand, price, stock, discount, material, sale_rate, description, fitAndCare, feature, spec, sizes: sizeValue, similarProduct, variantProduct,
         // image: req.files.map((x) => x.filename),
         image: images,
       });
@@ -236,7 +240,7 @@ const addVariantProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity, similarProduct,variantProduct } = req?.body
+    const { _id, name, subheading, brand, price, stock, discount, material, sale_rate, description, image, isAvailable, fitAndCare, feature, spec, sizes, sizeQuantity, similarProduct, variantProduct } = req?.body
 
     const sizesArray = Array.isArray(sizes) ? sizes : [sizes];
     const similarProductArray = Array.isArray(similarProduct) ? similarProduct : [similarProduct];
@@ -284,7 +288,7 @@ const updateProduct = async (req, res) => {
       });
     }
     await Product.updateOne({ _id }, {
-      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct,variantProduct }
+      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct, variantProduct }
     })
 
     res.status(200).json({ message: "Product updated successfully !" });

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../redux/actions/userActions';
 import { useRouter } from 'next/navigation';
 import ProductCard from '../components/products/ProductCard';
+import Filters from '../components/products/Filters';
 
 const KurtaSetsListing = () => {
   const dispatch = useDispatch();
@@ -95,27 +96,14 @@ const KurtaSetsListing = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8 first-item">
           <div className="flex items-center mb-4">
-            <button className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-gray-100 rounded-l-lg">
-              <Filter size={16} className="mr-2" />
-              <span className="text-xs sm:text-sm">Filter</span>
-            </button>
-            <div className="flex-grow relative">
-              <input
-                type="text"
-                placeholder="Kurta Sets"
-                value={search}
-                onChange={handleSearchChange}
-                className="w-full py-2 px-3 sm:px-4 border border-gray-300 rounded-r-lg text-xs sm:text-sm"
-              />
-              <Search size={20} className="absolute right-2.5 sm:right-3 top-2.5 text-gray-400" />
-            </div>
+            <Filters />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products?.map((product) => (
               <ProductCard
                 key={product._id}
                 ProId={product._id}
-                image={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`}
+                images={product?.image}
                 category={product?.category?.name}
                 title={product.name}
                 fit={product.fitAndCare[0] || 'Regular'}

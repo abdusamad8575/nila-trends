@@ -11,10 +11,12 @@ import { Roboto, Roboto_Mono, Rochester } from 'next/font/google'
 import ModalLayout from '../../components/common/ModalLayout';
 import Link from 'next/link';
 import axiosInstance from '../../../axios';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
 import { setCheckout } from '../../../redux/actions/storeActions';
 import { setCheckoutProduct } from '../../../redux/actions/storeActions';
+import toast from 'react-hot-toast';
+import Review from '@/app/components/products/Review';
 
 const rochester = Rochester({
    subsets: ['latin'],
@@ -50,19 +52,21 @@ const ProductPage = () => {
    const handleCheckout = () => {
       if (!userDetails) {
          router.push('/register');
-     }
+      }
       if (selectedSize || product?.stock) {
-         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize})) : dispatch(setCheckoutProduct({ product}))
+         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize })) : dispatch(setCheckoutProduct({ product }))
          dispatch(setCheckout(true))
-     } else {
-         alert('please select size')
-     }
-      
+      } else {
+         toast.error('please select size')
+      }
+
    };
    const fetchProduct = async () => {
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/client/${id}`)
          .then((response) => {
             setProduct(response.data);
+            console.log(response.data);
+
          })
          .catch((error) => {
             console.error('Error fetching product:', error);
@@ -86,32 +90,32 @@ const ProductPage = () => {
    const handleSizeSelect = (size, index) => {
       setSelectedSize(size);
       setSelectedSizeIndex(index);
-      
-  };
 
-  const addCartData = async (proId1) => {
+   };
 
-   if (!userDetails) {
-       router.push('/register');
-   } else {
-       try {
-           const urlQuery = `/user/addToCart/${proId1}`;
-           const response = await axiosInstance.patch(urlQuery, { size: selectedSize });
-           dispatch(setUserDetails(response?.data?.userData));
+   const addCartData = async (proId1) => {
 
-       } catch (error) {
-           console.error('Error adding to cart:', error);
-       }
-   }
-};
+      if (!userDetails) {
+         router.push('/register');
+      } else {
+         try {
+            const urlQuery = `/user/addToCart/${proId1}`;
+            const response = await axiosInstance.patch(urlQuery, { size: selectedSize });
+            dispatch(setUserDetails(response?.data?.userData));
 
-  const handleAddToCartClick = (product) => {
-   if (selectedSize || product?.stock) {
-       addCartData(product?._id);
-   } else {
-       alert('please select size')
-   }
-};
+         } catch (error) {
+            console.error('Error adding to cart:', error);
+         }
+      }
+   };
+
+   const handleAddToCartClick = (product) => {
+      if (selectedSize || product?.stock) {
+         addCartData(product?._id);
+      } else {
+         toast.error('please select size')
+      }
+   };
    return (
       <div className={styles.container}>
          <div className={styles.header}>
@@ -138,6 +142,29 @@ const ProductPage = () => {
                      <li key={index}>{feature}</li>
                   ))}
                </ul>
+               {product?.sizes?.length > 0 &&
+                  <div className={`md:hidden ${styles.footerSection}`}>
+                     <h3>Select Size</h3>
+                     <div className=''>
+                        {product?.sizes.map((sizeObj, index) => (
+                           sizeObj?.quantity > 0 && <button key={index} onClick={() => handleSizeSelect(sizeObj.sizes, index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
+                              ? 'border-[#B17E3E]'
+                              : 'hover:bg-gray-100'
+                              }`}>{sizeObj.sizes?.toUpperCase()} </button>
+                        ))}
+                     </div>
+                  </div>}
+               <div>
+                  <p className='text-green-600 text-sm'>Free delivery on your first order</p>
+               </div>
+               {!!product?.variantProduct?.length && <h3 className={styles.sectionTitle}>Available Color & Texture</h3>}
+               <div className='flex gap-2 pb-6'>
+                  {product?.variantProduct?.map(item => (
+                     <div className='overflow-hidden w-14 h-14 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => router.push(`/products/${item?._id}`)}>
+                        <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item?.image[0]}`} height={50} width={100} />
+                     </div>
+                  ))}
+               </div>
                <div >
                   <div className='flex relative h-12 justify-center md:justify-start'>
                      <h3 className={`${rochester.className} absolute text-2xl md:text-4xl`}>Nilaa Chronicles</h3>
@@ -154,13 +181,13 @@ const ProductPage = () => {
                   <p className={`${roboto_mono.className} text-xs md:text-base`}>{product?.description}</p>
                </div>
                <div className={styles.section}>
-                  <h3 className={styles.sectionTitle}>Fit & Care</h3>
+                  {!!product?.fitAndCare?.length && <h3 className={styles.sectionTitle}>Fit & Care</h3>}
                   {product?.fitAndCare?.map((fit, index) => (
                      <p key={index} className={styles.fitInfo}>{fit}</p>
                   ))}
                </div>
                <div className={styles.section}>
-                  <h3 className={styles.sectionTitle}>Specifications</h3>
+                  {!!product?.spec?.length && <h3 className={styles.sectionTitle}>Specifications</h3>}
                   {product?.spec?.map((spec, index) => (
                      <p key={index} className={styles.specInfo}>{spec}</p>
                   ))}
@@ -189,18 +216,19 @@ const ProductPage = () => {
          </div>
 
          <div className="mb-36">
-            <SimilarStores similarProducts={product.similarProduct} />
+            {!!product?.similarProduct?.length && <SimilarStores similarProducts={product?.similarProduct} />}
+            <Review data={product} />
          </div>
 
          <div className={`${styles.footer} bg-opacity-80 bg-white`}>
-            {product?.sizes?.length>0 &&<div className={`hidden md:block ${styles.footerSection}`}>
+            {product?.sizes?.length > 0 && <div className={`hidden md:block ${styles.footerSection}`}>
                <h3>Select Size</h3>
                <div className={styles.buttonGroup}>
                   {product?.sizes.map((sizeObj, index) => (
-                     sizeObj?.quantity>0 &&<button key={index} onClick={() => handleSizeSelect(sizeObj.sizes,index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
-                                ? 'border-[#B17E3E]'
-                                : 'hover:bg-gray-100'
-                                }`}>{sizeObj.sizes?.toUpperCase()} </button>
+                     sizeObj?.quantity > 0 && <button key={index} onClick={() => handleSizeSelect(sizeObj.sizes, index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
+                        ? 'border-[#B17E3E]'
+                        : 'hover:bg-gray-100'
+                        }`}>{sizeObj.sizes?.toUpperCase()} </button>
                   ))}
                </div>
             </div>}
@@ -231,10 +259,10 @@ const ProductPage = () => {
             </div>
 
             <div className={`${roboto.className} flex items-center gap-2 text-sm md:text-md w-full md:w-1/5`}>
-               <button 
-               // onClick={() => setOpen(true)}
-               onClick={() =>handleAddToCartClick(product)} 
-                className='flex w-1/2 justify-center items-center bg-[#333] text-white rounded-md p-2 md:p-3'>Add to Cart&nbsp;&nbsp;
+               <button
+                  // onClick={() => setOpen(true)}
+                  onClick={() => handleAddToCartClick(product)}
+                  className='flex w-1/2 justify-center items-center bg-[#333] text-white rounded-md p-2 md:p-3'>Add to Cart&nbsp;&nbsp;
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.875 0.125L13.25 0.125C13.4158 0.125 13.5747 0.190848 13.6919 0.308058C13.8092 0.425269 13.875 0.58424 13.875 0.75V10.125C13.875 10.4702 13.5952 10.75 13.25 10.75C12.9048 10.75 12.625 10.4702 12.625 10.125V2.25888L1.19194 13.6919C0.947864 13.936 0.552136 13.936 0.308058 13.6919C0.0639806 13.4479 0.0639806 13.0521 0.308058 12.8081L11.7411 1.375L3.875 1.375C3.52982 1.375 3.25 1.09518 3.25 0.75C3.25 0.404822 3.52982 0.125 3.875 0.125Z" fill="white" />
                   </svg>

@@ -3,7 +3,8 @@ import "./globals.css";
 import Navbar from "./components/navbar";
 import MobileNavbar from "./components/navbar-mobile";
 import MobileFooter from "./components/footer";
-import {Providers} from "./providers"
+import { Providers } from "./providers"
+import CustomToaster from "./components/common/CustomToaster";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <CustomToaster />
         <Providers>
           <div className="hidden lg:block">
             <Navbar />
@@ -29,7 +31,7 @@ export default function RootLayout({ children }) {
           <div className="block lg:hidden">
             <MobileFooter />
           </div>
-          </Providers>
+        </Providers>
       </body>
     </html>
   );

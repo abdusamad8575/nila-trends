@@ -23,20 +23,15 @@ const ModalLayout = ({
           Modal: {
             contentBg: bgcolor
               ? bgcolor
-              : theme === "light"
-              ? "#fff"
-              : "#212227",
-            colorIcon: theme
-              ? theme === "dark"
-              ? "#fff"
-              : "#212227" : "#fff",
+              : "#fff",
+            colorIcon: "#212227",
           },
         },
       }}
     >
       <Modal
         zIndex={9999}
-        className="modal-head"
+        className="modal-head w-full md:w-[70vw]"
         width={width}
         footer={false}
         title={title}

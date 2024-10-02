@@ -103,7 +103,7 @@ const KurtaSetsListing = () => {
                 <ProductCard
                   key={product._id}
                   ProId={product._id}
-                  image={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`}
+                  images={product?.image}
                   category={product?.category?.name}
                   title={product.name}
                   fit={product.fitAndCare[0] || 'Regular'}

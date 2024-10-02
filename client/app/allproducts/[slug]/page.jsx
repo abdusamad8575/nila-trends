@@ -3,13 +3,13 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import RightBox from '../RightBox'
 import { Pagination } from '@mui/material'
-import { Filter, Search } from 'lucide-react'
 import axiosInstance from '../../../axios'
 import ProductCard from '@/app/components/products/ProductCard'
 import { setUserDetails } from '@/redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
+import Filters from '../../components/products/Filters';
 
-const Filters = () => {
+const ProductListing = () => {
   const param = useParams()
   const category = param?.slug?.replace(/%20/g, ' ');
   const dispatch = useDispatch()
@@ -22,20 +22,6 @@ const Filters = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [wishlistItems, setWishlistItems] = useState([]);
 
-  const fetchProducts = async (page = 1, search = '') => {
-    try {
-      const { data } = await axiosInstance.get(`/products`, {
-        params: { page, search }
-      });
-      console.log('products-', data.products);
-
-      setProducts(data.products);
-      setMessage(data.message)
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error('Error fetching products:', error.message);
-    }
-  };
   const fetchFilters = async (page = 1, search = '') => {
     try {
       const { data } = await axiosInstance.get(`/products?category=${category}`, {
@@ -54,7 +40,6 @@ const Filters = () => {
 
   useEffect(() => {
     fetchFilters(page, search)
-    // fetchProducts(page, search);
   }, [page, search]);
 
   const handlePageChange = (event, value) => {
@@ -113,21 +98,8 @@ const Filters = () => {
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8 first-item">
-          <div className="flex items-center mb-4">
-            <button className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-gray-100 rounded-l-lg">
-              <Filter size={16} className="mr-2" />
-              <span className="text-xs sm:text-sm">Filter</span>
-            </button>
-            <div className="flex-grow relative">
-              <input
-                type="text"
-                placeholder="Kurta Sets"
-                value={search}
-                onChange={handleSearchChange}
-                className="w-full py-2 px-3 sm:px-4 border border-gray-300 rounded-r-lg text-xs sm:text-sm"
-              />
-              <Search size={20} className="absolute right-2.5 sm:right-3 top-2.5 text-gray-400" />
-            </div>
+        <div className="flex items-center mb-4">
+            <Filters />
           </div>
           <div className='w-full pb-5 text-sm'>{message}</div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -135,7 +107,7 @@ const Filters = () => {
               <ProductCard
                 key={product._id}
                 ProId={product._id}
-                image={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`}
+                images={product?.image}
                 category={product?.category?.name}
                 title={product.name}
                 fit={product.fitAndCare[0] || 'Regular'}
@@ -161,4 +133,4 @@ const Filters = () => {
   )
 }
 
-export default Filters
+export default ProductListing
