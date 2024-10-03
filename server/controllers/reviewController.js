@@ -5,8 +5,8 @@ const Product = require('../models/product');
 exports.createReview = async (req, res) => {
   try {
     const { productId, headline, rating, review, userId } = req.body;
-    console.log('productId, headline, rating, review, userId',productId, headline, rating, review, userId);
-    
+    console.log('productId, headline, rating, review, userId', productId, headline, rating, review, userId);
+
 
     const image = req.files ? (req?.files?.map((x) => x.filename)) : null;
 
@@ -20,7 +20,28 @@ exports.createReview = async (req, res) => {
     });
 
     await newReview.save();
-    await Product.findByIdAndUpdate(productId, { $push: { reviews: newReview._id } });
+    console.log('newReview');
+
+    // await Product.findByIdAndUpdate(productId, { $push: { reviews: newReview._id } });
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    product.reviews.push(newReview._id);
+
+    const totalReviews = product?.reviews?.length;
+    const totalRating = product?.rating + newReview?.rating;
+    const averageRatings = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : '0';
+    const averageRating = (averageRatings % 1 === 0) ? Math.round(averageRatings) : averageRatings;
+    console.log('averageRating', averageRating);
+
+    product.rating = averageRating;
+
+
+    await product.save();
+
 
     res.status(201).json({ success: true, data: newReview });
   } catch (error) {
@@ -32,7 +53,7 @@ exports.getReviewsByProductId = async (req, res) => {
   try {
     const { productId } = req.params;
     const reviews = await Review.find({ productId, approved: true })
-    .populate('userId','username');
+      .populate('userId', 'username');
     res.status(200).json({ success: true, data: reviews });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -47,7 +68,7 @@ exports.getAdminReview = async (req, res) => {
 
   try {
     const review = await Review.find().sort({ createdAt: -1 })
-    .populate('productId', 'name')
+      .populate('productId', 'name')
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();

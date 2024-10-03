@@ -2,64 +2,132 @@ const Product = require('../models/product');
 const Category = require('../models/category')
 
 
+// const getProducts = async (req, res) => {
+//   try {
+//     const { page = 1, perPage = 12, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
+//     const query = {};
+//     if (search) {
+//       query.name = { $regex: search, $options: 'i' };
+//     }
+
+//     let categoryNotFound = false;
+//     if (category) {
+//       const categoryDoc = await Category.findOne({
+//         name: { $regex: new RegExp(category, 'i') },
+//       });
+//       if (categoryDoc) {
+//         query.category = categoryDoc._id;
+//       } else {
+//         categoryNotFound = true;
+//       }
+//     }
+
+//     const options = {
+//       page: parseInt(page, 10),
+//       limit: parseInt(perPage, 10),
+//       sort: { [sortBy]: order === 'desc' ? -1 : 1 },
+//       populate: [
+//         { path: 'category' },
+//         { path: 'variantProduct' }
+//       ]
+//     };
+//     const products = await Product.paginate(query, options);
+//     const start = (page - 1) * perPage + 1;
+//     const end = Math.min(page * perPage, products.totalDocs);
+
+//     let responseMessage = `Showing ${start} – ${end} of ${products.totalDocs} results for "${category}"`;
+//     if (products.docs.length === 0 || categoryNotFound) {
+//       const suggestedProducts = await Product.paginate(
+//         { ...(search && { name: { $regex: search, $options: 'i' } }) },
+//         options
+//       );
+
+//       responseMessage = `No results for "${category}". Showing suggested products for "${category}".`
+
+//       return res.status(200).json({
+//         message: responseMessage,
+//         products: suggestedProducts.docs,
+//         totalPages: suggestedProducts.totalPages,
+//       });
+//     }
+
+//     res.status(200).json({
+//       message: responseMessage,
+//       products: products.docs,
+//       totalPages: products.totalPages,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to fetch products' });
+//   }
+// };
+
 const getProducts = async (req, res) => {
   try {
-    const { page = 1, perPage = 12, sortBy = 'createdAt', order = 'desc', search = '', category } = req.query;
-    const query = {};
+    const { page = 1, search, category, priceRange, discount, rating } = req.query;
+    console.log('search, category, priceRange, discount, rating', search, category, priceRange, discount, rating);
+
+    const limit = 9;
+    const skip = (page - 1) * limit;
+
+    let filter = {};
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      const matchingCategories = await Category.find({ name: { $regex: search, $options: 'i' } }, '_id').lean();
+      const matchingCategoryIds = matchingCategories.map(cat => cat._id);
+
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { category: { $in: matchingCategoryIds } }
+      ];
     }
 
-    let categoryNotFound = false;
+
+
+    if (priceRange) {
+      const [minPrice, maxPrice] = priceRange.split('-').map(Number);
+      filter.sale_rate = { $gte: minPrice, $lte: maxPrice };
+    }
+
+
+    if (discount) {
+      filter.discount = { $gte: discount };
+    }
+
+
+    if (rating) {
+      filter.rating = { $gte: rating };
+    }
+
     if (category) {
-      const categoryDoc = await Category.findOne({
-        name: { $regex: new RegExp(category, 'i') },
-      });
-      if (categoryDoc) {
-        query.category = categoryDoc._id;
-      } else {
-        categoryNotFound = true;
+      const categoriesArray = category.split(',');
+
+      const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
+      const categoryIdList = categoryIds.map(cat => cat._id);
+
+      if(categoryIdList.length){
+        console.log('categoryIdList');
+        
+
+        filter.category = { $in: categoryIdList };
       }
+
     }
 
-    const options = {
-      page: parseInt(page, 10),
-      limit: parseInt(perPage, 10),
-      sort: { [sortBy]: order === 'desc' ? -1 : 1 },
-      populate: [
-        { path: 'category' },
-        { path: 'variantProduct' }
-      ]
-    };
-    const products = await Product.paginate(query, options);
-    const start = (page - 1) * perPage + 1;
-    const end = Math.min(page * perPage, products.totalDocs);
+    const products = await Product.find(filter)
+      .populate('category')
+      .populate('variantProduct')
+      .skip(skip)
+      .limit(limit)
+      .exec();
 
-    let responseMessage = `Showing ${start} – ${end} of ${products.totalDocs} results for "${category}"`;
-    if (products.docs.length === 0 || categoryNotFound) {
-      const suggestedProducts = await Product.paginate(
-        { ...(search && { name: { $regex: search, $options: 'i' } }) },
-        options
-      );
+    const totalProducts = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(totalProducts / limit);
 
-      responseMessage = `No results for "${category}". Showing suggested products for "${category}".`
-
-      return res.status(200).json({
-        message: responseMessage,
-        products: suggestedProducts.docs,
-        totalPages: suggestedProducts.totalPages,
-      });
-    }
-
-    res.status(200).json({
-      message: responseMessage,
-      products: products.docs,
-      totalPages: products.totalPages,
-    });
+    res.json({ products, totalPages, message: 'Products fetched successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({ message: 'Error fetching products' });
   }
 };
+
 
 
 const getAdminProducts = async (req, res) => {
@@ -287,8 +355,14 @@ const updateProduct = async (req, res) => {
         updateFunction()
       });
     }
+    let discounts;
+    if (sale_rate && price) {
+      discounts = ((price - sale_rate) / price) * 100;
+    } else {
+      discounts = 0;
+    }
     await Product.updateOne({ _id }, {
-      $set: { name, subheading, brand, price, stock, discount, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct, variantProduct }
+      $set: { name, subheading, brand, price, stock, discount: discounts, material, sale_rate, description, isAvailable, fitAndCare, feature, spec, sizes: sizeValue, image: images, similarProduct, variantProduct }
     })
 
     res.status(200).json({ message: "Product updated successfully !" });
