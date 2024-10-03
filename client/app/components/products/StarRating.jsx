@@ -1,6 +1,7 @@
 import React from 'react'
 
 const StarRating = ({ rating }) => {
+	
 	return (
 		<>
 			{Array(Math.floor(rating)).fill().map(x =>
