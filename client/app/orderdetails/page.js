@@ -79,46 +79,7 @@ const OrderDetailPage = () => {
           ))}
         </div>
 
-        <div className="w-full md:w-1/2 bg-white shadow rounded-lg p-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
-            <div>
-              <p className="font-semibold">Order No : {orderDetails.orderNo}</p>
-              <p className="text-sm text-gray-600">Shipping addresses</p>
-              <p className="text-sm text-gray-600 max-w-md">{orderDetails.shippingAddress}</p>
-            </div>
-            <div className="text-left sm:text-right mt-2 sm:mt-0">
-              <p className="text-gray-600">{orderDetails.date}</p>
-              <p className="font-semibold mt-2">Total Amount • {orderDetails.totalAmount}</p>
-              <p className="text-green-500">{orderDetails.status}</p>
-            </div>
-          </div>
-
-          <h2 className="text-lg font-semibold mb-4">Items - {orderDetails.quantity}</h2>
-
-          {orderDetails.items.map((item, index) => (
-            <div key={index} className="flex flex-col sm:flex-row items-center border-t py-4">
-              <Image src={item.image} alt={item.name} width={80} height={80} className="mr-4 mb-2 sm:mb-0" />
-              <div className="flex-grow mb-2 sm:mb-0">
-                <h3 className="font-semibold text-sm">{item.name}</h3>
-                <p className="text-xs text-gray-600">
-                  Fit • {item.fit} &nbsp;&nbsp; Price • {item.price}
-                </p>
-              </div>
-              <div className="text-center sm:text-right">
-                <p className="text-sm mb-1">Select Size</p>
-                <select className="border rounded px-2 py-1 text-sm mb-1">
-                  <option>{item.size}</option>
-                </select>
-                <div className="flex items-center justify-center sm:justify-end border rounded">
-                  <button className="px-2 py-1 text-sm">-</button>
-                  <span className="px-2 text-sm">{item.quantity}</span>
-                  <button className="px-2 py-1 text-sm">+</button>
-                </div>
-                <button className="mt-1 text-xs text-gray-600 underline">save for later</button>
-              </div>
-            </div>
-          ))}
-        </div>
+        
       </div>
     </div>
   );

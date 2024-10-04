@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Input, Radio } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import axiosInstance from '../../../axios'
-import { useSelector,useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
 import { setProfile } from '../../../redux/actions/storeActions';
 import { useRouter } from 'next/navigation';
@@ -172,7 +172,7 @@ function Checkout() {
   }
   const handleDeliveryInstruction = () => {
     setDeliveryInstruction(!DeliveryInstruction);
-    
+
   }
   const handleProfile = (state) => dispatch(setProfile(state))
 
@@ -186,7 +186,7 @@ function Checkout() {
   const handlePaymentMethodChange = (e) => {
     setSelectedPaymentMethod(e.target.value);
   };
-  
+
 
   const handlePaymentSuccess = async () => {
 
@@ -216,7 +216,7 @@ function Checkout() {
       products: productsOrderData,
       couponId: appliedCouponDetails._id,
     });
-    
+
     dispatch(setUserDetails(response.data.user));
     alert('Your order has been placed!')
     router.push('/')
@@ -243,11 +243,11 @@ function Checkout() {
   };
 
   return (
-    <div className='flex flex-col gap-3 p-4'>
+    <div className='flex flex-col gap-3 p-4 mb-28 md:mb-1 text-sm md:text-sm'>
       <h2 className='font-bold text-lg pt-16 md:pt-1'>Proceed to Checkout</h2>
       <hr className='border-dashed ' />
       <div className="space-y-4">
-        <h3 className='font-bold text-sm pt-10 md:pt-1'>Delivery Items</h3>
+        <h3 className='font-bold text-sm'>Delivery Items</h3>
         <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto max-h-32">
           {cartData?.item?.slice().reverse().map((item, index) => (
             <div key={item?._id} className="flex items-center justify-between space-x-4">
@@ -278,18 +278,28 @@ function Checkout() {
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
-          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>3 - 7</span> days delivery</p> </div>
+          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p> </div>
           {/* <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label> */}
         </div>
         <div className="flex flex-row justify-between"> <p>Your addresses</p> </div>
-        {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.firstname},${DeliveryAddress?.lastname},${DeliveryAddress?.address_line_1},${DeliveryAddress?.address_line_2},${DeliveryAddress?.city},${DeliveryAddress?.state},${DeliveryAddress?.country},${DeliveryAddress?.zip},${DeliveryAddress?.mobile}`}</p> :
+        {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.firstname} ${DeliveryAddress?.lastname}, 
+        ${DeliveryAddress?.address_line_1}, ${DeliveryAddress?.address_line_2}, 
+        ${DeliveryAddress?.city}, ${DeliveryAddress?.state}, 
+        ${DeliveryAddress?.country}, 
+        ${DeliveryAddress?.zip}, 
+        ${DeliveryAddress?.mobile}`}</p> :
           <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto h-24">
             <ul className="w-full text-sm font-medium ">
               {addresses?.length > 0 ? addresses.map((details, index) => (
-                <li key={index} className="w-full">
+                <li key={index} className="w-full mb-2">
                   <div className="flex items-start gap-3" key={index} onClick={() => handleDeliveryAddress(details)}>
                     <input id={`checkbox-${index}`} type="checkbox" value="" className="cursor-pointer w-4 h-4 mt-1 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                    <label htmlFor={`checkbox-${index}`} className="w-full text-sm font-medium cursor-pointer">{`${details?.firstname},${details?.lastname},${details?.address_line_1},${details?.address_line_2},${details?.city},${details?.state},${details?.country},${details?.zip},${details?.mobile}`}</label>
+                    <label htmlFor={`checkbox-${index}`} className="w-full text-xs md:text-sm font-medium cursor-pointer">{`${details?.firstname} ${details?.lastname},
+                    ${details?.address_line_1}, ${details?.address_line_2}, 
+                    ${details?.city}, ${details?.state}, 
+                    ${details?.country}, 
+                    ${details?.zip}, 
+                    Ph:${details?.mobile}`}</label>
                   </div>
                 </li>
               )) : <p className="text-red-500  flex justify-center">address not font . please add the address then comeback checkout and select the address </p>}
@@ -319,7 +329,7 @@ function Checkout() {
         >
           <p className="text-center text-sm">{coupon}</p>
         </div>
-        <span className='text-green-500 text-sm'>coupon applied <CheckOutlined /></span>
+        <span className='text-green-500 text-xs md:text-sm'>coupon applied <CheckOutlined /></span>
       </div>}
 
       <hr className="border-dashed " />
@@ -329,8 +339,7 @@ function Checkout() {
           <div className="flex flex-col">
             <Radio.Group onChange={handlePaymentMethodChange} value={selectedPaymentMethod} >
               <Radio value="COD">Cash on Delivery (COD)</Radio>
-              <Radio value="SamsungPay">Samsung Pay</Radio>
-              <Radio value="ApplePay">Apple Pay</Radio>
+              <Radio value="online" disabled>Online Payment</Radio>
             </Radio.Group>
           </div>
         </div>

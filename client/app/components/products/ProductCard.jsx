@@ -50,7 +50,11 @@ const ProductCard = ({ images, category, ProId, title, fit, price, sale_rate, on
             </svg>
          </button>
          <Link href={`/products/${ProId}`}>
-            {/* <img src={image} alt={title} className="w-full h-48 sm:h-64 object-cover" /> */}
+         <Carousel autoplay={autoplay} autoplaySpeed={1000} onMouseEnter={() => setAutoplay(true)} onMouseLeave={() => setAutoplay(false)}>
+            {images?.map(image =>
+               <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} alt={title} className="w-full h-48 sm:h-64 object-cover" onClick={onClick} />
+            )}
+         </Carousel>
             <div className="p-4">
                <div className="flex justify-between items-center mb-2 space-x-2">
                   <span className="bg-gray-200 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0">
