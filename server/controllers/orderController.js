@@ -106,11 +106,11 @@ const getOrderById = async (req, res) => {
 const createOrder = async (req, res) => {
   const { _id } = req?.decoded
 
-  const { payment_mode, amount, address, products, couponId } = req?.body
-  console.log('payment_mode, amount, address, products,couponId', payment_mode, amount, address, products, couponId);
+  const { payment_mode, amount, address, products, couponId,delivery_days } = req?.body
+  console.log('payment_mode, amount, address, products,couponId,delivery_days', payment_mode, amount, address, products, couponId,delivery_days);
 
   try {
-    const data = await Order.create({ userId: _id, payment_mode, amount, address, products })
+    const data = await Order.create({ userId: _id, payment_mode, amount, address, products,delivery_days })
     console.log('prod qty findings ', products.item)
 
 

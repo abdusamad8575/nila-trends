@@ -36,7 +36,10 @@ const OrderList = ({ orders, selectedOrder, setSelectedOrder, selectedStatus, se
                         <button className="text-sm bg-gray-200 px-3 py-1 rounded-full mt-1">Details</button>
                      </div>
                   </div>
-                  <p className="text-green-500 text-sm mt-2">{order?.status}</p>
+                  <div className="flex justify-between items-center">
+                     <p className="text-green-500 text-sm mt-2">{order?.status}</p>
+                     {order?.delivery_days && <p className="text-green-500 text-sm mt-2"><span className="text-black text-sm mt-2">Arrival in:</span>{order?.delivery_days === 'free' ? '1-2 days' : `${order?.delivery_days} days`}</p>}
+                  </div>
                </div>
             ))}
          </div>
