@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
 import { setProfile } from '../../../redux/actions/storeActions';
 import { useRouter } from 'next/navigation';
+import { useMediaQuery } from '@mui/material';
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ function Checkout() {
   const storeData = useSelector(state => state.storeDetails);
   const userDetails = useSelector(state => state.userDetails);
   const checkoutProduct = storeData?.checkoutProduct
-
+  const isSmallScreen = useMediaQuery('(max-width: 640px)');
   const [DeliveryInstruction, setDeliveryInstruction] = useState(false)
   const [DeliveryAddress, setDeliveryAddress] = useState('')
   const [coupon, setCoupon] = useState(null);
@@ -176,7 +177,9 @@ function Checkout() {
     setDeliveryInstruction(!DeliveryInstruction);
 
   }
-  const handleProfile = (state) => dispatch(setProfile(state))
+  const handleProfile = (state) => {
+    isSmallScreen ? router.push('/profile') : dispatch(setProfile(state))
+  }
 
   const deliveryCharge = Number(selectedDaliveryDays);
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
@@ -192,7 +195,7 @@ function Checkout() {
     setSelectedDaliveryDays(e.target.value);
   };
 
-  const deliveryDays = lastTotal<200 ? (selectedDaliveryDays === '12' ? '2' : '1') :'free'
+  const deliveryDays = lastTotal < 200 ? (selectedDaliveryDays === '12' ? '2' : '1') : 'free'
   const handlePaymentSuccess = async () => {
 
     const mappedItems = await cartData?.item?.map((item) => ({
@@ -289,9 +292,9 @@ function Checkout() {
       </div>
 
       <hr className="border-dashed " />
-      {lastTotal<200 && <div className="flex flex-row gap-2 pb-10 md:pb-1">
+      {lastTotal < 200 && <div className="flex flex-row gap-2 pb-10 md:pb-1">
         <div className="flex-1">
-        <p className=" w-full text-xs font-medium ">how much days expecting  your delivery.</p>
+          <p className=" w-full text-xs font-medium ">how much days expecting  your delivery.</p>
           <div className="flex flex-col">
             <Radio.Group onChange={handleDaliveryDaysChange} value={selectedDaliveryDays} >
               <Radio value="18">1 day (AED:18)</Radio>
@@ -301,7 +304,7 @@ function Checkout() {
         </div>
       </div>}
 
-      
+
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
           <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p> </div>
@@ -358,7 +361,7 @@ function Checkout() {
         <span className='text-green-500 text-xs md:text-sm'>coupon applied <CheckOutlined /></span>
       </div>}
 
-      
+
 
       <hr className="border-dashed " />
       <div className="flex flex-row gap-2 pb-10 md:pb-1">

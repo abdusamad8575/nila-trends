@@ -43,7 +43,7 @@ const ProductCard = ({ images, category, ProId, title, fit, price, sale_rate, on
       <div className="md:hidden bg-white rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col relative" onClick={onClick}>
          <button
             onClick={onWishlistClick}
-            className={`absolute top-0 right-0 m-1 bg-slate-50 rounded-2xl p-1 focus:outline-none ${isInWishlist ? 'text-red-500' : 'text-gray-400'}`}
+            className={`absolute top-0 right-0 m-1 bg-slate-50 rounded-2xl p-1 z-10 focus:outline-none ${isInWishlist ? 'text-red-500' : 'text-gray-400'}`}
          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

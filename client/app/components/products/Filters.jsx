@@ -35,7 +35,7 @@ export default function Filters({
 
   const handlePriceChange = (e) => {
     setPrice(e.target.value);
-    setPriceRange([10, e.target.value]); 
+    setPriceRange([10, e.target.value]);
   };
 
   const handleCategoryChange = (e, categoryName) => {
@@ -49,17 +49,17 @@ export default function Filters({
   };
 
   const handleDiscountChange = (e, discount) => {
-    setSelectedDiscount(discount); 
+    setSelectedDiscount(discount);
   };
 
   const handleRatingChange = (e, rating) => {
-   console.log('rating',rating);
-   if(rating === 5){
+    console.log('rating', rating);
+    if (rating === 5) {
       setSelectedRatings(0);
-   }else{
+    } else {
       setSelectedRatings(rating);
-   }
-   
+    }
+
   };
 
   return (
@@ -89,11 +89,10 @@ export default function Filters({
 
       <div
         id="dropdown"
-        className={`z-10 overflow-hidden transition-height duration-300 pop ${
-          isDropdownOpen
+        className={`z-10 overflow-hidden transition-height duration-300 pop ${isDropdownOpen
             ? 'max-h-[100vh] opacity-1 p-4'
             : 'max-h-[1px] opacity-0'
-        } w-full bg-[#e9ded0] rounded-lg shadow`}
+          } w-full bg-[#e9ded0] rounded-lg shadow`}
       >
         <div className="flex gap-4 flex-col sm:flex-row">
           <div className="sm:w-1/4">
@@ -135,7 +134,7 @@ export default function Filters({
                     type="range"
                     value={price}
                     min="10"
-                    max="15000"
+                    max="5000"
                     onChange={handlePriceChange}
                     className="w-full h-2 bg-gray-400 rounded-lg appearance-none cursor-pointer"
                   />
@@ -146,7 +145,7 @@ export default function Filters({
                     {`AED ${price}`}
                   </span>
                   <span className="text-sm text-gray-500 absolute end-0 -bottom-6">
-                    Max (AED 15000)
+                    Max (AED 5000)
                   </span>
                 </div>
               </ul>

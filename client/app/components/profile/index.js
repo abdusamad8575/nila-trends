@@ -49,7 +49,7 @@ const Profile = () => {
         }
       </div>
       {user && (
-        <div className="flex flex-col md:flex-row md:gap-8">
+        <div className="relative flex flex-col md:flex-row md:gap-8">
           <div className={`w-full md:w-1/2 xl:w-3/5 order-${showOrders ? 1 : 0}`}>
             {showOrders ? <OrderDetails data={selectedOrder} /> : <ProfileSection showOrders={setShowOrders} />}
           </div>

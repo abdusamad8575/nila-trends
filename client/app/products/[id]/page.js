@@ -242,7 +242,7 @@ const ProductPage = () => {
                 </div> */}
             <div className={`hidden md:block ${styles.footerSection}`}>
                <h3>Delivery</h3>
-               <p className={styles.deliveryInfo}>Delivery in 3 - 7 days &bull; All over UAE</p>
+               <p className={styles.deliveryInfo}>Delivery in 1 - 2 days &bull; All over UAE</p>
             </div>
             <div className={`hidden md:block ${styles.footerSection}`}>
                <h3>Fit & Care</h3>

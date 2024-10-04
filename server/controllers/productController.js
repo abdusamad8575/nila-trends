@@ -88,14 +88,14 @@ const getProducts = async (req, res) => {
     }
 
 
-    if (discount) {
-      filter.discount = { $gte: discount };
-    }
+    // if (discount) {
+    //   filter.discount = { $gte: discount };
+    // }
 
 
-    if (rating) {
-      filter.rating = { $gte: rating };
-    }
+    // if (rating) {
+    //   filter.rating = { $gte: rating };
+    // }
 
     if (category) {
       const categoriesArray = category.split(',');

@@ -8,7 +8,8 @@ import { setCheckout, setCart, setCheckoutProduct } from '../../../redux/actions
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "@mui/material";
-
+import { motion } from 'framer-motion';
+import Link from "next/link";
 
 export default function Cart() {
   const dispatch = useDispatch();
@@ -141,132 +142,145 @@ export default function Cart() {
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:min-h-[40vh]">
       <h2 className="text-2xl font-semibold mb-4 hidden lg:block">Shopping Cart 🛒</h2>
       <div className=" flex justify-center items-center p-4 border">
-        <div className="bg-white rounded-lg md:p-6 relative w-full">
-
-          {/* MOBILE VIEW - Cart Total and Checkout at the top */}
-          <div className="block lg:hidden mb-4 space-y-2">
-            <div className="flex items-center border-b">
-              <p className="text-lg font-semibold">Cart Total :</p>&nbsp;&nbsp;
-              <p className="text-lg font-semibold">AED - {lastTotal}</p>
-            </div>
-            <div className="text-xs flex justify-between">
-              <p>Subtotal</p>
-              <p>AED - {(salePriceTotal).toFixed(2)}</p>
-            </div>
-            <div className="text-xs flex justify-between">
-              <p>Delivery Charge</p>
-              <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
-            </div>
-            <div className="flex justify-between items-center text-sm border-t">
-              <p className="font-semibold">Grand Total :</p>&nbsp;&nbsp;
-              <p className="font-semibold">AED - {lastTotal}</p>
-
-            </div>
-            <button className="mt-2 w-full bg-black text-white py-2 rounded-lg" onClick={() => router.push('/checkout')}>
-              Proceed To Checkout
+        {!cartData?.item?.length ? <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <p className="text-xs sm:text-sm text-gray-600 mt-8">Your cart is empty.</p>
+          <Link href="/allproducts">
+            <button className="bg-gray-200 px-3 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm mt-2">
+              <i className="fas fa-plus me-2"></i>Add Items
             </button>
-          </div>
+          </Link>
+        </motion.div> :
+          <div className="bg-white rounded-lg md:p-6 relative w-full">
 
-          <div className="flex flex-col lg:flex-row md:gap-4">
-            <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
-              <h3 className="text-lg font-semibold mb-2">Items - {cartData?.item?.length}</h3>
+            {/* MOBILE VIEW - Cart Total and Checkout at the top */}
+            <div className="block lg:hidden mb-4 space-y-2">
+              <div className="flex items-center border-b">
+                <p className="text-lg font-semibold">Cart Total :</p>&nbsp;&nbsp;
+                <p className="text-lg font-semibold">AED - {lastTotal}</p>
+              </div>
+              <div className="text-xs flex justify-between">
+                <p>Subtotal</p>
+                <p>AED - {(salePriceTotal).toFixed(2)}</p>
+              </div>
+              <div className="text-xs flex justify-between">
+                <p>Delivery Charge</p>
+                <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
+              </div>
+              <div className="flex justify-between items-center text-sm border-t">
+                <p className="font-semibold">Grand Total :</p>&nbsp;&nbsp;
+                <p className="font-semibold">AED - {lastTotal}</p>
 
-              <div className="space-y-4 md:max-h-[50vh] md:overflow-y-scroll pr-4">
+              </div>
+              <button className="mt-2 w-full bg-black text-white py-2 rounded-lg" onClick={() => router.push('/checkout')}>
+                Proceed To Checkout
+              </button>
+            </div>
 
-                {cartData?.item?.slice().reverse().map((item, index) => (
-                  <div key={item?._id} className="flex items-center justify-between space-x-4 border-t pt-2">
-                    <div className="overflow-hidden w-1/5">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item?.productId?.image?.[0]}`}
-                        alt="Product"
-                        width={50}
-                        height={50}
-                        className="w-16 md:w-20 h-16 md:h-20 object-cover rounded-lg"
-                      />
+            <div className="flex flex-col lg:flex-row md:gap-4">
+              <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
+                <h3 className="text-lg font-semibold mb-2">Items - {cartData?.item?.length}</h3>
+
+                <div className="space-y-4 md:max-h-[50vh] md:overflow-y-scroll pr-4">
+
+                  {cartData?.item?.slice().reverse().map((item, index) => (
+                    <div key={item?._id} className="flex items-center justify-between space-x-4 border-t pt-2">
+                      <div className="overflow-hidden w-1/5">
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item?.productId?.image?.[0]}`}
+                          alt="Product"
+                          width={50}
+                          height={50}
+                          className="w-16 md:w-20 h-16 md:h-20 object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="flex-grow text-left w-3/5">
+                        <h4 className="font-semibold text-sm">{item?.productId?.name}</h4>
+                        {item?.size && <p className="text-gray-500 text-xs">Size • {item?.size}</p>}
+                        <p className="text-gray-500 text-xs">AED • {item?.productId?.sale_rate}</p>
+                      </div>
+                      <div className="flex items-center w-1/5">
+                        {item?.productId?.isAvailable ? (
+                          <>
+                            <button className="px-2 border border-gray-300 rounded"
+                              onClick={() => handleQuantityChange(item, 'decrement', index)}
+                              disabled={item.qty === 1 || loadingIndex === index}>
+                              {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '-'}
+                            </button>
+                            <span className="mx-2">{item?.qty}</span>
+                            <button className="px-2 border border-gray-300 rounded"
+                              onClick={() => handleQuantityChange(item, 'increment', index)}
+                              disabled={loadingIndex === index}>
+                              {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '+'}
+                            </button>
+                          </>
+                        ) :
+                          (
+                            <div>
+                              <p style={{ color: 'red', fontSize: '18px', fontWeight: '600' }} >unavailable</p>
+                            </div>
+                          )
+
+                        }
+                      </div>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleRemoveItem(item)}
+                      >
+                        <FaTrash />
+                      </button>
                     </div>
-                    <div className="flex-grow text-left w-3/5">
-                      <h4 className="font-semibold text-sm">{item?.productId?.name}</h4>
-                      {item?.size && <p className="text-gray-500 text-xs">Size • {item?.size}</p>}
-                      <p className="text-gray-500 text-xs">AED • {item?.productId?.sale_rate}</p>
-                    </div>
-                    <div className="flex items-center w-1/5">
-                      {item?.productId?.isAvailable ? (
-                        <>
-                          <button className="px-2 border border-gray-300 rounded"
-                            onClick={() => handleQuantityChange(item, 'decrement', index)}
-                            disabled={item.qty === 1 || loadingIndex === index}>
-                            {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '-'}
-                          </button>
-                          <span className="mx-2">{item?.qty}</span>
-                          <button className="px-2 border border-gray-300 rounded"
-                            onClick={() => handleQuantityChange(item, 'increment', index)}
-                            disabled={loadingIndex === index}>
-                            {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '+'}
-                          </button>
-                        </>
-                      ) :
-                        (
-                          <div>
-                            <p style={{ color: 'red', fontSize: '18px', fontWeight: '600' }} >unavailable</p>
-                          </div>
-                        )
 
-                      }
-                    </div>
-                    <button
-                      className="btn btn-outline-danger"
-                      onClick={() => handleRemoveItem(item)}
-                    >
-                      <FaTrash />
-                    </button>
+                  ))}
+
+                </div>
+              </div>
+
+              {/* Cart Totals - Only for Desktop */}
+              <div className="hidden lg:block w-full lg:w-1/3 lg:ml-4">
+                <div className="border p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-4">Cart totals</h3>
+                  <div className="flex justify-between">
+                    <p>Subtotal</p>
+                    <p>AED - {(salePriceTotal).toFixed(2)}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p>Delivery Charge</p>
+                    <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
+                  </div>
+                  <div className="flex justify-between font-semibold text-lg">
+                    <p>Total</p>
+                    <p>AED - {lastTotal}</p>
+                  </div>
+                  <p className="mt-4 text-sm text-gray-500">
+                    🚚 2 days delivery
+                    <span className="text-green-600 cursor-pointer ml-2">Change</span>
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Your address<br />
+                    Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India
+                  </p>
+                  <button className="mt-4 text-sm text-gray-700 hover:underline">Add a delivery instruction</button>
+
+                  <div className="flex items-center mt-4">
+                    <input type="checkbox" id="singlePack" className="mr-2" />
+                    <label htmlFor="singlePack" className="text-sm">Get All these items in single pack</label>
                   </div>
 
-                ))}
-
+                  <button className="mt-4 w-full bg-black text-white py-2 rounded-lg" onClick={handleCheckout}>
+                    Proceed To Checkout
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* Cart Totals - Only for Desktop */}
-            <div className="hidden lg:block w-full lg:w-1/3 lg:ml-4">
-              <div className="border p-4 rounded-lg">
-                <h3 className="text-lg font-semibold mb-4">Cart totals</h3>
-                <div className="flex justify-between">
-                  <p>Subtotal</p>
-                  <p>AED - {(salePriceTotal).toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p>Delivery Charge</p>
-                  <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
-                </div>
-                <div className="flex justify-between font-semibold text-lg">
-                  <p>Total</p>
-                  <p>AED - {lastTotal}</p>
-                </div>
-                <p className="mt-4 text-sm text-gray-500">
-                  🚚 2 days delivery
-                  <span className="text-green-600 cursor-pointer ml-2">Change</span>
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Your address<br />
-                  Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India
-                </p>
-                <button className="mt-4 text-sm text-gray-700 hover:underline">Add a delivery instruction</button>
-
-                <div className="flex items-center mt-4">
-                  <input type="checkbox" id="singlePack" className="mr-2" />
-                  <label htmlFor="singlePack" className="text-sm">Get All these items in single pack</label>
-                </div>
-
-                <button className="mt-4 w-full bg-black text-white py-2 rounded-lg" onClick={handleCheckout}>
-                  Proceed To Checkout
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          </div>}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const OrderList = ({ orders, selectedOrder, setSelectedOrder, selectedStatus, se
             ))}
          </div>
 
-         <div className="space-y-4 md:max-h-[60vh] md:overflow-y-scroll">
+         <div className="space-y-4 md:max-h-[50vh] md:overflow-y-scroll">
             {orders?.map((order) => (
                <div key={order?._id} className={`bg-gray-100 rounded-lg p-4 cursor-pointer border ${selectedOrder?._id === order?._id && "border-blue-500"}`} onClick={() => setSelectedOrder(order)}>
                   <div className="flex justify-between items-start mb-2">

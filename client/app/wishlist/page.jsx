@@ -71,23 +71,15 @@ const KurtaSetsListing = () => {
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       {wishlistItems?.length === 0 ?
         (<>
-          <motion.h2
-            className="text-center mb-4 section-title"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            My Wishlist
-          </motion.h2>
           <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-xs sm:text-sm text-gray-600 mb-1">Your wishlist is empty.</p>
+            <p className="text-xs sm:text-sm text-gray-600 mt-8">Your wishlist is empty.</p>
             <Link href="/allproducts">
-              <button className="bg-gray-200 px-3 py-2 sm:px-4 sm:py-2 rounded text-xs sm:text-sm mt-5">
+              <button className="bg-gray-200 px-3 py-2 sm:px-4 sm:py-2 rounded text-xs sm:text-sm mt-2">
                 <i className="fas fa-plus me-2"></i>Add Items
               </button>
             </Link>
