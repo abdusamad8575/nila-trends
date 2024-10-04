@@ -61,6 +61,7 @@ function Checkout() {
   const [proPriceTotal, setProPriceTotal] = useState(0)
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("COD");
+  const [selectedDaliveryDays, setSelectedDaliveryDays] = useState("12");
 
   const calculateTotalSalePrice = (items) => {
     let totalSalePrice = 0;
@@ -102,6 +103,7 @@ function Checkout() {
     setCoupon(null)
     setAddCoupon(false)
     setDeliveryAddress('')
+    setSelectedDaliveryDays('12')
     if (checkoutProduct) {
       const newCartItem = {
         item: [{
@@ -176,7 +178,7 @@ function Checkout() {
   }
   const handleProfile = (state) => dispatch(setProfile(state))
 
-  const deliveryCharge = 40
+  const deliveryCharge = Number(selectedDaliveryDays);
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const salePriceIncludingDeliveryCharge = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
   const maximumDiscountPrice = ((appliedCouponDetails?.maxValue < ((salePriceIncludingDeliveryCharge * discount) / 100)) ? appliedCouponDetails?.maxValue : ((salePriceIncludingDeliveryCharge * discount) / 100)).toFixed(2)
@@ -186,8 +188,11 @@ function Checkout() {
   const handlePaymentMethodChange = (e) => {
     setSelectedPaymentMethod(e.target.value);
   };
+  const handleDaliveryDaysChange = (e) => {
+    setSelectedDaliveryDays(e.target.value);
+  };
 
-
+  const deliveryDays = lastTotal<200 ? (selectedDaliveryDays === '12' ? '2' : '1') :'free'
   const handlePaymentSuccess = async () => {
 
     const mappedItems = await cartData?.item?.map((item) => ({
@@ -209,8 +214,10 @@ function Checkout() {
 
 
 
+
     const response = await axiosInstance.post(`/orders`, {
       payment_mode: selectedPaymentMethod,
+      delivery_days: deliveryDays,
       amount: lastTotal,
       address: DeliveryAddress,
       products: productsOrderData,
@@ -232,6 +239,10 @@ function Checkout() {
       alert("Please select a payment method.");
       return;
     }
+    // if (!selectedDaliveryDays ) {
+    //   alert("Please Select a Delivery Day!.");
+    //   return;
+    // }
 
     if (selectedPaymentMethod === "COD") {
       handlePaymentSuccess();
@@ -276,6 +287,21 @@ function Checkout() {
         <hr className='border-dashed ' />
         <div className="flex flex-row justify-between"> <p>Total Charge</p><p>AED:<span>{lastTotal}</span></p> </div>
       </div>
+
+      <hr className="border-dashed " />
+      {lastTotal<200 && <div className="flex flex-row gap-2 pb-10 md:pb-1">
+        <div className="flex-1">
+        <p className=" w-full text-xs font-medium ">how much days expecting  your delivery.</p>
+          <div className="flex flex-col">
+            <Radio.Group onChange={handleDaliveryDaysChange} value={selectedDaliveryDays} >
+              <Radio value="18">1 day (AED:18)</Radio>
+              <Radio value="12">2 day (AED:12)</Radio>
+            </Radio.Group>
+          </div>
+        </div>
+      </div>}
+
+      
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
           <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p> </div>
@@ -331,6 +357,8 @@ function Checkout() {
         </div>
         <span className='text-green-500 text-xs md:text-sm'>coupon applied <CheckOutlined /></span>
       </div>}
+
+      
 
       <hr className="border-dashed " />
       <div className="flex flex-row gap-2 pb-10 md:pb-1">

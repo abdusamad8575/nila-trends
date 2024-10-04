@@ -92,6 +92,9 @@ const orderSchema = new mongoose.Schema({
     offer: {
         type: String,
         default: "None"
+    },
+    delivery_days: {
+        type: String,
     }
 },
     {

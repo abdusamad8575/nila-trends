@@ -136,7 +136,7 @@ export default function Cart() {
     dispatch(setCheckout(true))
   }
 
-  const deliveryCharge = 40
+  const deliveryCharge = 12
   const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
 
