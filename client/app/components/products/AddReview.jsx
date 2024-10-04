@@ -1,9 +1,19 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
+import Rating from "@mui/material/Rating";
+import { useSelector } from 'react-redux';
+import axiosInstance from '../../../axios';
 
-const AddReview = ({ product }) => {
+const AddReview = ({ product,setOpen,setReviews,reviews }) => {
+    const userDetails = useSelector((state) => state.userDetails);
     const [data, setData] = useState({ image: [] })
+    const [newReview, setNewReview] = useState({
+        headline: '',
+        rating: 0,
+        review: '',
+      });
+      const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = React.useRef(null);
 
     const handleRemoveImage = (index) => {
@@ -27,6 +37,46 @@ const AddReview = ({ product }) => {
     const handleFileSelect = () => {
         fileInputRef.current.click();
     };
+    const handleRatingChange = (event, newValue) => {
+        setNewReview({ ...newReview, rating: newValue });
+      };
+      const handleReviewChange = (e) => {
+        const { name, value } = e.target;
+          setNewReview({ ...newReview, [name]: value });
+      };
+
+      const handleSubmitReview = async (e) => {
+        e.preventDefault()
+        setIsLoading(true);
+        
+        const formData = new FormData();
+        formData.append('productId', product._id);
+        formData.append('userId', userDetails._id);
+        formData.append('headline', newReview.headline);
+        formData.append('rating', newReview.rating);
+        formData.append('review', newReview.review);
+        data.image.forEach((image) => formData.append('images', image));
+    
+        try {
+          const response = await axiosInstance.post('/reviews', formData, {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+    
+          setReviews([response.data.data, ...reviews]);
+          setNewReview({ headline: '', rating: 0, review: '' });
+        //   handleCloseReviewModal();
+          alert('your review is added')
+          setOpen(false)
+        } catch (error) {
+          console.error('Error submitting review:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
     return (
         <div className='lg:max-w-[500px] mx-auto my-4 lg:my-6'>
             <h3 className="text-lg md:text-xl font-semibold text-gray-900">Create Review</h3>
@@ -37,16 +87,28 @@ const AddReview = ({ product }) => {
                 <div >
                     <p className="block text-sm font-medium text-gray-900">{product?.name}</p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        {product?.description}
+                        {product?.description?.substring(0, 50)}
                     </p>
                 </div>
             </div>
             <hr />
-            <form className="flex flex-col gap-5 mt-5">
+            <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmitReview}>
                 <div className="">
                     <label for="base-input" className="block mb-2 text-sm font-medium text-gray-900">Add a headline</label>
-                    <input type="text" id="base-input" placeholder="what's the most important to know?" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5" />
+                    <input type="text" id="base-input" placeholder="what's the most important to know?" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5"
+                    name="headline"
+                    value={newReview.headline}
+                    onChange={handleReviewChange} 
+                    required/>
                 </div>
+                <div className="">
+                    <label for="base-input" className="block mb-2 text-sm font-medium text-gray-900">Add a Rating</label>
+                    <Rating
+                        name="simple-controlled"
+                        value={newReview.rating}
+                        onChange={handleRatingChange}
+                        required
+                    /></div>
                 <div className=''>
                     <label for="small-input" className="block text-sm font-medium text-gray-900">Add a photo or video</label>
                     <p className='font-xs mb-2'>Shoppers find images and videos more helpful than text alone.</p>
@@ -84,10 +146,14 @@ const AddReview = ({ product }) => {
                 </div>
                 <div className="">
                     <label for="large-input" className="block mb-2 text-sm font-medium text-gray-900">Add a written review</label>
-                    <textarea type="text" rows={4} id="large-input" placeholder="what did you like or dislike?" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50" />
+                    <textarea type="text" rows={4} id="large-input" placeholder="what did you like or dislike?" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50" 
+                    name="review"
+                    value={newReview.review}
+                    onChange={handleReviewChange}
+                    required/>
                 </div>
                 <div className="flex justify-end" >
-                    <button className="px-2 py-1.5 text-xs md:text-sm font-medium cursor-pointer text-gray-900 focus:outline-none bg-yellow-400 rounded-lg border border-gray-200 hover:bg-yellow-200 focus:z-10 focus:ring-4 focus:ring-gray-100">Submit Review</button>
+                    <button className="px-2 py-1.5 text-xs md:text-sm font-medium cursor-pointer text-gray-900 focus:outline-none bg-yellow-400 rounded-lg border border-gray-200 hover:bg-yellow-200 focus:z-10 focus:ring-4 focus:ring-gray-100" type="submit" disabled={isLoading}>Submit Review</button>
                 </div>
                 <hr />
                 <p className='text-xs'>Your review will be live as soon as the review is processed.</p>

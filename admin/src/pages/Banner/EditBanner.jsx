@@ -257,8 +257,8 @@ const EditBanner = () => {
                      </Box>}
                </Grid>
                <Grid item xs={12}>
-                  <Button onClick={handleSubmit}>UPDATE BANNER</Button>
-                  <Button color="secondary" onClick={handleDelete}>DELETE BANNER</Button>
+                  <Button onClick={handleSubmit} disabled={updating}>UPDATE BANNER</Button>
+                  <Button color="secondary" onClick={handleDelete} disabled={deleting}>DELETE BANNER</Button>
                </Grid>
                <Grid item xs={12}>
                   <Alert color="primary" severity="info" sx={{ mt: 3, fontSize: 13 }}>

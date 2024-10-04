@@ -21,10 +21,22 @@ const KurtaSetsListing = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [wishlistItems, setWishlistItems] = useState([]);
 
-  const fetchProducts = async (page = 1, search = '') => {
+  const [priceRange, setPriceRange] = useState([10, 15000]);
+  const [selectedDiscount, setSelectedDiscount] = useState(0);
+  const [selectedRatings, setSelectedRatings] = useState(0);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const fetchProducts = async () => {
     try {
-      const { data } = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
-        params: { page, search }
+      const { data } = await axiosInstance.get(`/products`, {
+        params: {
+          page,
+          search,
+          category: selectedCategories.join(','),
+          priceRange: priceRange.join('-'),
+          discount: selectedDiscount, 
+          rating: selectedRatings 
+        }
       });
       setProducts(data.products);
       setTotalPages(data.totalPages);
@@ -34,8 +46,8 @@ const KurtaSetsListing = () => {
   };
 
   useEffect(() => {
-    fetchProducts(page, search);
-  }, [page, search]);
+    fetchProducts();
+  }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -96,7 +108,13 @@ const KurtaSetsListing = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8 first-item">
           <div className="flex items-center mb-4">
-            <Filters />
+            <Filters
+            setPriceRange={setPriceRange}
+            setSelectedDiscount={setSelectedDiscount}
+            setSelectedRatings={setSelectedRatings}
+            setSelectedCategories={setSelectedCategories}
+            handleSearchChange={(e) => setSearch(e.target.value)}
+          />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products?.map((product) => (
