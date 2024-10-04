@@ -70,7 +70,7 @@ const Review = ({ data }) => {
                </div>
                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{reviews?.length && `${reviews?.length} global ratings`} </p>
                {[5, 4, 3, 2, 1].map((x, idx) =>
-                  <div className="flex items-center mt-4">
+                  <div key={idx} className="flex items-center mt-4">
                      <p className="text-sm font-medium text-blue-600">{x} star</p>
                      <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div className="h-5 bg-yellow-300 rounded" style={{ width: (ratingCounts[x - 1] / totalReviews) * 100 }}></div>
@@ -93,7 +93,7 @@ const Review = ({ data }) => {
             <div className='w-full md:w-2/3 flex flex-col gap-5'>
                {reviews.length > 0 ?
                   <>
-                     {displayedReviews.map(review => <ReviewCard data={review} />)}
+                     {displayedReviews.map(review => <ReviewCard key={review?._id} data={review} />)}
                      {!showAllReviews && reviews.length > 4 && (
                         <button className='block mb-2 text-sm font-medium text-blue-500 cursor-pointer' onClick={handleReadMore}>
                            Read More Reviews

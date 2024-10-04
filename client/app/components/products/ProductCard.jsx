@@ -17,7 +17,7 @@ const ProductCard = ({ images, category, ProId, title, fit, price, sale_rate, on
          </button>
          <Carousel autoplay={autoplay} autoplaySpeed={1000} onMouseEnter={() => setAutoplay(true)} onMouseLeave={() => setAutoplay(false)}>
             {images?.map(image =>
-               <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} alt={title} className="w-full h-48 sm:h-64 object-cover" onClick={onClick} />
+               <img key={image} src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} alt={title} className="w-full h-48 sm:h-64 object-cover" onClick={onClick} />
             )}
          </Carousel>
          <div className="p-4">
@@ -52,7 +52,7 @@ const ProductCard = ({ images, category, ProId, title, fit, price, sale_rate, on
          <Link href={`/products/${ProId}`}>
          <Carousel autoplay={autoplay} autoplaySpeed={1000} onMouseEnter={() => setAutoplay(true)} onMouseLeave={() => setAutoplay(false)}>
             {images?.map(image =>
-               <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} alt={title} className="w-full h-48 sm:h-64 object-cover" onClick={onClick} />
+               <img key={image} src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} alt={title} className="w-full h-48 sm:h-64 object-cover" onClick={onClick} />
             )}
          </Carousel>
             <div className="p-4">

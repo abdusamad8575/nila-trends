@@ -29,11 +29,11 @@ const OrderDetails = ({ data }) => {
          <div className='overflow-y-scroll md:h-[40vh]'>
             <h2 className="text-lg font-semibold mb-4">Items - {data?.products?.item?.length}</h2>
 
-            {data?.products?.item.map(product => <div className='flex gap-3 py-4 border-t'>
+            {data?.products?.item.map(product => <div key={product?.product_id?._id} className='flex gap-3 py-4 border-t'>
                <div className='w-1/5'>
-               <div className='flex items-center w-14 overflow-hidden  md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' >
-                  <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product?.product_id?.image?.[0]}`} height={100} width={150} />
-               </div>
+                  <div className='flex items-center w-14 overflow-hidden  md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' >
+                     <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product?.product_id?.image?.[0]}`} height={100} width={150} />
+                  </div>
                </div>
                <div className='w-3/5'>
                   <p className="block text-sm font-medium text-gray-900">{product?.product_id?.name}</p>

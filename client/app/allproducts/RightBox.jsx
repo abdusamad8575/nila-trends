@@ -88,7 +88,7 @@ function RightBox({ product }) {
                {!!product?.variantProduct?.length && <h3 className="text-sm sm:text-lg font-semibold mb-2">Available Color & Texture</h3>}
                <div className="flex space-x-2">
                   {product?.variantProduct?.map(item => (
-                     <div className='overflow-hidden w-14 h-14 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => router.push(`/products/${item?._id}`)}>
+                     <div key={item?._id} className='overflow-hidden w-14 h-14 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => router.push(`/products/${item?._id}`)}>
                         <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${item?.image?.[0]}`} height={50} width={100} alt={item?.name}/>
                      </div>
                   ))}

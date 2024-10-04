@@ -114,7 +114,7 @@ const AddReview = ({ product,setOpen,setReviews,reviews }) => {
                     <p className='font-xs mb-2'>Shoppers find images and videos more helpful than text alone.</p>
                     <div className='flex gap-3'>
                         {data?.image?.map((img, index) =>
-                            <div className='relative overflow-hidden w-14 md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-gray-300'>
+                            <div key={index} className='relative overflow-hidden w-14 md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-gray-300'>
                                 <button
                                     onClick={(e) => {
                                         e.preventDefault()

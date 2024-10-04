@@ -39,7 +39,7 @@ const ReviewCard = ({ data }) => {
          <p onClick={() => setOpen(true)} className="block mb-2 text-sm font-medium text-blue-500 cursor-pointer">Read more</p>
          <div className='flex gap-2 pb-3'>
             {data?.image?.map(image => (
-               <div className='overflow-hidden w-14 h-14 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => setOpen(true)}>
+               <div key={image} className='overflow-hidden w-14 h-14 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => setOpen(true)}>
                   <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} height={50} width={100} />
                </div>
             ))}
@@ -89,7 +89,7 @@ const ReviewCard = ({ data }) => {
                   </p>
                   <div className='flex gap-2 pb-3'>
                      {data?.image?.map(image => (
-                        <div className='overflow-hidden w-14 md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => setSelected(image)}>
+                        <div key={image} className='overflow-hidden w-14 md:w-20 h-14 md:h-20 border-[2px] rounded-lg border-[#B17E3E] cursor-pointer' onClick={() => setSelected(image)}>
                            <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${image}`} height={100} width={150} />
                         </div>
                      ))}
