@@ -96,21 +96,22 @@ const getProducts = async (req, res) => {
     // if (rating) {
     //   filter.rating = { $gte: rating };
     // }
-
+    let categoryIdList;
+    let setCategory;
     if (category) {
       const categoriesArray = category.split(',');
+      setCategory =  [...new Set(categoriesArray)]
 
       const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
-      const categoryIdList = categoryIds.map(cat => cat._id);
+      categoryIdList = categoryIds.map(cat => cat._id);
 
-      if(categoryIdList.length){
-        console.log('categoryIdList');
-        
-
+      if (categoryIdList.length) {
         filter.category = { $in: categoryIdList };
       }
 
     }
+
+
 
     const products = await Product.find(filter)
       .populate('category')
@@ -119,10 +120,26 @@ const getProducts = async (req, res) => {
       .limit(limit)
       .exec();
 
+
+
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    res.json({ products, totalPages, message: 'Products fetched successfully' });
+    const start = (page - 1) * 9 + 1;
+
+    let responseMessage;
+    if (category) {
+      if (categoryIdList.length) {
+        responseMessage = `Showing ${start} – ${totalPages} of ${totalProducts} results for "${setCategory}"`;
+      } else {
+        responseMessage = `No results for "${setCategory}". Showing suggested products for "${setCategory}".`
+      }
+    }else{
+      responseMessage ='Products fetched successfully'
+    }
+
+
+    res.json({ products, totalPages, message: responseMessage, });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products' });
   }

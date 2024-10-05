@@ -7,6 +7,8 @@ import ProfileSection from './ProfileSection';
 import OrderDetails from './OrderDetails';
 
 const Profile = () => {
+  const storeData = useSelector(state => state?.storeDetails?.profile);
+  // console.log('storeData',storeData.profile);
 
   const [showOrders, setShowOrders] = useState(false)
 
@@ -20,7 +22,7 @@ const Profile = () => {
     axiosInstance.get(`/orders/client?status=${selectedStatus}`)
       .then((res) => setOrders(res?.data?.data))
       .catch((error) => console.error(error));
-  }, [selectedStatus, userDetails]);
+  }, [selectedStatus, userDetails,storeData]);
 
   useEffect(() => {
     axiosInstance.get('/user')
@@ -28,7 +30,7 @@ const Profile = () => {
         setUser(res?.data?.data);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [storeData]);
 
   const handleSelect = (data) => {
     setSelectedOrder(data)
