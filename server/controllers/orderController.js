@@ -117,6 +117,7 @@ const createOrder = async (req, res) => {
     const user = await User.findById(_id);
     user.cart.item = [];
     user.cart.totalPrice = 0;
+    user.orderCount +=1
 
     if (couponId) {
       if (user.coupons.includes(couponId)) {

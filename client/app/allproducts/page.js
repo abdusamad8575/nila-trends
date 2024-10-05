@@ -20,6 +20,7 @@ const KurtaSetsListing = () => {
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [wishlistItems, setWishlistItems] = useState([]);
+  const [message, setMessage] = useState()
 
   const [priceRange, setPriceRange] = useState([10, 15000]);
   const [selectedDiscount, setSelectedDiscount] = useState(0);
@@ -39,6 +40,7 @@ const KurtaSetsListing = () => {
         }
       });
       setProducts(data.products);
+      setMessage(data.message)
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching products:', error.message);
@@ -116,6 +118,7 @@ const KurtaSetsListing = () => {
             handleSearchChange={(e) => setSearch(e.target.value)}
           />
           </div>
+          <div className='w-full pb-5 text-sm'>{message}</div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products?.map((product) => (
               <ProductCard
