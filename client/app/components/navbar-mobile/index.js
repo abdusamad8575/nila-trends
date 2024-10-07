@@ -1,9 +1,12 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import ExclusiveDrops from '../common/ExclusiveDrops';
+import ModalLayout from '../common/ModalLayout';
 
 const MobileNavbar = () => {
+  const [open, setOpen] = useState(false)
   return (
     <div className="w-full bg-white shadow-md fixed top-0 left-0 z-40">
       <nav className="flex items-center justify-between px-4 py-4 relative">
@@ -20,11 +23,12 @@ const MobileNavbar = () => {
 
         {/* Right - Button */}
         <div className="flex items-center z-10">
-          <button className="bg-gradient-to-r from-white to-[#f0e6d2] text-[#97895f] font-semibold py-1 px-2 xs:py-1.5 xs:px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-5 lg:py-3 lg:px-6 rounded-full shadow-lg text-xs xs:text-sm sm:text-sm md:text-base lg:text-lg whitespace-nowrap">
+          <button onClick={() => setOpen(true)} className="bg-gradient-to-r from-white to-[#f0e6d2] text-[#97895f] font-semibold py-1 px-2 xs:py-1.5 xs:px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-5 lg:py-3 lg:px-6 rounded-full shadow-lg text-xs xs:text-sm sm:text-sm md:text-base lg:text-lg whitespace-nowrap">
             Exclusive Drops
           </button>
         </div>
       </nav>
+      <ModalLayout open={open} setOpen={setOpen} width='500px' height='500px' padding={false}><ExclusiveDrops /></ModalLayout>
     </div>
   );
 };

@@ -19,7 +19,6 @@ const Login = () => {
             toast.success('Login Successfull')
             setAuth(dispatch, true)
         } else {
-            setAuth(dispatch, true)
             toast.error('Invalid username or password')
         }
     }

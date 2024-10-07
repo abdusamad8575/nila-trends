@@ -87,7 +87,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`bg-white font-sans fixed top-0 left-0 w-full transition-opacity duration-300 ${isScrolled ? 'bg-opacity-80 backdrop-blur-md' : 'bg-opacity-100 backdrop-blur-none'} z-50`}
+      className={`bg-white font-sans fixed top-0 left-0 w-full transition-opacity duration-300 ${isScrolled ? 'bg-opacity-80 backdrop-blur-md' : 'bg-opacity-100 backdrop-blur-none'} z-40`}
       style={{ backdropFilter: isScrolled ? 'blur(10px)' : 'none' }}
     >
       <div className="mx-auto">

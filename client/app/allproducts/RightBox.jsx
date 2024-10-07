@@ -50,7 +50,7 @@ function RightBox({ product }) {
 
    return (
       <div className="lg:col-span-4 side-item hidden md:block cursor-pointer" onClick={() => router.push(`/products/${product?._id}`)}>
-         <div className="sticky top-24 bg-white rounded-lg overflow-y-scroll custom-scrollbar h-[85vh] shadow-md px-4 pb-4">
+         <div className="sticky top-24 bg-white rounded-lg overflow-y-scroll h-[85vh] shadow-md px-4 pb-4">
             <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product.image[0]}`} alt={product.name} className="w-full h-[50vh] object-cover mb-4" />
             <h2 className="text-sm sm:text-lg font-semibold mb-2">{product.name}</h2>
             {product?.feature.map((fea, index) => (

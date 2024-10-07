@@ -5,6 +5,7 @@ import MobileNavbar from "./components/navbar-mobile";
 import MobileFooter from "./components/footer";
 import { Providers } from "./providers"
 import CustomToaster from "./components/common/CustomToaster";
+import Loading from "./loading";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <CustomToaster />
+        {/* <Loading/> */}
         <Providers>
           <div className="hidden lg:block">
             <Navbar />

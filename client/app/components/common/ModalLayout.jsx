@@ -10,6 +10,7 @@ const ModalLayout = ({
   setOpen,
   children,
   bgcolor,
+  padding = true
 }) => {
   const { theme } = useTheme();
   return (
@@ -31,7 +32,7 @@ const ModalLayout = ({
     >
       <Modal
         zIndex={9999}
-        className="modal-head w-full md:w-[70vw]"
+        className={`modal-head ${!padding && "custom-modal"} w-full md:w-[70vw]`}
         width={width}
         footer={false}
         title={title}

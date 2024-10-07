@@ -22,33 +22,33 @@ a {
   text-decoration: none;
 }
 
-.scrollbar-hide {
+/* Hide scrollbar for all elements */
+* {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }
 
-.scrollbar-hide::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
 
-
-/* Custom scrollbar styles */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 2px; /* Width of the scrollbar */
+/* Custom scrollbar styles for all elements */
+*::-webkit-scrollbar {
+  width: 2px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #d4d4d8; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Rounded corners for the thumb */
+*::-webkit-scrollbar-thumb {
+  background-color: #d4d4d8;
+  border-radius: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #a1a1aa; /* Darker color on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #a1a1aa;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background-color: #f3f4f6; /* Background of the scrollbar track */
-  border-radius: 10px; /* Rounded corners for the track */
+*::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+  border-radius: 10px;
 }
 
 .custom-carousel .slick-dots li button {
@@ -85,4 +85,12 @@ a {
 
 .slick-arrow.slick-next {
   font-size: 20px !important;
+}
+
+.custom-modal .ant-modal-body {
+  padding: 0 !important;  /* This removes the default padding */
+}
+
+.custom-modal .ant-modal-content {
+  padding: 0;  /* Ensure no padding in modal content */
 }

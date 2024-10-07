@@ -39,7 +39,7 @@ const Profile = () => {
       : setShowOrders(false)
   }
   return (
-    <div className="w-full py-20 lg:pt-1 md:h-[70vh] bg-white  sm:block p-4">
+    <div className="w-full py-20 lg:pt-1 md:h-[70vh] overflow-y-scroll overflow-x-hidden bg-white  sm:block p-4">
       <div className="flex justify-between items-center mb-6">
         {!showOrders ?
           <h1 className="text-2xl font-bold">My Profile</h1> : <>

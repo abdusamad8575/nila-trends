@@ -48,7 +48,7 @@ const MobileFooter = () => {
   }, [pathname]);
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-white shadow-lg">
+    <footer className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40">
       <nav className="flex justify-between items-center px-4 py-2">
         <Link href="/" passHref>
           <button

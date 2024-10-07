@@ -199,7 +199,7 @@ const ProductPage = () => {
                <div className='bg-red-100 border-rose-50 border-opacity-50 w-4/6 h-full relative flex overflow-hidden justify-center'>
                   <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product?.image[selected]}`} className='absolute top-0 left-0 w-auto h-full min-w-full min-h-full object-cover' alt='...' />
                </div>
-               <div className='h-full w-2/6 overflow-y-scroll overflow-x-hidden custom-scrollbar'>
+               <div className='h-full w-2/6 overflow-y-scroll overflow-x-hidden'>
                   <div className=' flex flex-col gap-3 w-full pr-2 '>
 
                      {product?.image?.map((img, index) => {

@@ -5,7 +5,7 @@ const OrderList = ({ orders, selectedOrder, setSelectedOrder, selectedStatus, se
    return (
       <div className={`${selectedOrder && "hidden"} md:block`}>
          <h2 className="text-xl font-bold mb-4">My Orders</h2>
-         <div className="flex space-x-2 mb-4">
+         <div className="relative flex lg:gap-1 mb-4">
             {['Placed', 'Delivered', 'Canceled', 'Returned'].map((status, index) => (
                <button
                   key={index}
