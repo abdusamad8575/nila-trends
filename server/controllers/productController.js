@@ -100,7 +100,7 @@ const getProducts = async (req, res) => {
     let setCategory;
     if (category) {
       const categoriesArray = category.split(',');
-      setCategory =  [...new Set(categoriesArray)]
+      setCategory = [...new Set(categoriesArray)]
 
       const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
       categoryIdList = categoryIds.map(cat => cat._id);
@@ -117,7 +117,7 @@ const getProducts = async (req, res) => {
       .populate('category')
       .populate('variantProduct')
       .skip(skip)
-      .limit(limit)
+      .limit(limit).sort({ createdAt: -1 })
       .exec();
 
 
@@ -126,16 +126,16 @@ const getProducts = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     const start = (page - 1) * 9 + 1;
-
+    const end = start + limit > totalProducts ? totalProducts : start + limit - 1
     let responseMessage;
     if (category) {
       if (categoryIdList.length) {
-        responseMessage = `Showing ${start} – ${totalPages} of ${totalProducts} results for "${setCategory}"`;
+        responseMessage = `Showing ${start} – ${end} of ${totalProducts} results for "${setCategory}"`;
       } else {
         responseMessage = `No results for "${setCategory}". Showing suggested products for "${setCategory}".`
       }
-    }else{
-      responseMessage ='Products fetched successfully'
+    } else {
+      responseMessage = `Showing ${start} – ${end} of ${totalProducts} results`
     }
 
 
