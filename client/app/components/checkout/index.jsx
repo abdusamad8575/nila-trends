@@ -27,6 +27,7 @@ function Checkout() {
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [appliedCouponDetails, setAppliedCouponDetails] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [ordersCount, setOrdersCount] = useState();
 
 
 
@@ -55,6 +56,11 @@ function Checkout() {
   useEffect(() => {
     fetchAddresses();
   }, [storeData]);
+
+  useEffect(() => {
+    setOrdersCount(userDetails?.orderCount)
+  }, [storeData,userDetails]);
+
 
 
   const [cartData, setCartData] = useState([])
@@ -182,7 +188,7 @@ function Checkout() {
   }
 
   const deliveryCharge = Number(selectedDaliveryDays);
-  const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
+  const includedDeliveryCharge =ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const salePriceIncludingDeliveryCharge = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
   const maximumDiscountPrice = ((appliedCouponDetails?.maxValue < ((salePriceIncludingDeliveryCharge * discount) / 100)) ? appliedCouponDetails?.maxValue : ((salePriceIncludingDeliveryCharge * discount) / 100)).toFixed(2)
   const lastTotal = discount > 0
@@ -194,8 +200,8 @@ function Checkout() {
   const handleDaliveryDaysChange = (e) => {
     setSelectedDaliveryDays(e.target.value);
   };
-
-  const deliveryDays = lastTotal < 200 ? (selectedDaliveryDays === '12' ? '2' : '1') : 'free'
+  const checkDaliveryDays = lastTotal < 200 ? (selectedDaliveryDays === '12' ? '2' : '1') : 'free'
+  const deliveryDays = ordersCount === 0 ? 'free' : checkDaliveryDays
   const handlePaymentSuccess = async () => {
 
     const mappedItems = await cartData?.item?.map((item) => ({
@@ -255,6 +261,7 @@ function Checkout() {
       alert('pay the Apple Pay')
     }
   };
+  console.log('userDetails checkout', ordersCount);
 
   return (
     <div className='flex flex-col gap-3 p-4 mb-28 md:mb-1 text-sm md:text-sm'>
@@ -292,7 +299,7 @@ function Checkout() {
       </div>
 
       <hr className="border-dashed " />
-      {lastTotal < 200 && <div className="flex flex-row gap-2 pb-10 md:pb-1">
+      {(lastTotal < 200 && ordersCount>0) && <div className="flex flex-row gap-2 pb-10 md:pb-1">
         <div className="flex-1">
           <p className=" w-full text-xs font-medium ">how much days expecting  your delivery.</p>
           <div className="flex flex-col">
@@ -307,7 +314,7 @@ function Checkout() {
 
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
-          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p> </div>
+          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p>. {ordersCount === 0 && <span className='text-green-500'>your first dalivery is free</span>} </div>
           {/* <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label> */}
         </div>
         <div className="flex flex-row justify-between"> <p>Your addresses</p> </div>

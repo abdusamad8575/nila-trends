@@ -65,6 +65,10 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    orderCount: {
+        type: Number,
+        default: 0
+    },
     coupons: [{
         type: mongoose.Types.ObjectId,
         ref: 'Coupon'

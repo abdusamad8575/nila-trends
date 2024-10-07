@@ -19,6 +19,7 @@ export default function Cart() {
   const [salePriceTotal, setSalePriceTotal] = useState(0)
   const [proPriceTotal, setProPriceTotal] = useState(0)
   const [loadingIndex, setLoadingIndex] = useState(null);
+  const [ordersCount, setOrdersCount] = useState();
   const isSmallScreen = useMediaQuery('(max-width: 640px)');
   const calculateTotalSalePrice = (items) => {
     let totalSalePrice = 0;
@@ -57,6 +58,14 @@ export default function Cart() {
   useEffect(() => {
     fetchData()
   }, [userData])
+
+  useEffect(() => {
+    setOrdersCount(userData?.orderCount)
+  }, [userData]);
+  console.log('userData',userData);
+  console.log('ordersCount',ordersCount);
+
+  
 
 
 
@@ -138,7 +147,7 @@ export default function Cart() {
   }
 
   const deliveryCharge = 12
-  const includedDeliveryCharge = salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
+  const includedDeliveryCharge =ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
 
   return (
@@ -172,7 +181,7 @@ export default function Cart() {
               </div>
               <div className="text-xs flex justify-between">
                 <p>Delivery Charge</p>
-                <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
+                <p>{ordersCount === 0 ? 'Free ' : includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
               </div>
               <div className="flex justify-between items-center text-sm border-t">
                 <p className="font-semibold">Grand Total :</p>&nbsp;&nbsp;
@@ -253,7 +262,7 @@ export default function Cart() {
                   </div>
                   <div className="flex justify-between">
                     <p>Delivery Charge</p>
-                    <p>{includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
+                    <p>{ordersCount === 0 ? 'Free ' : includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
                   </div>
                   <div className="flex justify-between font-semibold text-lg">
                     <p>Total</p>
