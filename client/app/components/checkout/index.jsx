@@ -314,7 +314,7 @@ function Checkout() {
 
       <div className="flex flex-col gap-1">
         <div className="flex flex-row justify-between">
-          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p>. {ordersCount === 0 && <span className='text-green-500'>your first dalivery is free</span>} </div>
+          <div className="flex-row flex gap-3"> <p>Shipping</p><Svg /><p><span className='text-green-500'>1 - 2</span> days delivery</p>. {ordersCount === 0 && <span className='text-green-500'>free delivery on your order</span>} </div>
           {/* <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label> */}
         </div>
         <div className="flex flex-row justify-between"> <p>Your addresses</p> </div>
@@ -338,7 +338,7 @@ function Checkout() {
                     Ph:${details?.mobile}`}</label>
                   </div>
                 </li>
-              )) : <p className="text-red-500  flex justify-center">address not font . please add the address then comeback checkout and select the address </p>}
+              )) : <p className="text-red-500 font-normal flex justify-center">Please add your address first, then return to checkout and select the address to order.</p>}
             </ul>
           </div>}
       </div>
@@ -353,7 +353,7 @@ function Checkout() {
       </div>
       {addCoupon && (
         <div className='flex mt-1 bg-black rounded-lg'>
-          <input ref={inputRef} onChange={(e) => setAppliedCoupon(e.target.value)} className="w-full border rounded-lg h-8 outline-none" value={appliedCoupon} placeholder="   Add a Coupon Code" />
+          <input ref={inputRef} onChange={(e) => setAppliedCoupon(e.target.value)} className="w-full px-3 border rounded-lg h-8 outline-none" value={appliedCoupon} placeholder="Add a Coupon Code" />
           <button onClick={() => handleCoupon(appliedCoupon)} className='bg-[#1F1F1F] text-white rounded-md px-3'>apply</button>
         </div>)}
       {/* {DeliveryInstruction && (<Input className='rounded-lg' placeholder="Add a delivery Instruction" />)} */}

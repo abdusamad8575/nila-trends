@@ -86,7 +86,7 @@ const Index = () => {
                <h1 className={`${scheherazade_New.className} text-2xl md:text-3xl font-bold md:mb-2`}>{section?.title}</h1>
                <p className="text-xs md:text-sm text-gray-600">{section?.subtitle}</p>
                <div
-                  className="flex overflow-x-auto space-x-4 scrollbar-hide py-4"
+                  className="flex overflow-x-auto space-x-4 scrollbar-hide py-4 pr-2"
                   onMouseLeave={handleScroll}
                >
                   {section?.product?.map((product) => (

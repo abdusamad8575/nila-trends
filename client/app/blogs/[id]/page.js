@@ -4,10 +4,13 @@ import Link from 'next/link';
 import React from 'react'
 import axiosInstance from '../../../axios';
 import logo from '../../favicon.ico'
+import { useRouter } from 'next/navigation';
 
 const Blog = ({ params }) => {
    const [data, setData] = React.useState(null);
    const [loading, setLoading] = React.useState(true)
+   const router = useRouter()
+
    React.useEffect(() => {
       fetchData();
    }, []);
@@ -27,6 +30,10 @@ const Blog = ({ params }) => {
    return (
       <section className="pt-[60px] md:pt-[120px] pb-[50px] md:pb-[100px] bg-[#FEFDFD] flex items-center justify-center">
          <div className="container p-6 md:p-10 w-full">
+         <div className='flex gap-1 pb-2'>
+            <button  onClick={() => router.back()}>← Back</button>
+            <p className='text-slate-400'>/ Blogs</p>
+         </div>
             <div className="-mx-4 flex flex-wrap justify-center">
                <div className="w-full px-4 lg:w-8/12">
                   <div>

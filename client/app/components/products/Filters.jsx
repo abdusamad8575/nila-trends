@@ -76,7 +76,7 @@ export default function Filters({
         <div className="flex-grow relative">
           <input
             type="text"
-            placeholder="Kurta Sets"
+            placeholder="eg: Kurta Sets"
             onChange={handleSearchChange}
             className="w-full py-2 px-3 sm:px-4 border border-gray-300 rounded-r-lg text-xs sm:text-sm"
           />

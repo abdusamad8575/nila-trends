@@ -3,6 +3,7 @@ import { Roboto, Scheherazade_New } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Blogs from '../blogs';
 const scheherazade_New = Scheherazade_New({
   subsets: ['latin'],
   weight: '400',
@@ -38,6 +39,7 @@ const WardrobeSection = () => {
             </div>
           </div>
         </div>
+        <Blogs/>
         <Carousel autoplay autoplaySpeed={10000} arrows className='custom-carousel bg-[#e9e2da] rounded-lg' >
           <div className="text-center pb-10 px-10">
             <svg className="w-6 h-6 text-stone-500 mx-auto my-4" fill="currentColor" viewBox="0 0 20 20">

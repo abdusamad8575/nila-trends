@@ -152,7 +152,7 @@ const Navbar = () => {
           <Link href="/allproducts/Daily & Office wear" className="text-gray-700 hover:text-gray-900">Daily / Office wear</Link>
           <Link href="/allproducts/Home & Night wear" className="text-gray-700 hover:text-gray-900">Home / Night wear</Link>
           <Link href="/allproducts/Travel Wear" className="text-gray-700 hover:text-gray-900">Travel Wear</Link>
-          <Link href="/allproducts/Jewelry" className="text-gray-700 hover:text-gray-900">Jewelry</Link>
+          <Link href="/allproducts/Jewellery" className="text-gray-700 hover:text-gray-900">Jewellery</Link>
           <Link href="/allproducts/Hair Acessories" className="text-gray-700 hover:text-gray-900">Hair Acessories</Link>
           <Link href="/allproducts/Nilaa&apos;s Designer Collection" className="text-gray-700 hover:text-gray-900">Nilaa&apos;s Designer Collection</Link>
         </div>

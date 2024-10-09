@@ -9,21 +9,20 @@ const OrderDetails = ({ data }) => {
             <div className="flex justify-between items-start mb-2">
                <div>
                   <p className="font-bold">Order No : {data?._id}</p>
-                  <p className="text-xs text-gray-600">Shipping addresses</p>
+                  <p className="text-xs text-gray-600 pt-2">Shipping addresses</p>
                   <p className="text-xs text-gray-600 max-w-xs">{data?.address.address_line_1}, {data?.address.city}</p>
                </div>
                <p className="text-sm text-gray-600">{dayjs(data?.createdAt).format('DD/MM/YYYY')}</p>
             </div>
             <div className="flex justify-between items-center">
-               <p className="text-sm">products : {data?.products?.item?.length} </p>
+               <p className="text-sm">Products : {data?.products?.item?.length} </p>
                <div className="text-right">
-                  <p className="text-sm">Total Amount AED:{data?.amount}</p>
-                  <button className="text-sm bg-gray-200 px-3 py-1 rounded-full mt-1">Details</button>
+                  <p className="text-sm">Total Amount AED : {data?.amount}</p>
                </div>
             </div>
             <div className="flex justify-between items-center">
                <p className="text-green-500 text-sm mt-2">{data?.status}</p>
-               {data?.delivery_days && <p className="text-green-500 text-sm mt-2"><span className="text-black text-sm mt-2">Arrival in:</span>{data?.delivery_days === 'free' ? '1-2 days' : `${data?.delivery_days} days`}</p>}
+               {data?.delivery_days && <p className="text-green-500 text-sm mt-2"><span className="text-black text-sm mt-2">Arrival in : </span>{data?.delivery_days === 'free' ? '1-2 days' : `${data?.delivery_days} days`}</p>}
             </div>
          </div>
          <div className='overflow-y-scroll md:h-[40vh]'>
