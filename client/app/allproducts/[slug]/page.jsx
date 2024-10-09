@@ -152,11 +152,11 @@ import Filters from '../../components/products/Filters';
 
 const ProductListing = () => {
   const param = useParams()
-  const category = param?.slug?.replace(/%20/g, ' ');
+  const category = decodeURIComponent(param?.slug || '');
   const dispatch = useDispatch()
   const userData = useSelector(state => state.userDetails);
   const [message, setMessage] = useState()
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
@@ -168,8 +168,8 @@ const ProductListing = () => {
   const [selectedRatings, setSelectedRatings] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
- 
-  
+
+
 
   const router = useRouter()
   const fetchFilters = async () => {
@@ -178,13 +178,16 @@ const ProductListing = () => {
         params: {
           page,
           search,
-          category: selectedCategories.length >0 || !category ?  selectedCategories.join(',') : [category],
+          category: selectedCategories.length > 0 || !category ? selectedCategories.join(',') : [category],
           priceRange: priceRange.join('-'),
-          discount: selectedDiscount, 
-          rating: selectedRatings 
+          discount: selectedDiscount,
+          rating: selectedRatings
         }
       });
       setProducts(data.products);
+      console.log(data.products);
+      console.warn(data.products);
+
       setMessage(data.message)
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -196,14 +199,14 @@ const ProductListing = () => {
     fetchFilters();
   }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories]);
 
-  useEffect(()=>{
-    console.log('category123-',category);
-    
-    if(category){
+  useEffect(() => {
+    console.log('category123-', category);
+
+    if (category) {
       setSelectedCategories((prev) => [...prev, category]);
     }
 
-  },[])
+  }, [])
 
 
   const handlePageChange = (event, value) => {
@@ -257,26 +260,26 @@ const ProductListing = () => {
     fetchWishlist();
   }, []);
 
-  const fixedSelectedProduct = selectedProduct ? selectedProduct : products[0]
+  const fixedSelectedProduct = selectedProduct ? selectedProduct : products?.[0]
 
-  console.log('priceRange,selectedDiscount,selectedRatings,selectedCategories',priceRange,selectedDiscount,selectedRatings,selectedCategories);
-  
+  console.log('priceRange,selectedDiscount,selectedRatings,selectedCategories', priceRange, selectedDiscount, selectedRatings, selectedCategories);
+
   return (
     <div className="max-w-7xl mx-auto p-4 mt-12 md:mt-28">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8 first-item">
           <div className="flex items-center mb-4">
-          <Filters
-            setPriceRange={setPriceRange}
-            setSelectedDiscount={setSelectedDiscount}
-            setSelectedRatings={setSelectedRatings}
-            setSelectedCategories={setSelectedCategories}
-            handleSearchChange={(e) => setSearch(e.target.value)}
-          />
+            <Filters
+              setPriceRange={setPriceRange}
+              setSelectedDiscount={setSelectedDiscount}
+              setSelectedRatings={setSelectedRatings}
+              setSelectedCategories={setSelectedCategories}
+              handleSearchChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          <div className='w-full pb-5 text-sm'>{message}</div>
+          <div className='w-full pb-3 md:pb-4 text-xs md:text-sm'>{message}</div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products?.map((product) => (
+            {products ? products?.map((product) => (
               <ProductCard
                 key={product._id}
                 ProId={product._id}
@@ -290,14 +293,16 @@ const ProductListing = () => {
                 onWishlistClick={() => toggleWishlist(product._id)}
                 isInWishlist={isInWishlist(product._id)}
               />
-            ))}
+            )) :
+              Array(9).fill().map((_item, index) => <ProductCard key={index} />)}
           </div>
           <Pagination
             count={totalPages}
             page={page}
             // onChange={handlePageChange}
             onChange={(event, value) => setPage(value)}
-            className="flex justify-center mt-4"
+            className="flex justify-center mb-10 md:mb-3 mt-5"
+            size='small'
           />
         </div>
 

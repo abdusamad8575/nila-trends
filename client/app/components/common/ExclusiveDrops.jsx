@@ -49,7 +49,7 @@ const ExclusiveDrops = () => {
          </motion.div>
          <div className='absolute flex flex-col justify-center align-center w-full'>
             <Image src={ExclusiveDropsTittle} className="z-20 pt-14 mx-auto" alt='...' width={300} height={100} />
-            <Carousel autoplay autoplaySpeed={30000} className='custom-carousel pb-5 '>
+            <Carousel autoplay autoplaySpeed={5000} className='custom-carousel pb-5 '>
                {data?.map((coupon, index) => {
                   const color = colors[index % colors.length];
                   return (

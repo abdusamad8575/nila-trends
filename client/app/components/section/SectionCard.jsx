@@ -8,7 +8,7 @@ const SectionCard = ({ image, category, ProId, title, fit, price, sale_rate, onW
          key={ProId}
          className="w-[50vw] sm:w-[30vw] md:w-[25vw] lg:w-[20vw] xl:w-[15vw] bg-white rounded-lg shadow-md flex-shrink-0"
       >
-         <div className="overflow-hidden cursor-pointer rounded-lg flex flex-col relative">
+         <div className=" cursor-pointer rounded-lg flex flex-col relative">
             <button
                onClick={onWishlistClick}
                className={`absolute top-0 right-0 m-1 bg-slate-50 rounded-2xl p-1 focus:outline-none ${isInWishlist ? 'text-red-500' : 'text-gray-400'}`}
@@ -30,14 +30,12 @@ const SectionCard = ({ image, category, ProId, title, fit, price, sale_rate, onW
                         Shop Now
                      </button>
                   </div>
-                  <h3 className="mt-2 text-sm sm:text-lg font-semibold">{title}</h3>
+                  <h3 className="mt-2 text-sm sm:text-lg font-semibold truncate">{title}</h3>
                </Link>
                <div className='flex justify-between'>
-                  <Link href={`/products/${ProId}`}>
-                     <div>
-                        <p className="text-xs sm:text-sm text-gray-600">{fit}</p>
+                  <Link href={`/products/${ProId}`} className='w-full'>
+                        <p className="text-xs sm:text-sm text-gray-600 truncate">{fit}</p>
                         <p className="text-xs sm:text-sm text-gray-600">Price • <span className='line-through'>AED {price}</span> &bull; <strong>AED {sale_rate}</strong></p>
-                     </div>
                   </Link>
                </div>
             </div>

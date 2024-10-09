@@ -48,6 +48,8 @@ const ProductPage = () => {
    const [selectedColor, setSelectedColor] = useState(0)
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()
+   const [loading, setLoading] = useState(true)
+
    // const handleCheckout = () => dispatch(setCheckout(true))
    const handleCheckout = () => {
       if (!userDetails) {
@@ -123,11 +125,25 @@ const ProductPage = () => {
          </div>
 
          <div className={styles.mainContent} >
-            <div className='md:hidden'>
+            <div className='lg:hidden'>
                <Carousel autoplay>
                   {product?.image?.map((img, index) => (
                      <div key={index} className='bg-red-100 border-rose-50 border-opacity-50 w-full h-[60vh] relative flex overflow-hidden justify-center' onClick={() => setSelected(index)}>
-                        <img key={index} src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${img}`} alt={`${product?.name} ${index}`} className='absolute top-0 left-0 w-auto h-full min-w-full min-h-full object-cover' />
+                        <img key={index} onLoad={() => setLoading(false)} src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${img}`} alt={`${product?.name} ${index}`} className='absolute top-0 left-0 w-auto h-full min-w-full min-h-full object-cover' />
+                        {loading && <div
+                           role="status"
+                           className="flex items-center justify-center absolute top-0 left-0 w-auto h-full min-w-full min-h-full bg-gray-300 animate-pulse"
+                        >
+                           <svg
+                              className="w-10 h-10 text-gray-200"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 20 18"
+                           >
+                              <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                           </svg>
+                        </div>}
                      </div>
                   ))}
                </Carousel>
@@ -143,9 +159,9 @@ const ProductPage = () => {
                   ))}
                </ul>
                {product?.sizes?.length > 0 &&
-                  <div className={`md:hidden ${styles.footerSection}`}>
+                  <div className={`lg:hidden mb-2`}>
                      <h3>Select Size</h3>
-                     <div className=''>
+                     <div className='flex gap-2'>
                         {product?.sizes.map((sizeObj, index) => (
                            sizeObj?.quantity > 0 && <button key={index} onClick={() => handleSizeSelect(sizeObj.sizes, index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
                               ? 'border-[#B17E3E]'
@@ -155,7 +171,7 @@ const ProductPage = () => {
                      </div>
                   </div>}
                <div>
-                  <p className='text-green-600 text-sm'>Free delivery on your first order</p>
+                  <p className='text-green-600 text-xs md:text-sm'>&quot;Enjoy free delivery on your first order and on all purchases over AED 200! Don’t miss out—shop now and save big!&quot;</p>
                </div>
                {!!product?.variantProduct?.length && <h3 className={styles.sectionTitle}>Available Color & Texture</h3>}
                <div className='flex gap-2 pb-6'>
@@ -195,7 +211,7 @@ const ProductPage = () => {
             </div>
 
             {/* Desktop view images */}
-            <div className='hidden bg-red-50 md:flex flex-row gap-4 w-[100vh] h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[60vh] relative'>
+            <div className='hidden bg-red-50 lg:flex flex-row gap-4 w-[100vh] h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[60vh] relative'>
                <div className='bg-red-100 border-rose-50 border-opacity-50 w-4/6 h-full relative flex overflow-hidden justify-center'>
                   <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${product?.image[selected]}`} className='absolute top-0 left-0 w-auto h-full min-w-full min-h-full object-cover' alt='...' />
                </div>
@@ -220,8 +236,8 @@ const ProductPage = () => {
             <Review data={product} />
          </div>
 
-         <div className={`${styles.footer} bg-opacity-80 bg-white`}>
-            {product?.sizes?.length > 0 && <div className={`hidden md:block ${styles.footerSection}`}>
+         <div className={`${styles.footer} flex justify-between bg-opacity-90 bg-white`}>
+            {product?.sizes?.length > 0 && <div className={`hidden lg:block text-center`}>
                <h3>Select Size</h3>
                <div className={styles.buttonGroup}>
                   {product?.sizes.map((sizeObj, index) => (
@@ -232,7 +248,7 @@ const ProductPage = () => {
                   ))}
                </div>
             </div>}
-            {/* <div className={`hidden md:block ${styles.footerSection}`}>
+            {/* <div className={`hidden md:block flex text-center`}>
                     <h3>Select Color & Texture</h3>
                     <div className={styles.colorOptions}>
                         <button className={`${styles.colorButton} ${styles.selectedColor}`} />
@@ -240,25 +256,25 @@ const ProductPage = () => {
                         <button className={styles.colorButton} />
                     </div>
                 </div> */}
-            <div className={`hidden md:block ${styles.footerSection}`}>
+            <div className={`hidden lg:block text-center`}>
                <h3>Delivery</h3>
-               <p className={styles.deliveryInfo}>Delivery in 1 - 2 days &bull; All over UAE</p>
+               <p className="mt-2 text-sm">Delivery in 1 - 2 days &bull; All over UAE</p>
             </div>
-            <div className={`hidden md:block ${styles.footerSection}`}>
+            <div className={`hidden lg:block w-1/5 text-center`}>
                <h3>Fit & Care</h3>
-               <p className={styles.fitInfoFooter}>{product?.fitAndCare?.[0]} &bull; {product?.fitAndCare?.[1]}</p>
+               <p className="mt-2 text-sm truncate line-clamp-4">{product?.fitAndCare?.[0]} &bull; {product?.fitAndCare?.[1]}</p>
             </div>
-            <div className={`hidden md:block ${styles.footerSection}`}>
+            <div className={`hidden lg:block text-center`}>
                <h3>Flat {Math.round(((product?.price - product?.sale_rate) / product?.price) * 100)}% Off</h3>
-               <p className={styles.fitInfoFooter}><span className='line-through'>AED {product?.price}</span> &bull; AED:{product?.sale_rate}</p>
+               <p className="mt-2 text-sm"><span className='line-through'>AED {product?.price}</span> &bull; AED:{product?.sale_rate}</p>
             </div>
 
             {/* Price displayed only on mobile */}
-            <div className={`block md:hidden ${styles.mobilePrice}`}>
+            <div className={`block lg:hidden ${styles.mobilePrice}`}>
                <p className={`${roboto_mono.className} pb-2 text-xs sm:text-sm text-gray-600`}>Price • <span className='line-through'>AED {product?.price}</span> &bull; <strong>AED {product?.sale_rate}</strong></p>
             </div>
 
-            <div className={`${roboto.className} flex items-center gap-2 text-sm md:text-md w-full md:w-1/5`}>
+            <div className={`${roboto.className} flex items-center gap-2 text-sm md:text-md w-full lg:w-1/5`}>
                <button
                   // onClick={() => setOpen(true)}
                   onClick={() => handleAddToCartClick(product)}
