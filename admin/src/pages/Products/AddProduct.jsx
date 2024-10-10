@@ -5,8 +5,8 @@ import Input from 'components/Input'
 import PageLayout from 'layouts/PageLayout'
 import React, { useEffect, useState } from 'react'
 import ImageList from './ImageList';
-import { useGetCategory } from 'queries/ProductQuery'
 import Typography from 'components/Typography'
+import { useGetCategory } from 'queries/ProductQuery'
 import { useAddProduct, useGetSimilarProducts } from 'queries/ProductQuery'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
@@ -25,9 +25,9 @@ const AddProduct = () => {
   const handleChange = (e) => {
     setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const [category, setCategory] = useState()
   const [disable, setDisable] = useState(false)
-
+  
+  const [category, setCategory] = useState()
   const [product, setProduct] = useState([])
   const [variantProduct, setVariantProduct] = useState([])
   const { data: respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });

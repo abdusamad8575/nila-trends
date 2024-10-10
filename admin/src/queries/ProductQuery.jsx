@@ -178,14 +178,14 @@ const useDeleteProduct = () => {
 
 
 const useGetCoupon = (data) => {
-  return useQuery(["get_category", data], () => getCoupon(data), {
+  return useQuery(["get_coupon", data], () => getCoupon(data), {
     staleTime: 3000,
     keepPreviousData: true,
     // refetchOnWindowFocus: false,
   });
 };
 const useGetCoinCoupen = (data) => {
-  return useQuery(["get_category", data], () => getCoinCoupon(data), {
+  return useQuery(["get_coupon", data], () => getCoinCoupon(data), {
     staleTime: 3000,
     keepPreviousData: true,
     // refetchOnWindowFocus: false,
@@ -207,7 +207,7 @@ const useAddCoupon = () => {
 };
 const useGetCouponById = (data) => {
   console.log('get coupon by id', data)
-  return useQuery(["get_coupons", data], () => getCouponById(data), {
+  return useQuery(["get_coupon", data], () => getCouponById(data), {
     // staleTime: 30000,
     keepPreviousData: true,
     refetchOnWindowFocus: false,
@@ -218,7 +218,7 @@ const useUpdateCouponStatus = () => {
 
   return useMutation((data) => couponStatus(data), {
     onSuccess: (data) => {
-      queryClient.invalidateQueries("get_coupons");
+      queryClient.invalidateQueries("get_coupon");
       return data;
     },
     onError: (data) => {
@@ -232,7 +232,7 @@ const useUpdateCoupon = () => {
 
   return useMutation((data) => updateCoupon(data), {
     onSuccess: (data) => {
-      queryClient.invalidateQueries("get_coupons");
+      queryClient.invalidateQueries("get_coupon");
       return data;
     },
     onError: (data) => {
@@ -247,7 +247,7 @@ const useDeletecoupons = () => {
 
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries("get_coupons");
+      queryClient.invalidateQueries("get_coupon");
       return data;
     },
     onError: (data) => {
