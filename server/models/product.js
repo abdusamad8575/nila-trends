@@ -87,6 +87,12 @@ const productSchema = new mongoose.Schema({
             ref: 'Product',
         }
     ],
+    coupons: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Coupon',
+        }
+    ],
 },
     {
         timestamps: true

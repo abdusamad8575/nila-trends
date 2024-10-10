@@ -1,7 +1,7 @@
-import { Alert, Box, Button, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, Typography,TextField,Autocomplete } from "@mui/material";
 import React, { useState } from 'react'
 import PageLayout from 'layouts/PageLayout';
-import { useAddCoupon } from "queries/ProductQuery";
+import { useAddCoupon,useGetSimilarProducts,useGetCategory } from "queries/ProductQuery";
 import toast from "react-hot-toast";
 import Input from "components/Input";
 import { useNavigate  } from 'react-router-dom';
@@ -9,11 +9,14 @@ import { useNavigate  } from 'react-router-dom';
 const AddCoupon = () => {
   const navigate = useNavigate();
 
+  const [category, setCategory] = useState([])
+  const [product, setProduct] = useState([])
+
   const [data, setData] = useState({})
   const fileInputRef = React.useRef(null);
-  // const handleFileSelect = () => {
-  //   fileInputRef.current.click();
-  // };
+  
+  const { data:catRespo } = useGetCategory({ pageNo: 1, pageCount: 100 });
+  const { data: respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
 
   
 
@@ -24,24 +27,6 @@ const AddCoupon = () => {
 
   const handleSubmit = () => {
     try {
-      // if (!data?.name) {
-      //   return toast.error("name is required")
-      // }
-      // if (!data?.code) {
-      //   return toast.error("code is required")
-      // }
-      // if (!data?.discount) {
-      //   return toast.error("discount is required")
-      // }
-      // if (!data?.validity) {
-      //   return toast.error("validity is required")
-      // }
-      // if (!data?.description) {
-      //   return toast.error("description is required")
-      // }
-      // if (!data?.image) {
-      //   return toast.error("image is required")
-      // }
 
       const requiredFields = ['name','code','discount', 'validity', 'minValue', 'maxValue'];
       for (const field of requiredFields) {
@@ -55,7 +40,8 @@ const AddCoupon = () => {
           formData.append(key, data[key]);
         }
       }
-      // typeof (data.image) == 'object' && formData.append("image", data.image, data?.image?.name);
+      category.length && category.forEach((category) =>formData.append('categorys', category?._id));
+      product.length && product.forEach((product) => formData.append('products', product._id));
       addCategory(formData)
         .then((res) => {
           toast.success(res?.message ?? "Coupon added");
@@ -167,6 +153,83 @@ const AddCoupon = () => {
               fullWidth
               autoComplete="maxValue"
               variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Autocomplete
+              id="category-select"
+              multiple
+              options={catRespo?.data || []}
+              value={category}
+              onChange={(event, newValue) => {
+                setCategory(newValue);
+              }}
+              autoHighlight
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  <img
+                    loading="lazy"
+                    width="20"
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image}`}
+                  />
+                  <Typography color="inherit" variant="caption">
+                    {option?.name} <br />
+                    {option?.desc}
+                  </Typography>
+                  <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                    {option?.isAvailable ? 'available' : 'NA'}
+                  </Typography>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Choose categorys"
+                  inputProps={{
+                    ...params.inputProps,
+                  }}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <Autocomplete
+              id="Product-select"
+              multiple
+              options={respo?.data || []}
+              value={product}
+              onChange={(event, newValue) => {
+                setProduct(newValue);
+              }}
+              autoHighlight
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  <img
+                    loading="lazy"
+                    width="20"
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
+                  />
+                  <Typography color="inherit" variant="caption">
+                    {option?.name} <br />
+                    {option?.brand}
+                  </Typography>
+                  <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                    {option?.isAvailable ? 'available' : 'NA'}
+                  </Typography>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Choose products"
+                  inputProps={{
+                    ...params.inputProps,
+                  }}
+                />
+              )}
             />
           </Grid>
 

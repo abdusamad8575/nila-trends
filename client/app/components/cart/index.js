@@ -62,10 +62,11 @@ export default function Cart() {
   useEffect(() => {
     setOrdersCount(userData?.orderCount)
   }, [userData]);
-  console.log('userData',userData);
-  console.log('ordersCount',ordersCount);
+  // console.log('userData', userData);
+  // console.log('ordersCount', ordersCount);
+  console.log('cartData', cartData);
 
-  
+
 
 
 
@@ -147,7 +148,7 @@ export default function Cart() {
   }
 
   const deliveryCharge = 12
-  const includedDeliveryCharge =ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
+  const includedDeliveryCharge = ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
 
   return (
@@ -214,6 +215,7 @@ export default function Cart() {
                         <h4 className="font-semibold text-sm">{item?.productId?.name}</h4>
                         {item?.size && <p className="text-gray-500 text-xs">Size • {item?.size}</p>}
                         <p className="text-gray-500 text-xs">AED • {item?.productId?.sale_rate}</p>
+                        {item?.coupon && <p className="text-green-500 text-xs">used {item?.coupon?.discount}% coupon</p>}
                       </div>
                       <div className="flex items-center w-1/5">
                         {item?.productId?.isAvailable ? (

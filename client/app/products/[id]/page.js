@@ -17,6 +17,7 @@ import { setCheckout } from '../../../redux/actions/storeActions';
 import { setCheckoutProduct } from '../../../redux/actions/storeActions';
 import toast from 'react-hot-toast';
 import Review from '@/app/components/products/Review';
+import Modal from '@/app/components/model';
 
 const rochester = Rochester({
    subsets: ['latin'],
@@ -48,13 +49,19 @@ const ProductPage = () => {
    const [selectedColor, setSelectedColor] = useState(0)
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()
-   // const handleCheckout = () => dispatch(setCheckout(true))
+
+   const [selectedCoupon, setSelectedCoupon] = useState(null);
+   const [selectedCouponDetails, setSelectedCouponDetails] = useState(null);
+   const [appliedMessage, setAppliedMessage] = useState('');
+   const [availableCoupon, setAvailableCoupon] = useState([]);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
    const handleCheckout = () => {
       if (!userDetails) {
          router.push('/register');
       }
       if (selectedSize || product?.stock) {
-         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize })) : dispatch(setCheckoutProduct({ product }))
+         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize,coupon: selectedCouponDetails || null })) : dispatch(setCheckoutProduct({ product }))
          dispatch(setCheckout(true))
       } else {
          toast.error('please select size')
@@ -65,8 +72,7 @@ const ProductPage = () => {
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/client/${id}`)
          .then((response) => {
             setProduct(response.data);
-            console.log(response.data);
-
+            response?.data?.coupons && setAvailableCoupon(response?.data?.coupons)
          })
          .catch((error) => {
             console.error('Error fetching product:', error);
@@ -100,7 +106,11 @@ const ProductPage = () => {
       } else {
          try {
             const urlQuery = `/user/addToCart/${proId1}`;
-            const response = await axiosInstance.patch(urlQuery, { size: selectedSize });
+            const payload = {
+               size: selectedSize,
+               coupon: selectedCoupon
+             };
+            const response = await axiosInstance.patch(urlQuery,payload);
             dispatch(setUserDetails(response?.data?.userData));
 
          } catch (error) {
@@ -116,6 +126,14 @@ const ProductPage = () => {
          toast.error('please select size')
       }
    };
+   const handleCouponSelect = (couponId) => {
+      setSelectedCoupon(couponId);
+      const coupon = availableCoupon.find(c => c._id === couponId);
+      setSelectedCouponDetails(coupon)
+      setAppliedMessage(`Coupon of ${coupon.discount}% applied successfully!`);
+      setIsModalOpen(false);
+   };
+
    return (
       <div className={styles.container}>
          <div className={styles.header}>
@@ -192,7 +210,52 @@ const ProductPage = () => {
                      <p key={index} className={styles.specInfo}>{spec}</p>
                   ))}
                </div>
+
+
+               {availableCoupon?.length > 0 &&
+
+                  <div className="flex flex-col">
+                     <div className="flex items-center mb-2">
+                        <span className="bg-yellow-400 text-black font-bold text-sm py-1 px-2 rounded mx-2">Coupon:</span>
+                  
+                        {availableCoupon.length > 0 && !selectedCoupon && (
+                        <div className="flex items-center mb-2">
+                           <button onClick={() => setIsModalOpen(true)} className="text-green-600">
+                              Open Coupons
+                           </button>
+                        </div>
+                     )}
+                     {selectedCoupon && (
+                        <div className="flex items-center">
+                           <div className="w-5 h-5 flex items-center justify-center bg-green-500 rounded-full">
+                              <img
+                                 src='https://static.vecteezy.com/system/resources/previews/011/858/556/original/green-check-mark-icon-with-circle-tick-box-check-list-circle-frame-checkbox-symbol-sign-png.png'
+                                 alt="Checkmark"
+                                 width={16}
+                                 height={16}
+                              />
+                           </div>
+                           <span className="ml-2 text-green-600">{appliedMessage}</span>
+                        </div>
+                     )}
+                     </div>
+                     <Modal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        availableCoupons={availableCoupon}
+                        onCouponSelect={handleCouponSelect}
+                        selectedCoupon={selectedCoupon}
+                     />
+                  </div>
+               }
+
+
             </div>
+
+
+
+
+
 
             {/* Desktop view images */}
             <div className='hidden bg-red-50 md:flex flex-row gap-4 w-[100vh] h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[60vh] relative'>
