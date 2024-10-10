@@ -31,7 +31,7 @@ const JewelryShop = () => {
 
       <header className="text-left my-8">
         <h1 className={`${scheherazade_New.className} text-2xl md:text-3xl font-bold md:mb-2`}>Shop Elegant Jewellery</h1>
-        <p className="text-xs md:text-sm text-gray-600">OUR LATEST LOOKBOOK</p>
+        <p className="text-xs md:text-sm text-gray-600">OUR LATEST LOOK BOOK</p>
       </header>
 
       <main className="flex gap-1">

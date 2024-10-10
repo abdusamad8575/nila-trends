@@ -16,7 +16,7 @@ const Index = () => {
    const router = useRouter();
    const dispatch = useDispatch();
    const userData = useSelector(state => state.userDetails);
-   const [products, setProducts] = useState([]);
+   const [products, setProducts] = useState(null);
    const [wishlistItems, setWishlistItems] = useState([]);
    const fetchProducts = async () => {
       try {
@@ -81,12 +81,12 @@ const Index = () => {
 
    return (
       <>
-         {products?.map((section) => (
+         {products ? products?.map((section) => (
             <div className="max-w-7xl mx-auto p-4 pt-6 md:mt-10" key={section?.title}>
                <h1 className={`${scheherazade_New.className} text-2xl md:text-3xl font-bold md:mb-2`}>{section?.title}</h1>
                <p className="text-xs md:text-sm text-gray-600">{section?.subtitle}</p>
                <div
-                  className="flex overflow-x-auto space-x-4 scrollbar-hide py-4"
+                  className="flex overflow-x-auto space-x-4 scrollbar-hide py-4 pr-2"
                   onMouseLeave={handleScroll}
                >
                   {section?.product?.map((product) => (
@@ -105,7 +105,20 @@ const Index = () => {
                   ))}
                </div>
             </div>
-         ))}
+         )) :
+            Array(9).fill().map((_item, index) =>
+               <div className="max-w-7xl mx-auto p-4 pt-6 md:mt-10" key={index}>
+                  <h1 className={`${scheherazade_New.className} text-2xl md:text-3xl bg-slate-200 w-3/5 md:w-2/5 h-6 md:h-8 animate-pulse mb-2`}></h1>
+                  <p className="text-xs md:text-sm  bg-slate-200 w-2/5 md:w-1/5 h-4 animate-pulse"></p>
+                  <div
+                     className="flex overflow-x-auto space-x-4 scrollbar-hide py-4"
+                     onMouseLeave={handleScroll}
+                  >
+                     {Array(9).fill().map((_item, index) => <SectionCard key={index} />)}
+                  </div>
+               </div>
+            )
+         }
       </>
    );
 };

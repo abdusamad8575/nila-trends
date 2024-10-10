@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -24,12 +24,15 @@ a {
 
 /* Hide scrollbar for all elements */
 * {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 *::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
 /* Custom scrollbar styles for all elements */
@@ -52,13 +55,15 @@ a {
 }
 
 .custom-carousel .slick-dots li button {
-  background-color: #a79b8d; /* Change this to your desired color */
+  background-color: #a79b8d;
+  /* Change this to your desired color */
   height: 5px;
 }
 
 /* Active dot color */
 .custom-carousel .slick-dots li.slick-active button {
-  background-color: #8b8174; /* Change this to your desired active color */
+  background-color: #8b8174;
+  /* Change this to your desired active color */
 }
 
 .custom-carousel .slick-prev,
@@ -88,9 +93,23 @@ a {
 }
 
 .custom-modal .ant-modal-body {
-  padding: 0 !important;  /* This removes the default padding */
+  padding: 0 !important;
+  /* This removes the default padding */
 }
 
 .custom-modal .ant-modal-content {
-  padding: 0;  /* Ensure no padding in modal content */
+  padding: 0;
+  /* Ensure no padding in modal content */
+}
+
+.truncate-line {
+  /* display: -webkit-box; */
+  /* -webkit-line-clamp: 1;
+  line-clamp: 1; */
+  /* -webkit-box-orient: vertical; */
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

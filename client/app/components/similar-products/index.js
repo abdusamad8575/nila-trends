@@ -124,12 +124,12 @@ const SimilarStores = ({ similarProducts }) => {
               alt={product.image[0]}
               className="w-full h-48 object-cover rounded-t-lg"
             />
-            <div className="p-4">
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
+            <div className="py-4 px-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs md:text-sm font-semibold text-gray-700 mb-2">
                 {product?.category?.name}
               </span>
-              <h3 className="text-sm md:text-lg font-semibold">{product.name}</h3>
-              <p className="text-gray-500 text-sm">{product.fitAndCare[0]}</p>
+              <h3 className="text-sm md:text-lg font-semibold truncate">{product.name}</h3>
+              <p className="text-gray-500 text-sm truncate">{product.fitAndCare[0]}</p>
               <p className="text-gray-800 font-bold text-sm">Price &bull; AED {product.price}</p>
               <button
                 className="flex items-center bg-[#AE9B84] text-white rounded-md p-2 mt-4 hover:bg-gray-200 py-2 px-4 text-xs"

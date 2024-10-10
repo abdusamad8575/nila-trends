@@ -14,7 +14,7 @@ const KurtaSetsListing = () => {
   const dispatch = useDispatch();
   const userData = useSelector(state => state.userDetails);
   const router = useRouter();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
@@ -35,8 +35,8 @@ const KurtaSetsListing = () => {
           search,
           category: selectedCategories.join(','),
           priceRange: priceRange.join('-'),
-          discount: selectedDiscount, 
-          rating: selectedRatings 
+          discount: selectedDiscount,
+          rating: selectedRatings
         }
       });
       setProducts(data.products);
@@ -111,16 +111,16 @@ const KurtaSetsListing = () => {
         <div className="lg:col-span-8 first-item">
           <div className="flex items-center mb-4">
             <Filters
-            setPriceRange={setPriceRange}
-            setSelectedDiscount={setSelectedDiscount}
-            setSelectedRatings={setSelectedRatings}
-            setSelectedCategories={setSelectedCategories}
-            handleSearchChange={(e) => setSearch(e.target.value)}
-          />
+              setPriceRange={setPriceRange}
+              setSelectedDiscount={setSelectedDiscount}
+              setSelectedRatings={setSelectedRatings}
+              setSelectedCategories={setSelectedCategories}
+              handleSearchChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          <div className='w-full pb-5 text-sm'>{message}</div>
+          <div className='w-full pb-3 md:pb-4 text-xs md:text-sm'>{message}</div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products?.map((product) => (
+            {products ? products?.map((product) => (
               <ProductCard
                 key={product._id}
                 ProId={product._id}
@@ -134,13 +134,15 @@ const KurtaSetsListing = () => {
                 onWishlistClick={() => toggleWishlist(product._id)}
                 isInWishlist={isInWishlist(product._id)}
               />
-            ))}
+            )) :
+              Array(9).fill().map((_item, index) => <ProductCard key={index} />)}
           </div>
           <Pagination
             count={totalPages}
             page={page}
             onChange={handlePageChange}
-            className="flex justify-center mt-4"
+            className="flex justify-center mb-10 md:mb-3 mt-5"
+            size='small'
           />
         </div>
         <RightBox product={fixedSelectedProduct} />

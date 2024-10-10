@@ -1,9 +1,10 @@
 import { Carousel } from 'antd';
-import { Roboto } from 'next/font/google';
+import { Roboto, Scheherazade_New } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-const roboto = Roboto({
+import Blogs from '../blogs';
+const scheherazade_New = Scheherazade_New({
   subsets: ['latin'],
   weight: '400',
   display: 'swap',
@@ -12,13 +13,13 @@ const roboto = Roboto({
 const WardrobeSection = () => {
   const router = useRouter()
   return (
-    <div className={roboto.className}>
+    <>
       <div className="md:max-w-7xl mx-auto p-4 mb-14">
         <div className="bg-[#C2B4A3] rounded-lg p-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-stone-200 rounded-full -mr-20 -mt-20 opacity-50"></div>
           <div className='flex flex-col md:flex-row'>
             <div className='w-full md:w-3/4'>
-              <h2 className="text-3xl font-bold mb-4">ELEVATE YOUR WARDROBE</h2>
+              <h2 className={`${scheherazade_New.className} text-3xl font-black mb-4`}>ELEVATE YOUR WARDROBE</h2>
               <p className="mb-4">
                 Discover the magic of Nilaa&apos;s exclusive collections, where each piece is crafted with
                 unparalleled attention to detail.
@@ -38,6 +39,7 @@ const WardrobeSection = () => {
             </div>
           </div>
         </div>
+        <Blogs/>
         <Carousel autoplay autoplaySpeed={10000} arrows className='custom-carousel bg-[#e9e2da] rounded-lg' >
           <div className="text-center pb-10 px-10">
             <svg className="w-6 h-6 text-stone-500 mx-auto my-4" fill="currentColor" viewBox="0 0 20 20">
@@ -131,7 +133,7 @@ const WardrobeSection = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

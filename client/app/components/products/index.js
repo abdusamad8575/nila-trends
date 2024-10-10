@@ -26,7 +26,7 @@ const Lookbook = () => {
   return (
     <div className="max-w-7xl mx-auto p-4 ">
       <h2 className={`${scheherazade_New.className} text-2xl md:text-3xl font-bold md:mb-2`} >Find Your Perfect Dress</h2>
-      <p className="text-xs md:text-sm text-gray-600 mb-6">OUR LATEST LOOKBOOK</p>
+      <p className="text-xs md:text-sm text-gray-600 mb-6">OUR LATEST LOOK BOOK</p>
 
       <div className='w-full h-full grid grid-flow-col grid-rows-2 md:grid-rows-1 grid-cols-2 md:grid-cols-4 gap-3'>
         {lookbookItems.map((x, index) => (
