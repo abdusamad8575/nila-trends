@@ -44,12 +44,12 @@ const ProductPage = () => {
    const { id } = params;
    const [open, setOpen] = useState(false)
    const [selected, setSelected] = useState(0)
-   const [selectedSize, setSelectedSize] = useState()
+   const [selectedSize, setSelectedSize] = useState() 
    const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
-   const [selectedColor, setSelectedColor] = useState(0)
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()
    const [loading, setLoading] = useState(true)
+
    const [selectedCoupon, setSelectedCoupon] = useState(null);
    const [selectedCouponDetails, setSelectedCouponDetails] = useState(null);
    const [appliedMessage, setAppliedMessage] = useState('');
@@ -72,7 +72,19 @@ const ProductPage = () => {
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/client/${id}`)
          .then((response) => {
             setProduct(response.data);
+
             response?.data?.coupons && setAvailableCoupon(response?.data?.coupons)
+            if (response?.data?.category?.coupons.length) {
+               
+               const newCoupons = response?.data?.category?.coupons || [];
+
+               setAvailableCoupon((prevCoupons) => {
+                  const combinedCoupons = [...prevCoupons, ...newCoupons];
+                  const uniqueCoupons = Array.from(new Map(combinedCoupons.map(coupon => [coupon._id, coupon])).values());
+
+                  return uniqueCoupons;
+               });
+            }
          })
          .catch((error) => {
             console.error('Error fetching product:', error);

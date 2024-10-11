@@ -27,6 +27,9 @@ function Checkout() {
   const [addresses, setAddresses] = useState([]);
 
   const [coupons, setCoupons] = useState([]);
+
+  const [loadingCoupons, setLoadingCoupons] = useState(true);
+
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [appliedCouponDetails, setAppliedCouponDetails] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -38,13 +41,15 @@ function Checkout() {
       setCoupons(data.data);
     } catch (error) {
       console.error('Failed to fetch coupons', error);
+    } finally {
+      setLoadingCoupons(false);
     }
   };
 
+  useEffect(() => {
 
-  // useEffect(() => {
-  //   fetchCoupons();
-  // }, [userDetails]);
+    fetchCoupons();
+  }, []);
 
   const fetchAddresses = async () => {
     try {
@@ -131,9 +136,6 @@ function Checkout() {
       setSalePriceTotal(totalSalePrice)
       const totalProPrice = calculateTotalProPrice(filteredItems);
       setProPriceTotal(totalProPrice)
-      // if(checkoutProduct?.coupon){
-      //   handleCoupon(checkoutProduct?.coupon?.code)
-      // }
     } else {
       setCartData([])
       fetchData()
@@ -141,8 +143,6 @@ function Checkout() {
   }, [storeData])
 
   const handleCoupon = async (couponCode) => {
-    console.log('samad coupons',coupons);
-    console.log('samad couponCode',couponCode);
 
     try {
       setDiscount(0)
@@ -154,7 +154,6 @@ function Checkout() {
 
       if (couponCode) {
         useCoupon = coupons?.filter((coupon) => {
-          // console.log('coupon.code === couponCode',coupon.code, couponCode);
 
           if (coupon.code === couponCode) {
             setAppliedCoupon(coupon?.code);
@@ -315,14 +314,11 @@ function Checkout() {
     try {
 
       if (cartData?.item?.length === 1 && cartData?.item[0]?.coupon) {
-        console.log('1');
-        
+
         await handleCoupon(cartData?.item[0]?.coupon?.code)
       } else if (cartData?.item?.length > 1) {
-        console.log('2');
         const cheapestCoupon = await checkCheaptCoupon(cartData?.item)
-        if(cheapestCoupon){
-          console.log('3');
+        if (cheapestCoupon) {
           await handleCoupon(cheapestCoupon?.code)
         }
       }
@@ -332,13 +328,13 @@ function Checkout() {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchCoupons();
-    if(storeDataCheckout){
 
+
+  useEffect(() => {
+    if (!loadingCoupons && storeDataCheckout) {
       setAlreyIncludedCoupons();
     }
-  }, [ storeDataCheckout,coupon,cartData]);
+  }, [loadingCoupons, storeDataCheckout,cartData]);
 
   return (
     <div className='flex flex-col gap-3 p-4 mb-28 md:mb-1 text-sm md:text-sm'>
