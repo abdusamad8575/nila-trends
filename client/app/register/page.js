@@ -130,7 +130,7 @@ const OTPPage = () => {
                   <div id="dropdown-phone" className="absolute mt-36 border z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52">
                     <ul className="py-2 text-sm text-gray-700">
                       {countries?.map(country =>
-                        <li>
+                        <li key={country?.code}>
                           <button
                             type="button"
                             onClick={() => handleCountrySelect(country)}
