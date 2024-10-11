@@ -1,10 +1,10 @@
 
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography, TextField, Autocomplete } from "@mui/material";
 import Input from 'components/Input';
 import PageLayout from 'layouts/PageLayout';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useGetCouponById, useUpdateCoupon, useDeletecoupons } from 'queries/ProductQuery';
+import { useGetCouponById, useUpdateCoupon, useDeletecoupons, useGetCategory, useGetSimilarProducts } from 'queries/ProductQuery';
 import { useParams } from 'react-router-dom';
 // import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { useNavigate } from 'react-router-dom';
@@ -15,13 +15,22 @@ const EditCoupon = () => {
    const [details, setDetails] = useState({});
    const { data: res, isLoading } = useGetCouponById({ id });
    const navigate = useNavigate();
+   const [category, setCategory] = useState([])
+   const [product, setProduct] = useState([])
+   const { data: respo } = useGetSimilarProducts({ pageNo: 1, pageCount: 100 });
+   const { data: catRespo } = useGetCategory({ pageNo: 1, pageCount: 100 });
 
    useEffect(() => {
       if (res?.data) {
+         console.log('res?.data', res?.data);
+
+         res?.data?.products && setProduct(res?.data?.products)
+         res?.data?.categorys && setCategory(res?.data?.categorys)
          setDetails(res.data);
          console.log(res.data)
       }
    }, [res]);
+
 
    const { mutateAsync: updateCoupon, isLoading: loading } = useUpdateCoupon();
    const { mutateAsync: deletecoupons, isLoading: deleting } = useDeletecoupons()
@@ -32,14 +41,42 @@ const EditCoupon = () => {
 
    // const fileInputRef = React.useRef(null);
 
-   const handleSubmit = () => {
+   const handleSubmit = () => {      
       try {
          const formData = new FormData();
-         for (const key in details) {
-            if (details.hasOwnProperty(key)) {
+         for (const key in details ) {
+            if (details.hasOwnProperty(key) && key !== "categorys" && key !== "products") {
                formData.append(key, details[key]);
             }
          }
+         let uniqueCategories;
+         if (category) {
+            uniqueCategories = category
+               .filter((cat, index, self) =>
+                  index === self.findIndex((t) => t._id === cat._id)
+               )
+               .map(cat => cat._id);
+         }
+         let uniqueProducts;
+         if (category) {
+            uniqueProducts = product
+               .filter((prod, index, self) =>
+                  index === self.findIndex((t) => t._id === prod._id)
+               )
+               .map(prod => prod._id);
+         } 
+         console.log('uniqueCategories',uniqueCategories);
+         if (uniqueCategories.length) {
+            uniqueCategories.forEach((categoryId) => formData.append('categorys', categoryId));
+         }
+         if (uniqueProducts.length) {
+            uniqueProducts.forEach((productId) => formData.append('products', productId));
+         }
+         console.log('last');
+         
+
+         // category.length && category.forEach((category) => formData.append('categorys', category?._id));
+         // product.length && product.forEach((product) => formData.append('products', product._id));
 
          updateCoupon(formData)
             .then((res) => {
@@ -163,10 +200,87 @@ const EditCoupon = () => {
                         variant="outlined"
                      />
                   </Grid>
+                  <Grid item xs={6}>
+                     <Autocomplete
+                        id="category-select"
+                        multiple
+                        options={catRespo?.data || []}
+                        value={category}
+                        onChange={(event, newValue) => {
+                           setCategory(newValue);
+                        }}
+                        autoHighlight
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option) => (
+                           <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                              <img
+                                 loading="lazy"
+                                 width="20"
+                                 src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image}`}
+                              />
+                              <Typography color="inherit" variant="caption">
+                                 {option?.name} <br />
+                                 {option?.desc}
+                              </Typography>
+                              <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                                 {option?.isAvailable ? 'available' : 'NA'}
+                              </Typography>
+                           </Box>
+                        )}
+                        renderInput={(params) => (
+                           <TextField
+                              {...params}
+                              placeholder="Choose categorys"
+                              inputProps={{
+                                 ...params.inputProps,
+                              }}
+                           />
+                        )}
+                     />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                     <Autocomplete
+                        id="Product-select"
+                        multiple
+                        options={respo?.data || []}
+                        value={product}
+                        onChange={(event, newValue) => {
+                           setProduct(newValue);
+                        }}
+                        autoHighlight
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option) => (
+                           <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                              <img
+                                 loading="lazy"
+                                 width="20"
+                                 src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image[0]}`}
+                              />
+                              <Typography color="inherit" variant="caption">
+                                 {option?.name} <br />
+                                 {option?.brand}
+                              </Typography>
+                              <Typography sx={{ ml: 'auto' }} color={option?.isAvailable ? 'success' : 'error'} variant="caption">
+                                 {option?.isAvailable ? 'available' : 'NA'}
+                              </Typography>
+                           </Box>
+                        )}
+                        renderInput={(params) => (
+                           <TextField
+                              {...params}
+                              placeholder="Choose products"
+                              inputProps={{
+                                 ...params.inputProps,
+                              }}
+                           />
+                        )}
+                     />
+                  </Grid>
 
                   <Grid item xs={12} sm={12} mt={'auto'}>
                      <Button onClick={handleSubmit} disabled={loading}>UPDATE COUPON</Button>
-                     <Button color="secondary" onClick={handleDelete}>DELETE COUPON</Button>
+                     {/* <Button color="secondary" onClick={handleDelete}>DELETE COUPON</Button> */}
 
                   </Grid>
                </Grid>

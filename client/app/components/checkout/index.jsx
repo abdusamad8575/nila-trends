@@ -8,13 +8,16 @@ import { setUserDetails } from '../../../redux/actions/userActions';
 import { setProfile } from '../../../redux/actions/storeActions';
 import { useRouter } from 'next/navigation';
 import { useMediaQuery } from '@mui/material';
+import toast from 'react-hot-toast';
 
 function Checkout() {
   const dispatch = useDispatch();
   const router = useRouter()
   const storeData = useSelector(state => state.storeDetails);
+  const storeDataCheckout = useSelector(state => state?.storeDetails?.checkout);
   const userDetails = useSelector(state => state.userDetails);
   const checkoutProduct = storeData?.checkoutProduct
+  // const checkoutProduct = useSelector(state => state?.storeDetails?.checkoutProduct);
   const isSmallScreen = useMediaQuery('(max-width: 640px)');
   const [DeliveryInstruction, setDeliveryInstruction] = useState(false)
   const [DeliveryAddress, setDeliveryAddress] = useState('')
@@ -29,8 +32,6 @@ function Checkout() {
   const [discount, setDiscount] = useState(0);
   const [ordersCount, setOrdersCount] = useState();
 
-
-
   const fetchCoupons = async () => {
     try {
       const { data } = await axiosInstance.get('/coupons/client');
@@ -41,9 +42,9 @@ function Checkout() {
   };
 
 
-  useEffect(() => {
-    fetchCoupons();
-  }, [userDetails]);
+  // useEffect(() => {
+  //   fetchCoupons();
+  // }, [userDetails]);
 
   const fetchAddresses = async () => {
     try {
@@ -59,7 +60,7 @@ function Checkout() {
 
   useEffect(() => {
     setOrdersCount(userDetails?.orderCount)
-  }, [storeData,userDetails]);
+  }, [storeData, userDetails]);
 
 
 
@@ -117,6 +118,7 @@ function Checkout() {
           productId: checkoutProduct?.product,
           size: checkoutProduct?.selectedSize,
           price: checkoutProduct?.product?.price,
+          coupon: checkoutProduct?.coupon,
           qty: 1,
         }]
       };
@@ -129,6 +131,9 @@ function Checkout() {
       setSalePriceTotal(totalSalePrice)
       const totalProPrice = calculateTotalProPrice(filteredItems);
       setProPriceTotal(totalProPrice)
+      // if(checkoutProduct?.coupon){
+      //   handleCoupon(checkoutProduct?.coupon?.code)
+      // }
     } else {
       setCartData([])
       fetchData()
@@ -136,25 +141,30 @@ function Checkout() {
   }, [storeData])
 
   const handleCoupon = async (couponCode) => {
+    console.log('samad coupons',coupons);
+    console.log('samad couponCode',couponCode);
+
     try {
       setDiscount(0)
-      if (inputRef.current) {
-        setAddCoupon(false);
-        setCoupon(inputRef.current.value)
-      }
+      // if (inputRef.current) {
+      //   setAddCoupon(false);
+      //   setCoupon(inputRef.current.value)
+      // }
       let useCoupon;
 
       if (couponCode) {
         useCoupon = coupons?.filter((coupon) => {
+          // console.log('coupon.code === couponCode',coupon.code, couponCode);
 
           if (coupon.code === couponCode) {
             setAppliedCoupon(coupon?.code);
+            setCoupon(coupon?.code)
             setAppliedCouponDetails(coupon);
             return coupon
           }
 
         })
-        useCoupon[0] ? '' : alert('your coupon code is not existed')
+        useCoupon[0] ? '' : toast.error('your coupon code not exists')
       }
       if (useCoupon) {
         const couponId = useCoupon[0]?._id;
@@ -168,7 +178,7 @@ function Checkout() {
         if (data.valid) {
           setDiscount(data.discount);
         } else {
-          alert(data.message);
+          toast.error(data.message);
         }
       }
     } catch (error) {
@@ -188,7 +198,7 @@ function Checkout() {
   }
 
   const deliveryCharge = Number(selectedDaliveryDays);
-  const includedDeliveryCharge =ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
+  const includedDeliveryCharge = ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const salePriceIncludingDeliveryCharge = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
   const maximumDiscountPrice = ((appliedCouponDetails?.maxValue < ((salePriceIncludingDeliveryCharge * discount) / 100)) ? appliedCouponDetails?.maxValue : ((salePriceIncludingDeliveryCharge * discount) / 100)).toFixed(2)
   const lastTotal = discount > 0
@@ -234,34 +244,101 @@ function Checkout() {
     });
 
     dispatch(setUserDetails(response.data.user));
-    alert('Your order has been placed!')
+    toast.success('Your order has been placed!')
     router.push('/')
   };
 
   const handleProceedToPayment = () => {
     if (!DeliveryAddress) {
-      alert("Please select a delivery address.");
+      toast.error("Please select a delivery address.");
       return;
     }
 
     if (!selectedPaymentMethod) {
-      alert("Please select a payment method.");
+      toast.error("Please select a payment method.");
       return;
     }
     // if (!selectedDaliveryDays ) {
-    //   alert("Please Select a Delivery Day!.");
+    //   toast.error("Please Select a Delivery Day!.");
     //   return;
     // }
 
     if (selectedPaymentMethod === "COD") {
       handlePaymentSuccess();
     } else if (selectedPaymentMethod === "SamsungPay") {
-      alert('pay the Samsung Pay')
+      toast.error('pay the Samsung Pay')
     } else if (selectedPaymentMethod === "ApplePay") {
-      alert('pay the Apple Pay')
+      toast.error('pay the Apple Pay')
     }
   };
-  console.log('userDetails checkout', ordersCount);
+
+
+  const checkCheaptCoupon = async (data) => {
+    try {
+
+      const couponsIncluded = data.filter(item => item.coupon);
+
+      const uniqueCoupons = {};
+      couponsIncluded.forEach(item => {
+        const couponId = item.coupon._id;
+        if (!uniqueCoupons[couponId] || uniqueCoupons[couponId].discount > item.coupon.discount) {
+          uniqueCoupons[couponId] = item.coupon;
+          uniqueCoupons[couponId].associatedItems = uniqueCoupons[couponId].associatedItems || [];
+          uniqueCoupons[couponId].associatedItems.push(item);
+        }
+      });
+      const filteredCoupons = Object.values(uniqueCoupons);
+
+
+      if (filteredCoupons.length === 0) {
+        return null;
+      }
+
+      let cheapestCoupon = filteredCoupons[0];
+
+      filteredCoupons.forEach(coupon => {
+        if (coupon.discount < cheapestCoupon.discount) {
+          cheapestCoupon = coupon;
+        } else if (coupon.discount === cheapestCoupon.discount) {
+          if (coupon.minValue < cheapestCoupon.minValue) {
+            cheapestCoupon = coupon;
+          }
+        }
+      });
+
+      return cheapestCoupon;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const setAlreyIncludedCoupons = async () => {
+    try {
+
+      if (cartData?.item?.length === 1 && cartData?.item[0]?.coupon) {
+        console.log('1');
+        
+        await handleCoupon(cartData?.item[0]?.coupon?.code)
+      } else if (cartData?.item?.length > 1) {
+        console.log('2');
+        const cheapestCoupon = await checkCheaptCoupon(cartData?.item)
+        if(cheapestCoupon){
+          console.log('3');
+          await handleCoupon(cheapestCoupon?.code)
+        }
+      }
+
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchCoupons();
+    if(storeDataCheckout){
+
+      setAlreyIncludedCoupons();
+    }
+  }, [ storeDataCheckout,coupon,cartData]);
 
   return (
     <div className='flex flex-col gap-3 p-4 mb-28 md:mb-1 text-sm md:text-sm'>
@@ -299,7 +376,7 @@ function Checkout() {
       </div>
 
       <hr className="border-dashed " />
-      {(lastTotal < 200 && ordersCount>0) && <div className="flex flex-row gap-2 pb-10 md:pb-1">
+      {(lastTotal < 200 && ordersCount > 0) && <div className="flex flex-row gap-2 pb-10 md:pb-1">
         <div className="flex-1">
           <p className=" w-full text-xs font-medium ">how much days expecting  your delivery.</p>
           <div className="flex flex-col">
