@@ -63,10 +63,9 @@ const Category = require('../models/category')
 
 const getProducts = async (req, res) => {
   try {
-    const { page = 1, search, category, priceRange, discount, rating } = req.query;
+    const { page = 1, limit = 12, search, category, priceRange, discount, rating } = req.query;
     console.log('search, category, priceRange, discount, rating', search, category, priceRange, discount, rating);
 
-    const limit = 9;
     const skip = (page - 1) * limit;
 
     let filter = {};
@@ -125,7 +124,7 @@ const getProducts = async (req, res) => {
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    const start = (page - 1) * 9 + 1;
+    const start = (page - 1) * limit + 1;
     const end = start + limit > totalProducts ? totalProducts : start + limit - 1
     let responseMessage;
     if (category) {

@@ -1,8 +1,8 @@
 'use client';
+import axios from '../../../axios';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import axios from 'axios';
+import { CircularProgress } from '@mui/material';
 
 const GoogleLoginComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,15 +12,18 @@ const GoogleLoginComponent = () => {
     if (typeof window !== 'undefined') {
       const loadGoogleApi = () => {
         const script = document.createElement('script');
-        script.src = 'https://apis.google.com/js/platform.js';
+        script.src = 'https://accounts.google.com/gsi/client';
         script.async = true;
         script.onload = () => {
-          window.gapi.load('auth2', () => {
-            window.gapi.auth2.init({
-              client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-              scope: 'profile email',
-            });
+          window.google.accounts.id.initialize({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+            callback: handleCredentialResponse,
           });
+
+          window.google.accounts.id.renderButton(
+            document.getElementById('googleSignInDiv'),
+            { theme: 'outline', size: 'large', logo_alignment: "center", }
+          );
         };
         document.body.appendChild(script);
       };
@@ -28,43 +31,34 @@ const GoogleLoginComponent = () => {
     }
   }, []);
 
-  const handleLogin = () => {
+  const handleCredentialResponse = async (response) => {
+    const id_token = response.credential;
     setIsLoading(true);
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signIn().then(async (googleUser) => {
-      const id_token = googleUser.getAuthResponse().id_token;
-      try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google-login`, { tokenId: id_token });
-        localStorage.setItem('Tokens', JSON.stringify({ access: res.data.token.accessToken, refresh: res.data.token.refreshToken }));
-        setIsLoading(false);
-        router.push('/');
-      } catch (error) {
-        console.error('Error during Google login: ', error);
-        setIsLoading(false);
-      }
-    }).catch((error) => {
-      alert('Google login failed');
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google-login`, { tokenId: id_token });
+      localStorage.setItem('Tokens', JSON.stringify({
+        access: res.data.token.accessToken,
+        refresh: res.data.token.refreshToken,
+      }));
       setIsLoading(false);
-      console.error('Google login failed: ', error);
-    });
+      router.push('/');
+    } catch (error) {
+      console.error('Error during Google login: ', error);
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-white bg-opacity-70 flex justify-center items-center z-50">
-          <div className="loader"></div>
+        <div className="fixed z-50 top-0 bg-white opacity-80 w-[100vw] h-[100vh] flex items-center justify-center">
+          <p className="text-black text-xl font-medium"><CircularProgress size={20} color='inherit' />&nbsp;loading...</p>
         </div>
       )}
-      <button
-        onClick={handleLogin}
-        className="w-full flex items-center justify-center bg-white border border-gray-300 p-2 rounded hover:bg-gray-50 mb-4"
-      >
-        <Image src="/assets/google-icon.png" alt="Google" width={20} height={20} className="mr-2" />
-        Continue with Google
-      </button>
+      <div id="googleSignInDiv" className="mb-4"></div>
     </>
   );
 };
 
 export default GoogleLoginComponent;
+
