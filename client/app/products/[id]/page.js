@@ -44,7 +44,7 @@ const ProductPage = () => {
    const { id } = params;
    const [open, setOpen] = useState(false)
    const [selected, setSelected] = useState(0)
-   const [selectedSize, setSelectedSize] = useState()
+   const [selectedSize, setSelectedSize] = useState() 
    const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()

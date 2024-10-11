@@ -22,7 +22,7 @@ const Profile = () => {
     axiosInstance.get(`/orders/client?status=${selectedStatus}`)
       .then((res) => setOrders(res?.data?.data))
       .catch((error) => console.error(error));
-  }, [selectedStatus, userDetails,storeData]);
+  }, [selectedStatus, userDetails, storeData]);
 
   useEffect(() => {
     axiosInstance.get('/user')
@@ -52,7 +52,7 @@ const Profile = () => {
       </div>
       {user && (
         <div className="relative flex flex-col md:flex-row md:gap-8">
-          <div className={`w-full md:w-1/2 xl:w-3/5 order-${showOrders ? 1 : 0}`}>
+          <div className={`w-full md:w-1/2 xl:w-3/5 order-1`}>
             {showOrders ? <OrderDetails data={selectedOrder} /> : <ProfileSection showOrders={setShowOrders} />}
           </div>
           <div className={`w-full md:w-1/2 xl:w-2/5 order-${showOrders ? 0 : 1} ${showOrders ? "block" : "hidden"} md:block`}>

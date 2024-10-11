@@ -177,7 +177,7 @@ function Checkout() {
         if (data.valid) {
           setDiscount(data.discount);
         } else {
-          alert(data.message);
+          toast.error(data.message);
         }
       }
     } catch (error) {
@@ -243,31 +243,31 @@ function Checkout() {
     });
 
     dispatch(setUserDetails(response.data.user));
-    alert('Your order has been placed!')
+    toast.success('Your order has been placed!')
     router.push('/')
   };
 
   const handleProceedToPayment = () => {
     if (!DeliveryAddress) {
-      alert("Please select a delivery address.");
+      toast.error("Please select a delivery address.");
       return;
     }
 
     if (!selectedPaymentMethod) {
-      alert("Please select a payment method.");
+      toast.error("Please select a payment method.");
       return;
     }
     // if (!selectedDaliveryDays ) {
-    //   alert("Please Select a Delivery Day!.");
+    //   toast.error("Please Select a Delivery Day!.");
     //   return;
     // }
 
     if (selectedPaymentMethod === "COD") {
       handlePaymentSuccess();
     } else if (selectedPaymentMethod === "SamsungPay") {
-      alert('pay the Samsung Pay')
+      toast.error('pay the Samsung Pay')
     } else if (selectedPaymentMethod === "ApplePay") {
-      alert('pay the Apple Pay')
+      toast.error('pay the Apple Pay')
     }
   };
 
