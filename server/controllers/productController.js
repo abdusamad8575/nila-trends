@@ -179,13 +179,17 @@ const getProductById = async (req, res) => {
   }
 }
 const getClientProductById = async (req, res) => {
-  console.log('getClientProductById');
   const id = req.params.id
-  console.log('getClientProductById id', id);
 
   try {
     const product = await Product.findById(id)
-      .populate('category')
+      .populate({
+        path: 'category',
+        populate: {
+          path: 'coupons',
+        },
+        
+      })
       .populate({
         path: 'similarProduct',
         populate: {

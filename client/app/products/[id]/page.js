@@ -46,9 +46,9 @@ const ProductPage = () => {
    const [selected, setSelected] = useState(0)
    const [selectedSize, setSelectedSize] = useState()
    const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
-   const [selectedColor, setSelectedColor] = useState(0)
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()
+   const [loading, setLoading] = useState(true)
 
    const [selectedCoupon, setSelectedCoupon] = useState(null);
    const [selectedCouponDetails, setSelectedCouponDetails] = useState(null);
@@ -61,7 +61,7 @@ const ProductPage = () => {
          router.push('/register');
       }
       if (selectedSize || product?.stock) {
-         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize,coupon: selectedCouponDetails || null })) : dispatch(setCheckoutProduct({ product }))
+         selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize, coupon: selectedCouponDetails || null })) : dispatch(setCheckoutProduct({ product }))
          dispatch(setCheckout(true))
       } else {
          toast.error('please select size')
@@ -72,7 +72,19 @@ const ProductPage = () => {
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/client/${id}`)
          .then((response) => {
             setProduct(response.data);
+
             response?.data?.coupons && setAvailableCoupon(response?.data?.coupons)
+            if (response?.data?.category?.coupons.length) {
+               
+               const newCoupons = response?.data?.category?.coupons || [];
+
+               setAvailableCoupon((prevCoupons) => {
+                  const combinedCoupons = [...prevCoupons, ...newCoupons];
+                  const uniqueCoupons = Array.from(new Map(combinedCoupons.map(coupon => [coupon._id, coupon])).values());
+
+                  return uniqueCoupons;
+               });
+            }
          })
          .catch((error) => {
             console.error('Error fetching product:', error);
@@ -109,8 +121,8 @@ const ProductPage = () => {
             const payload = {
                size: selectedSize,
                coupon: selectedCoupon
-             };
-            const response = await axiosInstance.patch(urlQuery,payload);
+            };
+            const response = await axiosInstance.patch(urlQuery, payload);
             dispatch(setUserDetails(response?.data?.userData));
 
          } catch (error) {
@@ -231,27 +243,27 @@ const ProductPage = () => {
                   <div className="flex flex-col">
                      <div className="flex items-center mb-2">
                         <span className="bg-yellow-400 text-black font-bold text-sm py-1 px-2 rounded mx-2">Coupon:</span>
-                  
+
                         {availableCoupon.length > 0 && !selectedCoupon && (
-                        <div className="flex items-center mb-2">
-                           <button onClick={() => setIsModalOpen(true)} className="text-green-600">
-                              Open Coupons
-                           </button>
-                        </div>
-                     )}
-                     {selectedCoupon && (
-                        <div className="flex items-center">
-                           <div className="w-5 h-5 flex items-center justify-center bg-green-500 rounded-full">
-                              <img
-                                 src='https://static.vecteezy.com/system/resources/previews/011/858/556/original/green-check-mark-icon-with-circle-tick-box-check-list-circle-frame-checkbox-symbol-sign-png.png'
-                                 alt="Checkmark"
-                                 width={16}
-                                 height={16}
-                              />
+                           <div className="flex items-center mb-2">
+                              <button onClick={() => setIsModalOpen(true)} className="text-green-600">
+                                 Open Coupons
+                              </button>
                            </div>
-                           <span className="ml-2 text-green-600">{appliedMessage}</span>
-                        </div>
-                     )}
+                        )}
+                        {selectedCoupon && (
+                           <div className="flex items-center">
+                              <div className="w-5 h-5 flex items-center justify-center bg-green-500 rounded-full">
+                                 <img
+                                    src='https://static.vecteezy.com/system/resources/previews/011/858/556/original/green-check-mark-icon-with-circle-tick-box-check-list-circle-frame-checkbox-symbol-sign-png.png'
+                                    alt="Checkmark"
+                                    width={16}
+                                    height={16}
+                                 />
+                              </div>
+                              <span className="ml-2 text-green-600">{appliedMessage}</span>
+                           </div>
+                        )}
                      </div>
                      <Modal
                         isOpen={isModalOpen}
