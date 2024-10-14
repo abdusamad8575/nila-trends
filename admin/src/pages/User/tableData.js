@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import Box from 'components/Box';
+import Avatar from "components/Avatar";
 import { useNavigate } from 'react-router-dom';
 import Typography from 'components/Typography';
 import Table from 'examples/Tables/Table';
-import { Select, MenuItem ,Icon, TextField, Button,Pagination } from '@mui/material';
+import { Select, MenuItem, Icon, TextField, Button, Pagination } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useGetUser, useUpdateUserStatus } from 'queries/StoreQuery';  
+import { useGetUser, useUpdateUserStatus } from 'queries/StoreQuery';
 const TableData = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1);
@@ -16,9 +17,9 @@ const TableData = () => {
   const [search, setSearch] = useState('');
 
   const { data, isLoading } = useGetUser({ page, perPage, sortBy, order, search });
-  const { mutate: updateUserStatus,isLoading: deleting  } = useUpdateUserStatus();
+  const { mutate: updateUserStatus, isLoading: deleting } = useUpdateUserStatus();
 
-  
+
 
   const handleStatusChange = (userId, newStatus) => {
     updateUserStatus({ userId, newStatus });
@@ -29,55 +30,61 @@ const TableData = () => {
 
   const columns = [
     { name: 'User', align: 'left' },
+    { name: 'Phone', align: 'center' },
     { name: 'CreatedAt', align: 'center' },
     { name: 'Status', align: 'center' },
-    { name: 'Action', align: 'center' },
+    // { name: 'Action', align: 'center' },
   ];
 
   const rows = data?.docs?.map(item => ({
     User: (
       <>
-         <Typography variant="caption" color="secondary" fontWeight="medium">
-         {/* <Link to={`/orders/editOrder/${item?._id}`} state={{ item }}> */}
-       <span style={{color:'grey'}} >  {item?.username ? item?.username :'user not create user name'} </span>  <br /> 
-         {item?.email ? item?.email : "user not create user email"} 
-         {/* </Link> */}
-    
-      </Typography> <br/>
+        <Box key={item?._id} display="flex" alignItems="center" px={1} py={0.5}>
+          <Box mr={2}>
+            <Avatar src={`${process.env.REACT_APP_API_URL}/uploads/${item?.profile}`} alt={item?._id} size="sm" variant="rounded" />
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Typography variant="caption" color="secondary" fontWeight="medium">
+              <span style={{ color: 'grey' }} >  {item?.username ? item?.username : 'user'} </span>  <br />
+              {item?.email && item?.email}
 
-      <Typography variant="caption" color="secondary" fontWeight="medium">
-        {item._id}
-      </Typography>
+            </Typography>
+          </Box>
+        </Box>
       </>
-   
+
     ),
-   
-    Status: (
-      <Select
-        value={item?.is_verified ? 'Block' : 'UnBlock'}
-        onChange={(e) => handleStatusChange(item._id, e.target.value)}
-      >
-        {['Block','UnBlock'].map(status => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
-        ))}
-      </Select>
+    Phone: (
+      <Typography variant="caption" color="secondary" fontWeight="medium">
+        <a href={item?.phone ? `tel:${item?.phone}` : '#'}>
+          {item?.phone ? item.phone : '-'}
+        </a>
+      </Typography>
     ),
     CreatedAt: (
       <Typography variant="caption" color="secondary" fontWeight="medium">
         {new Date(item?.createdAt).toDateString()}
       </Typography>
     ),
-    Action: (
-      // <Link to={`/orders/editOrder/${item?._id}`} state={{ item }}>
-      <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small">
-        more_vert
-      </Icon>
-    // </Link> 
+    Status: (
+      <Select
+        value={item?.is_verified ? 'Block' : 'UnBlock'}
+        onChange={(e) => handleStatusChange(item._id, e.target.value)}
+      >
+        {['Block', 'UnBlock'].map(status => (
+          <MenuItem key={status} value={status}>
+            {status}
+          </MenuItem>
+        ))}
+      </Select>
     ),
+    // Action: (
+    //   <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small">
+    //     more_vert
+    //   </Icon>
+    // ),
   }));
-console.log('datauser',data);
+  // console.log('datauser', data);
 
   return (
     <>
@@ -88,7 +95,7 @@ console.log('datauser',data);
           onChange={(e) => setSearch(e.target.value)}
           variant="outlined"
           size="small"
-          style={{marginLeft:'5px'}}
+          style={{ marginLeft: '5px' }}
         />
         <Box>
           <Button onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}>
@@ -101,7 +108,7 @@ console.log('datauser',data);
       ) : (
         <Table columns={columns} rows={rows} />
       )}
-      <Box style={{display:'flex',justifyContent:'center', Margin:'10px'}}>
+      <Box style={{ display: 'flex', justifyContent: 'center', Margin: '10px' }}>
         <Pagination
           count={Math.ceil((data?.totalDocs || 0) / perPage)}
           page={page}

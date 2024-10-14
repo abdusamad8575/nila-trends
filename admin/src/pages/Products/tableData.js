@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Box from "components/Box";
 import Typography from "components/Typography";
+import Box from "components/Box";
 import Avatar from "components/Avatar";
 import Badge from "components/Badge";
 import Table from "examples/Tables/Table";
