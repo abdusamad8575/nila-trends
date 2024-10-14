@@ -122,18 +122,7 @@ const EditOrder = () => {
                   <Typography fontSize={15}>quantity: {product?.qty}</Typography>
                   {product?.size && <Typography fontSize={15}>sizes: {product?.size}</Typography>}
                 </Grid>
-                <Grid p={1} container spacing={1} xs={12}>
-                  {product?.product_id?.image?.map(image => (
-                    <Grid item key={image}>
-                      <Avatar component={Link} target='_blank' href={`${process.env.REACT_APP_API_URL}/uploads/${image}`} variant='rounded' src={`${process.env.REACT_APP_API_URL}/uploads/${image}`} >err</Avatar>
-                    </Grid>
-                  ))}
-                  {/* {!!product?.product_id?.image?.length && (
-                    <Grid item xs={12}>
-                      <Button onClick={() => downloadImages(product.product_id.image)}>Download Resources</Button>
-                    </Grid>
-                  )} */}
-                </Grid>
+                
               </Grid>
             ))}
           </Grid>
