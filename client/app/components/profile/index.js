@@ -4,7 +4,7 @@ import axiosInstance from '../../../axios';
 import { useSelector } from 'react-redux';
 import OrderList from './OrderList';
 import ProfileSection from './ProfileSection';
-import OrderDetails from './OrderDetails';
+import OrderDetails from './OrderDetails';      
 
 const Profile = () => {
   const storeData = useSelector(state => state?.storeDetails?.profile);

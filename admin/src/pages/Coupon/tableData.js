@@ -132,10 +132,7 @@ function Coupon({ name, desc }) {
       
       <Box display="flex" flexDirection="column">
         <Typography variant="button" fontWeight="medium">
-          {name}
-        </Typography>
-        <Typography variant="caption" color="secondary">
-          {desc}
+          {name.slice(0,50)}
         </Typography>
       </Box>
     </Box>

@@ -20,7 +20,7 @@ function Category({ image, name, desc }) {
           {name}
         </Typography>
         <Typography variant="caption" color="secondary">
-          {desc}
+          {desc.slice(0,30)}
         </Typography>
       </Box>
     </Box>

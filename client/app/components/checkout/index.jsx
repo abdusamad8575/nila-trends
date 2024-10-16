@@ -29,6 +29,7 @@ function Checkout() {
   const [coupons, setCoupons] = useState([]);
 
   const [loadingCoupons, setLoadingCoupons] = useState(true);
+  const [loadingState, setLoadingState] = useState(false);
 
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [appliedCouponDetails, setAppliedCouponDetails] = useState('');
@@ -212,7 +213,7 @@ function Checkout() {
   const checkDaliveryDays = lastTotal < 200 ? (selectedDaliveryDays === '12' ? '2' : '1') : 'free'
   const deliveryDays = ordersCount === 0 ? 'free' : checkDaliveryDays
   const handlePaymentSuccess = async () => {
-
+    setLoadingState(true)
     const mappedItems = await cartData?.item?.map((item) => ({
       product_id: item.productId._id,
       qty: item.qty,
@@ -244,7 +245,9 @@ function Checkout() {
 
     dispatch(setUserDetails(response.data.user));
     toast.success('Your order has been placed!')
+    setLoadingState(false)
     router.push('/')
+
   };
 
   const handleProceedToPayment = () => {
@@ -271,7 +274,7 @@ function Checkout() {
     }
   };
 
-
+  
   const checkCheaptCoupon = async (data) => {
     try {
 
@@ -334,7 +337,7 @@ function Checkout() {
     if (!loadingCoupons && storeDataCheckout) {
       setAlreyIncludedCoupons();
     }
-  }, [loadingCoupons, storeDataCheckout,cartData]);
+  }, [loadingCoupons, storeDataCheckout, cartData]);
 
   return (
     <div className='flex flex-col gap-3 p-4 mb-28 md:mb-1 text-sm md:text-sm'>
@@ -459,7 +462,7 @@ function Checkout() {
       <div className="flex pt-2 h-full">
         <p className=" w-full text-xs font-medium ">Review the order carefully, by proceeding will redirect to secure payment gateway page.</p>
       </div>
-      <button onClick={handleProceedToPayment} className='bg-[#1F1F1F] text-white py-2 rounded-lg'>Proceed To Payment</button>
+      <button onClick={handleProceedToPayment} disabled={loadingState} className='bg-[#1F1F1F] text-white py-2 rounded-lg'>Proceed To Payment</button>
     </div>
   )
 }
