@@ -18,10 +18,10 @@ function Author({id, image, name, desc }) {
       </Box>
       <Box display="flex" flexDirection="column">
         <Typography variant="button" fontWeight="medium">
-          {name}
+          {name.slice(0,50)}
         </Typography>
         <Typography variant="caption" color="secondary">
-          {desc}
+          {desc.slice(0,30)}
         </Typography>
       </Box>
     </Box>

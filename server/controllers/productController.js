@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category')
+const Tags = require('../models/tags')
 
 
 // const getProducts = async (req, res) => {
@@ -73,9 +74,17 @@ const getProducts = async (req, res) => {
       const matchingCategories = await Category.find({ name: { $regex: search, $options: 'i' } }, '_id').lean();
       const matchingCategoryIds = matchingCategories.map(cat => cat._id);
 
+      let tagProductIds = [];
+      const matchingTags = await Tags.find({ title: { $regex: search, $options: 'i' }},'product').lean();
+      
+      matchingTags.forEach(tagItem => {
+        tagProductIds = [...tagProductIds, ...tagItem.product.map(prod => prod._id)];
+      });
+
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
-        { category: { $in: matchingCategoryIds } }
+        { category: { $in: matchingCategoryIds } },
+        { _id: { $in: tagProductIds } },
       ];
     }
 
@@ -100,6 +109,8 @@ const getProducts = async (req, res) => {
     if (category) {
       const categoriesArray = category.split(',');
       setCategory = [...new Set(categoriesArray)]
+      console.log('setCategory',setCategory);
+      
 
       const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
       categoryIdList = categoryIds.map(cat => cat._id);
@@ -116,7 +127,8 @@ const getProducts = async (req, res) => {
       .populate('category')
       .populate('variantProduct')
       .skip(skip)
-      .limit(limit).sort({ createdAt: -1 })
+      .limit(limit)
+      .sort({ createdAt: -1 })
       .exec();
 
 
@@ -133,6 +145,8 @@ const getProducts = async (req, res) => {
       } else {
         responseMessage = `No results for "${setCategory}". Showing suggested products for "${setCategory}".`
       }
+    } else if (search) {
+      responseMessage = `Showing ${start} – ${end} of ${totalProducts} results for tag or category or products "${search}"`;
     } else {
       responseMessage = `Showing ${start} – ${end} of ${totalProducts} results`
     }
