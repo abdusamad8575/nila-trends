@@ -117,6 +117,7 @@ const SimilarStores = ({ similarProducts }) => {
         {similarProducts?.map((product) => (
           <div
             key={product.id}
+            onClick={() => router.push(`/products/${product?._id}`)}
             className="w-[50vw] sm:w-[30vw] md:w-[25vw] lg:w-[20vw] xl:w-[15vw] bg-white rounded-lg shadow-md flex-shrink-0"
           >
             <img
@@ -133,7 +134,6 @@ const SimilarStores = ({ similarProducts }) => {
               <p className="text-gray-800 font-bold text-sm">Price &bull; AED {product.price}</p>
               <button
                 className="flex items-center bg-[#AE9B84] text-white rounded-md p-2 mt-4 hover:bg-gray-200 py-2 px-4 text-xs"
-                onClick={() => router.push(`/products/${product?._id}`)}
               >
                 Shop Now&nbsp;&nbsp;
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -51,7 +51,7 @@ const GoogleLoginComponent = () => {
   return (
     <>
       {isLoading && (
-        <div className="fixed z-50 top-0 bg-white opacity-80 w-[100vw] h-[100vh] flex items-center justify-center">
+        <div className="fixed z-50 top-0 left-0 bg-white opacity-80 w-[100vw] h-[100vh] flex items-center justify-center">
           <p className="text-black text-xl font-medium"><CircularProgress size={20} color='inherit' />&nbsp;loading...</p>
         </div>
       )}

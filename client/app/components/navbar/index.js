@@ -8,13 +8,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../../../axios'
 import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
 import { setCart, setCheckout, setProfile } from '../../../redux/actions/storeActions';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import Checkout from '../checkout';
 import Profile from '../profile';
 import Image from 'next/image';
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const param = useParams()
+  const slug = decodeURIComponent(param?.slug || '');
   const path = usePathname();
   const userData = useSelector(state => state.userDetails);
   const storeData = useSelector(state => state.storeDetails);
@@ -147,14 +149,14 @@ const Navbar = () => {
 
         {/* Bottom menu */}
         <div className="flex flex-wrap justify-center py-2 space-x-10 text-sm font-bold bg-[#faf9f3] overflow-x-auto">
-          <Link href="/allproducts/Ethnic Fashion" className="text-gray-700 hover:text-gray-900">Ethnic Fashion</Link>
-          <Link href="/allproducts/Festive Collection" className="text-gray-700 hover:text-gray-900">Festive Collection</Link>
-          <Link href="/allproducts/Daily & Office wear" className="text-gray-700 hover:text-gray-900">Daily / Office wear</Link>
-          <Link href="/allproducts/Home & Night wear" className="text-gray-700 hover:text-gray-900">Home / Night wear</Link>
-          <Link href="/allproducts/Travel Wear" className="text-gray-700 hover:text-gray-900">Travel Wear</Link>
-          <Link href="/allproducts/Jewellery" className="text-gray-700 hover:text-gray-900">Jewellery</Link>
-          <Link href="/allproducts/Hair Acessories" className="text-gray-700 hover:text-gray-900">Hair Acessories</Link>
-          <Link href="/allproducts/Nilaa&apos;s Designer Collection" className="text-gray-700 hover:text-gray-900">Nilaa&apos;s Designer Collection</Link>
+          <Link href="/allproducts/Ethnic Fashion" className={`${slug === "Ethnic Fashion" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Ethnic Fashion</Link>
+          <Link href="/allproducts/Festive Collection" className={`${slug === "Festive Collection" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Festive Collection</Link>
+          <Link href="/allproducts/Daily & Office wear" className={`${slug === "Daily & Office wear" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Daily / Office wear</Link>
+          <Link href="/allproducts/Home & Night wear" className={`${slug === "Home & Night wear" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Home / Night wear</Link>
+          <Link href="/allproducts/Travel Wear" className={`${slug === "Travel Wear" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Travel Wear</Link>
+          <Link href="/allproducts/Jewellery" className={`${slug === "Jewellery" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Jewellery</Link>
+          <Link href="/allproducts/Hair Acessories" className={`${slug === "Hair Acessories" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Hair Acessories</Link>
+          <Link href="/allproducts/Nilaa&apos;s Designer Collection" className={`${slug === "Nilaa's Designer Collection" ? "text-yellow-600" : "text-gray-700"} hover:text-gray-900`}>Nilaa&apos;s Designer Collection</Link>
         </div>
       </div>
       <ModalLayout open={storeData?.cart} setOpen={handleCart} bgcolor={'#fff'}><Cart /></ModalLayout>
