@@ -83,13 +83,14 @@ const userSchema = mongoose.Schema({
     })
 
 userSchema.methods.updateCart = async function (id, qty, size) {
+
     const cart = this.cart;
     const product = await Product.findById(id);
 
     const index = cart.item.findIndex((objInItems) => {
         return (
             size ? new String(objInItems.productId).trim() === new String(product._id).trim() &&
-                objInItems.size === size : new String(objInItems.productId).trim() == new String(product._id).trim()
+                objInItems.size === size : new String(objInItems.productId).trim() === new String(product._id).trim()
         );
     });
 
@@ -126,12 +127,12 @@ userSchema.methods.addToCart = async function (product, size, coupon) {
     );
 
     if (isExisting >= 0) {
-        cart.item[isExisting].qty += 1;  
-        if(coupon){
+        cart.item[isExisting].qty += 1;
+        if (coupon) {
             cart.item[isExisting].coupon = coupon;
-        }else {
-            existingItem.coupon = null;
-          }
+        } else {
+            cart.item[isExisting].coupon = null;
+        }
 
     } else {
         size ? cart.item.push({
