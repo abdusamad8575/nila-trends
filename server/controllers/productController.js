@@ -62,6 +62,17 @@ const Tags = require('../models/tags')
 //   }
 // };
 
+
+
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 const getProducts = async (req, res) => {
   try {
     const { page = 1, limit = 12, search, category, priceRange, discount, rating } = req.query;
@@ -75,8 +86,8 @@ const getProducts = async (req, res) => {
       const matchingCategoryIds = matchingCategories.map(cat => cat._id);
 
       let tagProductIds = [];
-      const matchingTags = await Tags.find({ title: { $regex: search, $options: 'i' }},'product').lean();
-      
+      const matchingTags = await Tags.find({ title: { $regex: search, $options: 'i' } }, 'product').lean();
+
       matchingTags.forEach(tagItem => {
         tagProductIds = [...tagProductIds, ...tagItem.product.map(prod => prod._id)];
       });
@@ -106,17 +117,35 @@ const getProducts = async (req, res) => {
     // }
     let categoryIdList;
     let setCategory;
+    let tagProductIdsCheckCategory = [];
     if (category) {
       const categoriesArray = category.split(',');
       setCategory = [...new Set(categoriesArray)]
-      console.log('setCategory',setCategory);
-      
+      console.log('setCategory', setCategory);
+
 
       const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
       categoryIdList = categoryIds.map(cat => cat._id);
 
-      if (categoryIdList.length) {
-        filter.category = { $in: categoryIdList };
+
+
+      const matchingTags = await Tags.find({ title: { $in: categoriesArray } }, 'product').lean();
+
+      matchingTags.forEach(tagItem => {
+        tagProductIdsCheckCategory = [...tagProductIdsCheckCategory, ...tagItem.product.map(prod => prod._id)];
+      });
+
+
+
+
+      // if (categoryIdList.length) {
+      //   filter.category = { $in: categoryIdList };
+      // }
+      if (categoryIdList.length || tagProductIdsCheckCategory.length > 0) {
+        filter.$or = [
+          { category: { $in: categoryIdList } },
+          { _id: { $in: tagProductIdsCheckCategory } },
+        ];
       }
 
     }
@@ -131,6 +160,9 @@ const getProducts = async (req, res) => {
       .sort({ createdAt: -1 })
       .exec();
 
+    // const shuffledProducts = shuffleArray(products);
+    const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
+
 
 
     const totalProducts = await Product.countDocuments(filter);
@@ -140,19 +172,21 @@ const getProducts = async (req, res) => {
     const end = start + limit > totalProducts ? totalProducts : start + limit - 1
     let responseMessage;
     if (category) {
-      if (categoryIdList.length) {
+      if (categoryIdList.length || tagProductIdsCheckCategory.length > 0) {
         responseMessage = `Showing ${start} – ${end} of ${totalProducts} results for "${setCategory}"`;
       } else {
         responseMessage = `No results for "${setCategory}". Showing suggested products for "${setCategory}".`
       }
-    } else if (search) {
-      responseMessage = `Showing ${start} – ${end} of ${totalProducts} results for tag or category or products "${search}"`;
-    } else {
+    }
+    else if (search) {
+      responseMessage = `Showing ${start} – ${end} of ${totalProducts} results for "${search}"`;
+    }
+    else {
       responseMessage = `Showing ${start} – ${end} of ${totalProducts} results`
     }
 
 
-    res.json({ products, totalPages, message: responseMessage, });
+    res.json({ products: shuffledProducts, totalPages, message: responseMessage, });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products' });
   }
@@ -201,7 +235,7 @@ const getClientProductById = async (req, res) => {
         populate: {
           path: 'coupons',
         },
-        
+
       })
       .populate({
         path: 'similarProduct',
