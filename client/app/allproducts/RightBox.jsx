@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import Image from 'next/image';
 
 function RightBox({ product }) {
+ 
    const dispatch = useDispatch();
    const userDetails = useSelector(state => state?.userDetails);
    const router = useRouter()
@@ -19,6 +20,11 @@ function RightBox({ product }) {
    const [isInStock, setIsInStock] = useState(true);
    const [isAdded, setIsAdded] = useState(false);
 
+   useEffect(()=>{
+         setSelectedSize(null)
+         setSelectedSizeIndex(null)
+      },[product])
+
    const addCartData = async (proId1) => {
       if (!userDetails) {
          router.push('/register');
@@ -27,9 +33,11 @@ function RightBox({ product }) {
             const urlQuery = `/user/addToCart/${proId1}`;
             const response = await axiosInstance.patch(urlQuery, { size: selectedSize });
             dispatch(setUserDetails(response?.data?.userData));
+            
          } catch (error) {
             console.error('Error adding to cart:', error);
          }
+         setSelectedSize(null)
       }
    };
 

@@ -67,8 +67,9 @@ const updateUser = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-
+     
 const updateQty = async (req, res) => {
+               
   try {   
     const { _id } = req?.decoded
     const { qty, productId,size} = req?.body
@@ -99,9 +100,9 @@ const addToCart = async (req, res) => {
   }
 }
 
-const removeFromCart = async (req, res) => {
+const removeFromCart = async (req, res) => {   
   try {
-   const { _id } = req?.decoded
+   const { _id } = req?.decoded     
     const productId = req?.params?.id 
     const {size} = req.body
     
