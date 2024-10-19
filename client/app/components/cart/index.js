@@ -15,6 +15,7 @@ export default function Cart() {
   const dispatch = useDispatch();
   const router = useRouter()
   const userData = useSelector(state => state.userDetails);
+  const storeDataCart = useSelector(state => state?.storeDetails?.cart);
   const [cartData, setCartData] = useState([])
   const [salePriceTotal, setSalePriceTotal] = useState(0)
   const [proPriceTotal, setProPriceTotal] = useState(0)
@@ -40,7 +41,12 @@ export default function Cart() {
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get(`/user/getcarts`);
-      setCartData(response?.data?.data)
+      // setCartData(response?.data?.data)
+      if (response?.data?.data?.item) {
+        setCartData(response.data.data.item); 
+      } else {
+        setCartData([]); 
+      }
       const items = response?.data?.data?.item;
       const filteredItems = items.filter((obj) => {
         return obj.productId.isAvailable != false
@@ -51,13 +57,14 @@ export default function Cart() {
       setProPriceTotal(totalProPrice)
     } catch (error) {
       console.log(error)
+      setCartData([]);
     }
 
   }
 
   useEffect(() => {
     fetchData()
-  }, [userData])
+  }, [storeDataCart])
 
   useEffect(() => {
     setOrdersCount(userData?.orderCount)
@@ -94,18 +101,48 @@ export default function Cart() {
     }
     setLoadingIndex(index);
 
+     
+     const updatedCartData = [...cartData];
+     updatedCartData[index].qty = newQty;
+
+     const items = updatedCartData;
+      const filteredItems = items.filter((obj) => {
+        return obj.productId.isAvailable != false
+      })
+      const totalSalePrice = calculateTotalSalePrice(filteredItems);
+      setSalePriceTotal(totalSalePrice)
+      const totalProPrice = calculateTotalProPrice(filteredItems);
+      setProPriceTotal(totalProPrice)
+
+     setCartData(updatedCartData);
+
     try {
       const response = await axiosInstance.patch(`/user/updateQty`, { qty: newQty, productId: item?.productId?._id, size: item.size });
-      dispatch(setUserDetails(response?.data?.userData));
+      // dispatch(setUserDetails(response?.data?.userData));
+      dispatch(setUserDetails({ ...userData, cartData: updatedCartData }));
 
       !isSmallScreen && dispatch(setCart(true))
-      await fetchData();
+      // await fetchData();
     } catch (error) {
       console.log(error);
 
-      const revertedCartData = { ...cartData };
-      revertedCartData.item[index].qty = item?.qty;
+      // const revertedCartData = { ...cartData };
+      // revertedCartData.item[index].qty = item?.qty;
+      // setCartData(revertedCartData);
+      const revertedCartData = [...cartData];
+      revertedCartData[index].qty = item?.qty;
+
+      const items = revertedCartData;
+      const filteredItems = items.filter((obj) => {
+        return obj.productId.isAvailable != false
+      })
+      const totalSalePrice = calculateTotalSalePrice(filteredItems);
+      setSalePriceTotal(totalSalePrice)
+      const totalProPrice = calculateTotalProPrice(filteredItems);
+      setProPriceTotal(totalProPrice)
+
       setCartData(revertedCartData);
+
     } finally {
       setLoadingIndex(null);
     }
@@ -119,15 +156,13 @@ export default function Cart() {
         dispatch(setUserDetails(response?.data?.userData));
         dispatch(setCart(true))
       }
-      const updatedCartItems = cartData.item.filter((item) => item?._id !== itemId?._id);
-      const updatedTotalPrice = updatedCartItems.reduce((acc, item) => acc + (item?.price * item?.qty), 0);
-      setProPriceTotal(null)
-      setSalePriceTotal(null)
-      setCartData({
-        ...cartData,
-        item: updatedCartItems,
-        totalPrice: updatedTotalPrice
-      });
+      const updatedCartItems = cartData.filter((item) => item?._id !== itemId?._id);
+      // const updatedTotalPrice = updatedCartItems.reduce((acc, item) => acc + (item?.price * item?.qty), 0);
+      // setProPriceTotal(null)
+      // setSalePriceTotal(null)
+      setCartData(
+         updatedCartItems
+      );
 
       const filteredItems = updatedCartItems.filter((obj) => {
         return obj.productId.isAvailable != false
@@ -150,12 +185,14 @@ export default function Cart() {
   const deliveryCharge = 12
   const includedDeliveryCharge = ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
+console.log('cartData12',cartData);
+console.log('cartData?.length',cartData?.length);
 
   return (
     <div className="p-4 md:min-h-[40vh]">
       <h2 className="text-2xl font-semibold mb-4 hidden lg:block">Shopping Cart 🛒</h2>
       <div className=" flex justify-center items-center p-4 border">
-        {!cartData?.item?.length ? <motion.div
+        {!cartData?.length ? <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -200,7 +237,7 @@ export default function Cart() {
 
                 <div className="space-y-4 md:max-h-[50vh] md:overflow-y-scroll pr-4">
 
-                  {cartData?.item?.slice().reverse().map((item, index) => (
+                  {cartData?.map((item, index) => (
                     <div key={item?._id} className="flex items-center justify-between space-x-4 border-t pt-2">
                       <div className="overflow-hidden w-1/5">
                         <Image
@@ -223,13 +260,13 @@ export default function Cart() {
                             <button className="px-2 border border-gray-300 rounded"
                               onClick={() => handleQuantityChange(item, 'decrement', index)}
                               disabled={item.qty === 1 || loadingIndex === index}>
-                              {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '-'}
+                              {'-'}
                             </button>
                             <span className="mx-2">{item?.qty}</span>
                             <button className="px-2 border border-gray-300 rounded"
                               onClick={() => handleQuantityChange(item, 'increment', index)}
                               disabled={loadingIndex === index}>
-                              {loadingIndex === index ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : '+'}
+                              { '+'}
                             </button>
                           </>
                         ) :
