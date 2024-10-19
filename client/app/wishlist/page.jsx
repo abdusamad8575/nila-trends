@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import RightBox from '../allproducts/RightBox';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/products/ProductCard';
+import toast from 'react-hot-toast';
 
 const KurtaSetsListing = () => {
   const dispatch = useDispatch();
@@ -42,23 +43,53 @@ const KurtaSetsListing = () => {
     }
   };
 
+  // const toggleWishlist = async (proId) => {
+  //   if (!userData) {
+  //     router.push('/register');
+  //   } else {
+  //     try {
+  //       if (isInWishlist(proId)) {
+  //         const response = await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
+  //         dispatch(setUserDetails(response?.data?.userData));
+  //       } else {
+  //         const response = await axiosInstance.patch(`/user/addToWishlist/${proId}`);
+  //         dispatch(setUserDetails(response?.data?.userData));
+  //       }
+  //       await fetchWishlist();
+  //     } catch (error) {
+  //       console.error('Error toggling wishlist:', error);
+  //     }
+  //   }
+  // };
+
   const toggleWishlist = async (proId) => {
     if (!userData) {
       router.push('/register');
     } else {
-      try {
-        if (isInWishlist(proId)) {
-          // Remove from wishlist
-          const response = await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
-          dispatch(setUserDetails(response?.data?.userData));
+      const alreadyInWishlist = isInWishlist(proId);
+      setWishlistItems((prev) => {
+        if (alreadyInWishlist) {
+          return prev.filter(item => item._id !== proId);
         } else {
-          // Add to wishlist
-          const response = await axiosInstance.patch(`/user/addToWishlist/${proId}`);
-          dispatch(setUserDetails(response?.data?.userData));
+          return [...prev, { _id: proId }];
         }
-        await fetchWishlist();
+      });
+  
+      try {
+        const response = await axiosInstance.patch(
+          alreadyInWishlist ? `/user/removeFromWishlist/${proId}` : `/user/addToWishlist/${proId}`
+        );
+        console.log("wishlist-response?.data",response?.data);
+        
+        dispatch(setUserDetails(response?.data?.userData));
+        if(alreadyInWishlist){
+          setProducts (prev => prev.filter(item => item._id !== proId)  )
+        }
+        // await fetchWishlist(); 
       } catch (error) {
         console.error('Error toggling wishlist:', error);
+        toast.error('It is not possible to remove this product from the wishlist due to error reasons in the network.')
+        setWishlistItems(prev => (alreadyInWishlist ? [...prev, { _id: proId }] : prev.filter(item => item._id !== proId)));
       }
     }
   };

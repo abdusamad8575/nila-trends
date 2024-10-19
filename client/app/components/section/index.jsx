@@ -45,24 +45,49 @@ const Index = () => {
       }
    };
 
+   // const toggleWishlist = async (proId) => {
+   //    if (!userData) {
+   //       router.push('/register');
+   //    } else {
+   //       try {
+   //          if (isInWishlist(proId)) {
+   //             const response = await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
+   //             dispatch(setUserDetails(response?.data?.userData));
+   //          } else {
+   //             const response = await axiosInstance.patch(`/user/addToWishlist/${proId}`);
+   //             dispatch(setUserDetails(response?.data?.userData));
+   //          }
+   //          await fetchWishlist();
+   //       } catch (error) {
+   //          console.error('Error toggling wishlist:', error);
+   //       }
+   //    }
+   // };
    const toggleWishlist = async (proId) => {
       if (!userData) {
-         router.push('/register');
+        router.push('/register');
       } else {
-         try {
-            if (isInWishlist(proId)) {
-               const response = await axiosInstance.patch(`/user/removeFromWishlist/${proId}`);
-               dispatch(setUserDetails(response?.data?.userData));
-            } else {
-               const response = await axiosInstance.patch(`/user/addToWishlist/${proId}`);
-               dispatch(setUserDetails(response?.data?.userData));
-            }
-            await fetchWishlist();
-         } catch (error) {
-            console.error('Error toggling wishlist:', error);
-         }
+        const alreadyInWishlist = isInWishlist(proId);
+        setWishlistItems((prev) => {
+          if (alreadyInWishlist) {
+            return prev.filter(item => item._id !== proId);
+          } else {
+            return [...prev, { _id: proId }];
+          }
+        });
+    
+        try {
+          const response = await axiosInstance.patch(
+            alreadyInWishlist ? `/user/removeFromWishlist/${proId}` : `/user/addToWishlist/${proId}`
+          );
+          dispatch(setUserDetails(response?.data?.userData));
+          // await fetchWishlist(); 
+        } catch (error) {
+          console.error('Error toggling wishlist:', error);
+          setWishlistItems(prev => (alreadyInWishlist ? [...prev, { _id: proId }] : prev.filter(item => item._id !== proId)));
+        }
       }
-   };
+    };
    useEffect(() => {
       fetchProducts();
       fetchWishlist();
