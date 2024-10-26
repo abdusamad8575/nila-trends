@@ -153,7 +153,7 @@ export default function Cart() {
     try {
       const response = await axiosInstance.patch(urlQuery, { size: itemId?.size });
       if (response?.data?.userData) {
-        dispatch(setUserDetails(response?.data?.userData));
+        dispatch(setUserDetails(response?.data?.userData));   
         dispatch(setCart(true))
       }
       const updatedCartItems = cartData.filter((item) => item?._id !== itemId?._id);
