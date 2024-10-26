@@ -155,15 +155,15 @@ const getProducts = async (req, res) => {
     const products = await Product.find(filter)
       .populate('category')
       .populate('variantProduct')
-      .skip(skip)
-      .limit(limit)
+      // .skip(skip)
+      // .limit(limit)
       .sort({ createdAt: -1 })
       .exec();
       
       
 
-    const shuffledProducts = shuffleArray(products);
-    // const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
+    // const shuffledProducts = shuffleArray(products);
+    const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
 
 
 
