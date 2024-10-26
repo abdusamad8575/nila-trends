@@ -91,5 +91,5 @@ module.exports = {
   addAddress,
   updateAddress,
   deleteAddress,
-  setPrimaryAddress,
+  setPrimaryAddress,   
 }

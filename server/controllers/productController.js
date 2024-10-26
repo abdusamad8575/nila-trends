@@ -80,13 +80,13 @@ const getProducts = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    let filter = {};
+    let filter = { isAvailable: true };
     if (search) {
-      const matchingCategories = await Category.find({ name: { $regex: search, $options: 'i' } }, '_id').lean();
+      const matchingCategories = await Category.find({ name: { $regex: search, $options: 'i' },isAvailable: true }, '_id').lean();
       const matchingCategoryIds = matchingCategories.map(cat => cat._id);
 
       let tagProductIds = [];
-      const matchingTags = await Tags.find({ title: { $regex: search, $options: 'i' } }, 'product').lean();
+      const matchingTags = await Tags.find({ title: { $regex: search, $options: 'i' },status: true  }, 'product').lean();
 
       matchingTags.forEach(tagItem => {
         tagProductIds = [...tagProductIds, ...tagItem.product.map(prod => prod._id)];
@@ -124,12 +124,12 @@ const getProducts = async (req, res) => {
       console.log('setCategory', setCategory);
 
 
-      const categoryIds = await Category.find({ name: { $in: categoriesArray } }, '_id').lean();
+      const categoryIds = await Category.find({ name: { $in: categoriesArray }, isAvailable: true }, '_id').lean();
       categoryIdList = categoryIds.map(cat => cat._id);
 
 
 
-      const matchingTags = await Tags.find({ title: { $in: categoriesArray } }, 'product').lean();
+      const matchingTags = await Tags.find({ title: { $in: categoriesArray },status: true }, 'product').lean();
 
       matchingTags.forEach(tagItem => {
         tagProductIdsCheckCategory = [...tagProductIdsCheckCategory, ...tagItem.product.map(prod => prod._id)];
@@ -159,9 +159,11 @@ const getProducts = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 })
       .exec();
+      
+      
 
-    // const shuffledProducts = shuffleArray(products);
-    const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
+    const shuffledProducts = shuffleArray(products);
+    // const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
 
 
 
@@ -185,14 +187,14 @@ const getProducts = async (req, res) => {
       responseMessage = `Showing ${start} – ${end} of ${totalProducts} results`
     }
 
-
+    console.log("products.length",shuffledProducts.length);
     res.json({ products: shuffledProducts, totalPages, message: responseMessage, });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products' });
-  }
+  }   
 };
 
-
+  
 
 const getAdminProducts = async (req, res) => {
   try {
