@@ -54,6 +54,8 @@ const ProductCard = ({ images, category, ProId, title, fit, price, sale_rate, on
                            style={{ display: loading[index] ? 'none' : 'block' }}
                            onLoad={() => handleImageLoad(index)}
                            onClick={onClick}
+                           onMouseEnter={() => setAutoplay(true)} 
+                           onMouseLeave={() => setAutoplay(false)}
                         />
                      </div>
                   ))}

@@ -71,7 +71,7 @@ const WardrobeSection = () => {
         }}
       >
         <div>
-          <p className="text-sm italic md:max-w-[50vw] text-gray-800 sm:mb-0 p-4 sm:p-6 xl:p-8">
+          <p className="text-sm italic md:max-w-[50vw] text-gray-800 sm:mb-0 p-4 sm:p-6 xl:px-8 sm:pb-0">
             Connect to Nilaa,
             <br />
             Share your valuable thoughts and suggestions, or even your fashion needs or ideas, and we&apos;ll craft something unique just for you.
@@ -79,14 +79,19 @@ const WardrobeSection = () => {
             <br />
             Store 11, New Gold Souq Center Building,
             <br />
-            Al Raffa, Dubai, UAE
+            Al Mina Road, Al Raffa, Dubai, UAE
             <br />
             <Link target='_blank' href="tel:971521193364">ph: +971 521 193 364</Link>
             <br />
-            <Link target='_blank' href="https://maps.app.goo.gl/1ja1nN6XhQ6drkML6" className='text-blue-500 font-thin'>view directions</Link>
+            <Link target='_blank' href="https://maps.app.goo.gl/1ja1nN6XhQ6drkML6" className='text-blue-600'>view directions</Link>
+            <br />
+            <br />
+            <Link className='text-blue-600' href="/terms-conditions">Terms & Conditions</Link>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <Link className='text-blue-600' href="/return-refund">Return & Refund Policy</Link>
           </p>
         </div>
-        <div className="rounded-lg pb-36 shadow sm:flex sm:items-center sm:justify-between p-4 sm:p-6 xl:p-8">
+        <div className="rounded-lg pb-36 shadow sm:flex sm:items-center sm:justify-between p-4 sm:p-6 xl:px-8 sm:pt-4">
           <p className="mb-4 text-sm text-center text-gray-800 sm:mb-0">
             &copy; 2024 <Link target='_blank' href="https://nilaatrends.com/" className="hover:underline">Nilaatrends.com</Link>. All rights reserved.
           </p>
@@ -103,7 +108,7 @@ const WardrobeSection = () => {
               </svg>
               <span className="sr-only">Twitter</span>
             </Link> */}
-            <Link target='_blank' href="#" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer hover:text-blue-700">
+            <Link target='_blank' href="https://www.linkedin.com/in/nayana-nireesh-181a8a58/?originalSubdomain=ae" className="inline-flex justify-center p-2 text-gray-800 rounded-lg cursor-pointer hover:text-blue-700">
               <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd" />
                 <path d="M7.2 8.809H4V19.5h3.2V8.809Z" />

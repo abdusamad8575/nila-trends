@@ -294,7 +294,7 @@ console.log('cartData?.length',cartData?.length);
               {/* Cart Totals - Only for Desktop */}
               <div className="hidden lg:block w-full lg:w-1/3 lg:ml-4">
                 <div className="border p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">Cart totals</h3>
+                  <h3 className="text-lg font-semibold mb-4">Cart Total</h3>
                   <div className="flex justify-between">
                     <p>Subtotal</p>
                     <p>AED - {(salePriceTotal).toFixed(2)}</p>
@@ -303,26 +303,15 @@ console.log('cartData?.length',cartData?.length);
                     <p>Delivery Charge</p>
                     <p>{ordersCount === 0 ? 'Free ' : includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
                   </div>
+                  <hr className="my-2"/>
                   <div className="flex justify-between font-semibold text-lg">
                     <p>Total</p>
                     <p>AED - {lastTotal}</p>
                   </div>
-                  <p className="mt-4 text-sm text-gray-500">
-                    🚚 2 days delivery
-                    <span className="text-green-600 cursor-pointer ml-2">Change</span>
+                  <p className="mt-4 text-sm text-green-600">
+                    Free delivery on all orders above AED 200
                   </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Your address<br />
-                    Manzil, Neettani, Thadatharikathu Veedu, Chullimanoor, NEDUMANGAD, KERALA, 695541, India
-                  </p>
-                  <button className="mt-4 text-sm text-gray-700 hover:underline">Add a delivery instruction</button>
-
-                  <div className="flex items-center mt-4">
-                    <input type="checkbox" id="singlePack" className="mr-2" />
-                    <label htmlFor="singlePack" className="text-sm">Get All these items in single pack</label>
-                  </div>
-
-                  <button className="mt-4 w-full bg-black text-white py-2 rounded-lg" onClick={handleCheckout}>
+                  <button className="mt-16 w-full bg-black text-white py-2 rounded-lg" onClick={handleCheckout}>
                     Proceed To Checkout
                   </button>
                 </div>

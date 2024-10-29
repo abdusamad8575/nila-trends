@@ -30,10 +30,10 @@ const Blog = ({ params }) => {
    return (
       <section className="pt-[60px] md:pt-[120px] pb-[50px] md:pb-[100px] bg-[#FEFDFD] flex items-center justify-center">
          <div className="container p-6 md:p-10 w-full">
-         <div className='flex gap-1 pb-2'>
-            <button  onClick={() => router.back()}>← Back</button>
-            <p className='text-slate-400'>/ Blogs</p>
-         </div>
+            <div className='flex gap-1 pb-2'>
+               <button onClick={() => router.back()}>← Back</button>
+               <p className='text-slate-400'>/ Blogs</p>
+            </div>
             <div className="-mx-4 flex flex-wrap justify-center">
                <div className="w-full px-4 lg:w-8/12">
                   <div>
@@ -204,7 +204,7 @@ const Blog = ({ params }) => {
                                  <a
                                     href={`https://twitter.com/intent/tweet?url=https://www.nilaatrends.com/blogs/${data?._id}text=Check%20this%20out`}
                                     target="_blank"
-                                    className="ml-3 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
+                                    className="ml-1 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
                                  >
                                     <svg
                                        width="18"
@@ -218,10 +218,50 @@ const Blog = ({ params }) => {
                                  <a
                                     href={`https://www.facebook.com/sharer/sharer.php?u=https://www.nilaatrends.com/blogs/${data?._id}`}
                                     target="_blank"
-                                    className="ml-3 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
+                                    className="ml-1 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
                                  >
                                     <svg width="9" height="18" viewBox="0 0 9 18" className="fill-current">
                                        <path d="M8.13643 7H6.78036H6.29605V6.43548V4.68548V4.12097H6.78036H7.79741C8.06378 4.12097 8.28172 3.89516 8.28172 3.55645V0.564516C8.28172 0.254032 8.088 0 7.79741 0H6.02968C4.11665 0 2.78479 1.58064 2.78479 3.92339V6.37903V6.94355H2.30048H0.65382C0.314802 6.94355 0 7.25403 0 7.70564V9.7379C0 10.1331 0.266371 10.5 0.65382 10.5H2.25205H2.73636V11.0645V16.7379C2.73636 17.1331 3.00273 17.5 3.39018 17.5H5.66644C5.81174 17.5 5.93281 17.4153 6.02968 17.3024C6.12654 17.1895 6.19919 16.9919 6.19919 16.8226V11.0927V10.5282H6.70771H7.79741C8.11222 10.5282 8.35437 10.3024 8.4028 9.96371V9.93548V9.90726L8.74182 7.95968C8.76604 7.7621 8.74182 7.53629 8.59653 7.31048C8.54809 7.16935 8.33016 7.02823 8.13643 7Z" />
+                                    </svg>
+                                 </a>
+                                 <a
+                                    href="#"
+                                    onClick={(e) => {
+                                       e.preventDefault()
+                                       navigator.share({
+                                          title: 'Check out Nilaa Trends!',
+                                          text: 'Discover amazing fashion collections on Nilaa Trends.',
+                                          url: `https://www.nilaatrends.com/blogs/${data?._id}`,
+                                       })
+                                    }}
+                                    className="ml-1 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
+                                 >
+                                    <svg
+                                       className="w-6 h-6 mt-2"
+                                       aria-hidden="true"
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       fill="currentColor"
+                                       viewBox="0 0 20 20"
+                                    >
+                                       <path
+                                          d="M16.5 4.916a3.832 3.832 0 01-2.133-.647 4.083 4.083 0 01-1.329-1.719c-.256-.004-.507-.021-.757-.052v6.72a4.532 4.532 0 01-6.544 4.064 4.55 4.55 0 01-1.47-1.211 4.487 4.487 0 01-.923-2.852 4.533 4.533 0 015.465-4.451v2.04a2.507 2.507 0 00-3.565 2.217c0 .69.282 1.31.736 1.757a2.493 2.493 0 004.218-1.757V.333h2.5a6.33 6.33 0 003.04 5.583 6.322 6.322 0 003.46 1.034v2.5a8.826 8.826 0 01-3.5-.784v-.001Z"
+                                       />
+                                    </svg>
+                                 </a>
+                                 <a
+                                    href="#"
+                                    onClick={(e) => {
+                                       e.preventDefault()
+                                       navigator.share({
+                                          title: 'Check out Nilaa Trends!',
+                                          text: 'Discover amazing fashion collections on Nilaa Trends.',
+                                          url: `https://www.nilaatrends.com/blogs/${data?._id}`,
+                                       })
+                                    }}
+                                    className="ml-1 mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md  text-black bg-opacity-10 duration-300 hover:bg-opacity-100 hover:text-gray-500"
+                                 >
+                                    <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                       <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd" />
                                     </svg>
                                  </a>
                               </div>
