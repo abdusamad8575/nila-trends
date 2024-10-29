@@ -7,7 +7,7 @@ const TermsAndConditions = () => {
         Terms and Conditions
       </h1>
       <p className="text-gray-700">
-        Welcome to NILAA! These Terms and Conditions ("Terms") apply to both our
+        Welcome to NILAA! These Terms and Conditions (&quot;Terms&quot;) apply to both our
         physical retail location in the New Gold Souq Center, Al Mina Road, Al
         Raffa, Bur Dubai, Dubai, UAE, and our e-commerce platform accessible at{" "}
         <a
@@ -23,7 +23,7 @@ const TermsAndConditions = () => {
         <h2 className="text-xl mb-3 font-semibold mt-8">Business Information:</h2>
         <ul className="text-gray-700 list-disc list-inside space-y-2">
           <li>Company Name: AIRNXT General Trading LLC</li>
-          <li>Retail Brand: NILAA, "The Stories of Threads"</li>
+          <li>Retail Brand: NILAA, &quot;The Stories of Threads&quot;</li>
           <li>
             Location: Store 11, New Gold Souq Center, Al Mina Road, Al Raffa,
             Bur Dubai, Dubai, UAE

@@ -122,7 +122,7 @@ const ReturnRefundPolicy = () => (
     </section>
 
     <p className="mt-8">
-      Thank you for shopping with NILAA, "The Stories of Threads." We value your trust and are here to assist you with any questions or concerns regarding your purchase.
+      Thank you for shopping with NILAA, &quot;The Stories of Threads&quot;. We value your trust and are here to assist you with any questions or concerns regarding your purchase.
     </p>
   </div>
 );
