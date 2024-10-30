@@ -26,6 +26,7 @@ const ProductListing = () => {
   const [selectedDiscount, setSelectedDiscount] = useState(0);
   const [selectedRatings, setSelectedRatings] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [sorting, setSorting] = useState();
 
 
 
@@ -40,12 +41,13 @@ const ProductListing = () => {
           category: selectedCategories.length > 0 || !category ? selectedCategories.join(',') : [category],
           priceRange: priceRange.join('-'),
           discount: selectedDiscount,
-          rating: selectedRatings
+          rating: selectedRatings,
+          sort: sorting,
         }
       });
       setProducts(data.products);
-      console.log(data.products);
-      console.warn(data.products);
+      // console.log(data.products);
+      // console.warn(data.products);
 
       setMessage(data.message)
       setTotalPages(data.totalPages);
@@ -56,7 +58,7 @@ const ProductListing = () => {
 
   useEffect(() => {
     fetchFilters();
-  }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories]);
+  }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories,sorting]);
 
   useEffect(() => {
     console.log('category123-', category);
@@ -159,6 +161,7 @@ const ProductListing = () => {
               setSelectedDiscount={setSelectedDiscount}
               setSelectedRatings={setSelectedRatings}
               setSelectedCategories={setSelectedCategories}
+              setSorting={setSorting} 
               handleSearchChange={(e) => setSearch(e.target.value)}
             />
           </div>

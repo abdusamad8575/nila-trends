@@ -26,6 +26,7 @@ const KurtaSetsListing = () => {
   const [selectedDiscount, setSelectedDiscount] = useState(0);
   const [selectedRatings, setSelectedRatings] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [sorting, setSorting] = useState();
 
   const fetchProducts = async () => {
     try {
@@ -36,7 +37,8 @@ const KurtaSetsListing = () => {
           category: selectedCategories.join(','),
           priceRange: priceRange.join('-'),
           discount: selectedDiscount,
-          rating: selectedRatings
+          rating: selectedRatings,
+          sort: sorting,
         }
       });
       setProducts(data.products);
@@ -49,7 +51,7 @@ const KurtaSetsListing = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories]);
+  }, [page, search, priceRange, selectedDiscount, selectedRatings, selectedCategories,sorting]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -141,6 +143,7 @@ const KurtaSetsListing = () => {
               setSelectedDiscount={setSelectedDiscount}
               setSelectedRatings={setSelectedRatings}
               setSelectedCategories={setSelectedCategories}
+              setSorting={setSorting} 
               handleSearchChange={(e) => setSearch(e.target.value)}
             />
           </div>

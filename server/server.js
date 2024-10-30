@@ -2,7 +2,7 @@ const app = require("./app.js");
 const { connect, connection } = require("mongoose");
 const dotenv = require('dotenv');     
 dotenv.config();
-
+    
 async function server() {     
   try {
     const mongoUrl = process.env.NODE_ENV === 'production' ? process.env.MONGO_URL_PROD : process.env.MONGO_URL_LOCAL;
@@ -20,6 +20,6 @@ async function server() {
   } catch (error) {
     console.log(error.message);
   }
-}
+}   
 
 server();
