@@ -44,7 +44,7 @@ const ProductPage = () => {
    const { id } = params;
    const [open, setOpen] = useState(false)
    const [selected, setSelected] = useState(0)
-   const [selectedSize, setSelectedSize] = useState() 
+   const [selectedSize, setSelectedSize] = useState()
    const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
    const [product, setProduct] = useState(null);
    const dispatch = useDispatch()
@@ -75,7 +75,7 @@ const ProductPage = () => {
 
             response?.data?.coupons && setAvailableCoupon(response?.data?.coupons)
             if (response?.data?.category?.coupons.length) {
-               
+
                const newCoupons = response?.data?.category?.coupons || [];
 
                setAvailableCoupon((prevCoupons) => {
@@ -310,25 +310,70 @@ const ProductPage = () => {
          </div>
 
          <div className={`${styles.footer} flex justify-between bg-opacity-90 bg-white`}>
-            {product?.sizes?.length > 0 && <div className={`hidden lg:block text-center`}>
-               <h3>Select Size</h3>
-               <div className={styles.buttonGroup}>
+            {product?.sizes?.length > 0 ?
+               (<div className={`hidden lg:block text-center`}>
+                  <h3>Select Size</h3>
+                  {/* <div className={styles.buttonGroup}>
                   {product?.sizes.map((sizeObj, index) => (
                      sizeObj?.quantity > 0 && <button key={index} onClick={() => handleSizeSelect(sizeObj.sizes, index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
                         ? 'border-[#B17E3E]'
                         : 'hover:bg-gray-100'
                         }`}>{sizeObj.sizes?.toUpperCase()} </button>
                   ))}
-               </div>
-            </div>}
-            {/* <div className={`hidden md:block flex text-center`}>
-                    <h3>Select Color & Texture</h3>
-                    <div className={styles.colorOptions}>
-                        <button className={`${styles.colorButton} ${styles.selectedColor}`} />
-                        <button className={styles.colorButton} />
-                        <button className={styles.colorButton} />
-                    </div>
-                </div> */}
+               </div> */}
+                  <div className={styles.buttonGroup}>
+                     {product.sizes.map((sizeObj, index) => {
+                        let badge = null;
+
+                        if (sizeObj.quantity < 5) {
+                           badge = (
+                              <span className="inline-block bg-red-500 text-white text-xs font-bold px-1 py-1 rounded mt-1">
+                                 Only {sizeObj.quantity} left!
+                              </span>
+                           );
+                        } else if (sizeObj.quantity < 10) {
+                           badge = (
+                              <span className="inline-block bg-yellow-500 text-black text-xs font-bold px-1 py-1 rounded mt-1">
+                                 Low Stock
+                              </span>
+                           );
+                        }
+
+                        return (
+                           sizeObj?.quantity > 0 && <div key={index} className="flex flex-col items-center">
+                              <button key={index} onClick={() => handleSizeSelect(sizeObj.sizes, index)} className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center text-xs sm:text-sm  ${selectedSizeIndex === index
+                                 ? 'border-[#B17E3E]'
+                                 : 'hover:bg-gray-100'
+                                 }`}>{sizeObj.sizes?.toUpperCase()} </button>
+                              {badge}
+                           </div>
+                        );
+                     })}
+                  </div>
+               </div>)
+               :
+               (
+                  <div className={`hidden md:block flex text-center`}>
+                    {product?.stock && (
+                      <>
+                        <h3>Stock</h3>
+                        {product.stock < 5 ? (
+                          <span className="inline-block bg-red-500 text-white text-xs font-bold px-1 py-2 rounded mt-1">
+                            Only {product.stock} left!
+                          </span>
+                        ) : product.stock < 10 ? (
+                          <span className="inline-block bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded mt-1">
+                            Low Stock
+                          </span>
+                        ) : (
+                          <span className="inline-block bg-green-500 text-white text-xs font-bold px-2 py-1 rounded mt-1">
+                            In Stock
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
             <div className={`hidden lg:block text-center`}>
                <h3>Delivery</h3>
                <p className="mt-2 text-sm">Delivery in 1 - 2 days &bull; All over UAE</p>
@@ -374,7 +419,9 @@ const ProductPage = () => {
             </div>
          </ModalLayout>
       </div>
+
    );
+
 };
 
 export default ProductPage;

@@ -75,10 +75,11 @@ const shuffleArray = (array) => {
 
 const getProducts = async (req, res) => {
   try {
-    const { page = 1, limit = 12, search, category, priceRange, discount, rating } = req.query;
-    console.log('search, category, priceRange, discount, rating', search, category, priceRange, discount, rating);
+    const { page = 1, limit = 12, search, category, priceRange, discount, rating,sort} = req.query;
+    console.log('sort',sort);
 
     const skip = (page - 1) * limit;
+    const sortOption = sort ? sort === 'lowToHigh' ? { sale_rate: 1 } : { sale_rate: -1 } : { createdAt: -1 };
 
     let filter = { isAvailable: true };
     if (search) {
@@ -150,20 +151,42 @@ const getProducts = async (req, res) => {
 
     }
 
-
-
-    const products = await Product.find(filter)
+let products;
+let shuffledProducts;
+if(sort){
+  products = await Product.find(filter)
       .populate('category')
       .populate('variantProduct')
-      // .skip(skip)
-      // .limit(limit)
-      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      // .sort({ createdAt: -1 })
+      .sort(sortOption)
       .exec();
       
       
 
     // const shuffledProducts = shuffleArray(products);
-    const shuffledProducts = shuffleArray(products).slice(skip, skip + limit);
+    // const shuffledProduct = shuffleArray(products).slice(skip, skip + limit);
+    shuffledProducts = products;
+
+}else{
+  products = await Product.find(filter)
+      .populate('category')
+      .populate('variantProduct')
+      // .skip(skip)
+      // .limit(limit)
+      // .sort({ createdAt: -1 })
+      .sort(sortOption)
+      .exec();
+      
+      
+
+    // const shuffledProducts = shuffleArray(products);
+    const shuffledProduct = shuffleArray(products).slice(skip, skip + limit);
+    shuffledProducts =  shuffledProduct ;
+
+}
+    
 
 
 
