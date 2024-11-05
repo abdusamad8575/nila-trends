@@ -12,12 +12,13 @@ export default function Filters({
   handleSearchChange
 }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [price, setPrice] = useState(15000);
+  const [price, setPrice] = useState(250);
   const [category, setCategory] = useState([]);
 
-  const placeholders = ['eg: Kurta Sets', 'eg: Casual Wear', 'eg: Party Dresses'];
+  const placeholders = ['Search for Sarees','Search for Kurta Sets', 'Search for Casual Wear', 'Search for Party Dresses'];
   const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
   const [showingPlaceholder, setShowingPlaceholder] = useState(true);
+  const [onFocus, setOnFocus] = useState(false);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Filters({
         setCurrentPlaceholder(placeholders[(index + 1) % placeholders.length]);
         setShowingPlaceholder(true);
       }, 500);
-    }, 3000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [index, placeholders]);
@@ -104,12 +105,14 @@ export default function Filters({
             // placeholder="eg: Kurta Sets"
             // placeholder={currentPlaceholder}
             onChange={handleSearchChange}
-            className="w-full py-2 px-3 sm:px-4 border border-gray-300 rounded-r-lg text-xs sm:text-sm"
+            onFocus={()=>setOnFocus(true)}
+            onBlur={()=>setOnFocus(false)}
+            className="w-full py-2 px-3 sm:px-4 border font-bold border-gray-300 rounded-r-lg text-sm sm:text-md"
             style={{
               caretColor: 'transparent', 
             }}
           />
-          <div className={`absolute left-2.5 top-2.5 transition-opacity duration-500 text-xs sm:text-sm ${showingPlaceholder ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`absolute left-2.5 top-2.5 transition-opacity duration-500 text-xs sm:text-sm ${!onFocus && showingPlaceholder ? 'opacity-100' : 'opacity-0'}`}>
             <span className="text-gray-400">{currentPlaceholder}</span>
           </div>
           <Search
@@ -122,7 +125,7 @@ export default function Filters({
       <div
         id="dropdown"
         className={`z-10 overflow-hidden transition-height duration-300 pop ${isDropdownOpen
-          ? 'max-h-[100vh] opacity-1 p-4'
+          ? 'opacity-1 p-4'
           : 'max-h-[1px] opacity-0'
           } w-full bg-[#e9ded0] rounded-lg shadow`}
       >
@@ -166,7 +169,7 @@ export default function Filters({
                     type="range"
                     value={price}
                     min="10"
-                    max="5000"
+                    max="500"
                     onChange={handlePriceChange}
                     className="w-full h-2 bg-gray-400 rounded-lg appearance-none cursor-pointer"
                   />
@@ -177,7 +180,7 @@ export default function Filters({
                     {`AED ${price}`}
                   </span>
                   <span className="text-sm text-gray-500 absolute end-0 -bottom-6">
-                    Max (AED 5000)
+                    Max (AED 500)
                   </span>
                 </div>
               </ul>
@@ -246,7 +249,7 @@ export default function Filters({
               <h6 className="mb-2 text-sm font-medium text-gray-900">
                 Sort by Price
               </h6>
-              <select id="sorting" onChange={handleSortingChange} className="block w-full p-2 border border-gray-900 rounded">
+              <select id="sorting" onChange={handleSortingChange} className="block w-full text-sm p-2 border border-gray-300 bg-[#faf9f3] rounded outline-none">
                 <option value="">None</option>
                 <option value="lowToHigh">Low to High</option>
                 <option value="highToLow">High to Low</option>

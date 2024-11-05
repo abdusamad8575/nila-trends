@@ -28,7 +28,7 @@ const Blog = ({ params }) => {
       return <div dangerouslySetInnerHTML={{ __html: desc }} />;
    };
    return (
-      <section className="pt-[60px] md:pt-[120px] pb-[50px] md:pb-[100px] bg-[#FEFDFD] flex items-center justify-center">
+      <section className="pt-[70px] md:pt-[120px] pb-[50px] md:pb-[100px] bg-[#FEFDFD] flex items-center justify-center">
          <div className="container p-6 md:p-10 w-full">
             <div className='flex gap-1 pb-2'>
                <button onClick={() => router.back()}>← Back</button>
