@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();     
 // app.use(cors());
 const corsOptions = {   
-  origin: [process.env.ADMIN_PORT_LOCAL,process.env.CLIENT_PORT_LOCAL],
+  origin: [process.env.ADMIN_PORT_LOCAL,process.env.CLIENT_PORT_LOCAL,process.env.CLIENT_PAYMENT_PORT_LOCAL],
   credentials: true,       
 };         
 
@@ -25,6 +25,6 @@ app.use(
   )
 );
 console.log(morgan);
-app.use('/api',router);
+app.use('/api',router);    
 
 module.exports = app;
