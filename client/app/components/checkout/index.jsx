@@ -6,6 +6,7 @@ import axiosInstance from '../../../axios'
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
 import { setProfile } from '../../../redux/actions/storeActions';
+import { setOrderDetails } from '../../../redux/actions/orderActions';
 import { useRouter } from 'next/navigation';
 import { useMediaQuery } from '@mui/material';
 import toast from 'react-hot-toast';
@@ -250,7 +251,94 @@ function Checkout() {
 
   };
 
+
+
+
+
+
+
+
+
+
+
+  const handleNetworkPayment = async () => {
+    try {
+
+      
+
+      const response = await axiosInstance.post('/payment/initiate', {
+        totalPrice: lastTotal,
+        currency: 'AED',
+        redirectUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment-confirmation`,
+        // redirectUrl: 'https://www.google.co.in', 
+      });
+
+
+
+
+      if (response.data.orderPaypageUrl) {
+        window.location.href = response.data.orderPaypageUrl;
+      }
+    } catch (error) {
+      toast.error("Payment initiation failed. Please try again.");
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const orderStoredInlocalStorage={} = async()=>{
+  const mappedItems = await cartData?.item?.map((item) => ({
+    product_id: item.productId._id,
+    qty: item.qty,
+    price: item.productId.sale_rate,
+    size: item?.size
+  }));
+
+  const totalPrice = mappedItems.reduce(
+    (total, item) => total + item.qty * item.price,
+    0
+  );
+
+  const productsOrderData = {
+    item: mappedItems,
+    totalPrice,
+  };
+
+  const orderData = {
+    payment_mode: selectedPaymentMethod,
+    delivery_days: deliveryDays,
+    amount: lastTotal,
+    address: DeliveryAddress,
+    products: productsOrderData,
+    couponId: appliedCouponDetails._id,
+  };
+  localStorage.setItem('orderDetails', JSON.stringify(orderData));
+
+  
+  
+}
+
+
+
+
+
+
   const handleProceedToPayment = () => {
+    console.log('handleProceedToPayment worked');
+
     if (!DeliveryAddress) {
       toast.error("Please select a delivery address.");
       return;
@@ -260,21 +348,16 @@ function Checkout() {
       toast.error("Please select a payment method.");
       return;
     }
-    // if (!selectedDaliveryDays ) {
-    //   toast.error("Please Select a Delivery Day!.");
-    //   return;
-    // }
 
     if (selectedPaymentMethod === "COD") {
       handlePaymentSuccess();
-    } else if (selectedPaymentMethod === "SamsungPay") {
-      toast.error('pay the Samsung Pay')
-    } else if (selectedPaymentMethod === "ApplePay") {
-      toast.error('pay the Apple Pay')
+    } else {
+      orderStoredInlocalStorage()      
+      handleNetworkPayment();
     }
   };
 
-  
+
   const checkCheaptCoupon = async (data) => {
     try {
 
@@ -453,7 +536,7 @@ function Checkout() {
           <div className="flex flex-col">
             <Radio.Group onChange={handlePaymentMethodChange} value={selectedPaymentMethod} >
               <Radio value="COD">Cash on Delivery (COD)</Radio>
-              <Radio value="online" disabled>Online Payment</Radio>
+              <Radio value="online">Online Payment</Radio>
             </Radio.Group>
           </div>
         </div>
