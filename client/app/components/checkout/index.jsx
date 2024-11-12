@@ -269,7 +269,7 @@ function Checkout() {
       const response = await axiosInstance.post('/payment/initiate', {
         totalPrice: lastTotal,
         currency: 'AED',
-        redirectUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment-confirmation`,
+        redirectUrl: `${process.env.NEXT_PUBLIC_CLIENT_API}/payment-confirmation`,
         // redirectUrl: 'https://www.google.co.in', 
       });
 
