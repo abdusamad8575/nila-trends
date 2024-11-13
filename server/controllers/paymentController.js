@@ -269,14 +269,7 @@ exports.confirmNgeniusPayment = async (req, res) => {
               subject: emailSubject,
               html: internalEmailHtml,
             });
-        
-        
-        
-        
-        
-            res.status(201).json({ user, message: 'Order placed successfully' });
-
-            res.json({ message: 'Payment successful' });
+            res.status(201).json({user, message: 'Payment successful' });
         } else {
             res.status(400).json({ message: 'Payment not captured' });
         }

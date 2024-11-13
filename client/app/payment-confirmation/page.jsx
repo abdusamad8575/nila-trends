@@ -4,9 +4,11 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axiosInstance from '../../axios';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setUserDetails } from '../../redux/actions/userActions';
 
 export default function PaymentConfirmation() {
-  console.log('1');
+  const dispatch = useDispatch();
 
 
 
@@ -31,8 +33,12 @@ export default function PaymentConfirmation() {
       console.log('orderDetails12', orderDetails);
 
       const response = await axiosInstance.post('/payment/confirm', { orderReference,orderDetails });
+      console.log('response samad',response);
+      
       if (response.data.message === 'Payment successful') {
+        dispatch(setUserDetails(response.data.user));
         toast.success("Payment confirmed!");
+        localStorage.removeItem('orderDetails');
         // router.push('/order-success'); 
         router.push('/'); 
       } else {
