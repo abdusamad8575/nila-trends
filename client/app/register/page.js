@@ -93,7 +93,7 @@ const OTPPage = () => {
       );
 
       if (response.data) {
-        router.push('/')
+        router.back()
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);

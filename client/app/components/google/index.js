@@ -41,7 +41,7 @@ const GoogleLoginComponent = () => {
         refresh: res.data.token.refreshToken,
       }));
       setIsLoading(false);
-      router.push('/');
+      router.back()
     } catch (error) {
       console.error('Error during Google login: ', error);
       setIsLoading(false);
