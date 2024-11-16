@@ -5,19 +5,12 @@ const addressSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
     },
-    firstname: {
+    emirate: {
         type: String,
+        enum: ["Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Umm Al Quwain", "Ras Al Khaimah", "Fujairah"],
         required: true
     },
-    lastname: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    country: {
+    area: {
         type: String,
         required: true
     },
@@ -28,16 +21,18 @@ const addressSchema = new mongoose.Schema({
     address_line_2: {
         type: String,
     },
-
-    city: {
+    landmark: {
+        type: String,
+    },
+    fullname: {
         type: String,
         required: true
     },
-    state: {
+    email: {
         type: String,
         required: true
     },
-    zip: {
+    code: {
         type: String,
         required: true
     },
@@ -45,14 +40,19 @@ const addressSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    type: {
+        type: String,
+        enum: ["home", "office"],
+        default: "home",
+    },
     primary: {
         type: Boolean,
         default: false,
         required: true
     }
 },
-{
-    timestamps: true
-})
-     
+    {
+        timestamps: true
+    })
+
 module.exports = mongoose.model('Address', addressSchema)

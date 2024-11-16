@@ -264,7 +264,7 @@ function Checkout() {
   const handleNetworkPayment = async () => {
     try {
 
-      
+
 
       const response = await axiosInstance.post('/payment/initiate', {
         totalPrice: lastTotal,
@@ -299,37 +299,37 @@ function Checkout() {
 
 
 
-const orderStoredInlocalStorage={} = async()=>{
-  const mappedItems = await cartData?.item?.map((item) => ({
-    product_id: item.productId._id,
-    qty: item.qty,
-    price: item.productId.sale_rate,
-    size: item?.size
-  }));
+  const orderStoredInlocalStorage = {} = async () => {
+    const mappedItems = await cartData?.item?.map((item) => ({
+      product_id: item.productId._id,
+      qty: item.qty,
+      price: item.productId.sale_rate,
+      size: item?.size
+    }));
 
-  const totalPrice = mappedItems.reduce(
-    (total, item) => total + item.qty * item.price,
-    0
-  );
+    const totalPrice = mappedItems.reduce(
+      (total, item) => total + item.qty * item.price,
+      0
+    );
 
-  const productsOrderData = {
-    item: mappedItems,
-    totalPrice,
-  };
+    const productsOrderData = {
+      item: mappedItems,
+      totalPrice,
+    };
 
-  const orderData = {
-    payment_mode: selectedPaymentMethod,
-    delivery_days: deliveryDays,
-    amount: lastTotal,
-    address: DeliveryAddress,
-    products: productsOrderData,
-    couponId: appliedCouponDetails._id,
-  };
-  localStorage.setItem('orderDetails', JSON.stringify(orderData));
+    const orderData = {
+      payment_mode: selectedPaymentMethod,
+      delivery_days: deliveryDays,
+      amount: lastTotal,
+      address: DeliveryAddress,
+      products: productsOrderData,
+      couponId: appliedCouponDetails._id,
+    };
+    localStorage.setItem('orderDetails', JSON.stringify(orderData));
 
-  
-  
-}
+
+
+  }
 
 
 
@@ -352,7 +352,7 @@ const orderStoredInlocalStorage={} = async()=>{
     if (selectedPaymentMethod === "COD") {
       handlePaymentSuccess();
     } else {
-      orderStoredInlocalStorage()      
+      orderStoredInlocalStorage()
       handleNetworkPayment();
     }
   };
@@ -477,24 +477,20 @@ const orderStoredInlocalStorage={} = async()=>{
           {/* <label onClick={handleDeliveryAddress} className='text-green-500 cursor-pointer'>{DeliveryAddress ? <p>Change</p> : <p>Save</p>} </label> */}
         </div>
         <div className="flex flex-row justify-between"> <p>Your addresses</p> </div>
-        {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.firstname} ${DeliveryAddress?.lastname}, 
+        {DeliveryAddress ? <p className='font-semibold'>{`${DeliveryAddress?.fullname}, 
         ${DeliveryAddress?.address_line_1}, ${DeliveryAddress?.address_line_2}, 
-        ${DeliveryAddress?.city}, ${DeliveryAddress?.state}, 
-        ${DeliveryAddress?.country}, 
-        ${DeliveryAddress?.zip}, 
-        ${DeliveryAddress?.mobile}`}</p> :
+        ${DeliveryAddress?.area}, ${DeliveryAddress?.emirate}, 
+        ${DeliveryAddress?.code}-${DeliveryAddress?.mobile}`}</p> :
           <div className="flex flex-col gap-1.5 justify-between px-5 py-2 border rounded-md overflow-y-auto h-24">
             <ul className="w-full text-sm font-medium ">
               {addresses?.length > 0 ? addresses.map((details, index) => (
                 <li key={index} className="w-full mb-2">
                   <div className="flex items-start gap-3" key={index} onClick={() => handleDeliveryAddress(details)}>
                     <input id={`checkbox-${index}`} type="checkbox" value="" className="cursor-pointer w-4 h-4 mt-1 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                    <label htmlFor={`checkbox-${index}`} className="w-full text-xs md:text-sm font-medium cursor-pointer">{`${details?.firstname} ${details?.lastname},
+                    <label htmlFor={`checkbox-${index}`} className="w-full text-xs md:text-sm font-medium cursor-pointer">{`${details?.fullname},
                     ${details?.address_line_1}, ${details?.address_line_2}, 
-                    ${details?.city}, ${details?.state}, 
-                    ${details?.country}, 
-                    ${details?.zip}, 
-                    Ph:${details?.mobile}`}</label>
+                    ${details?.area}, ${details?.emirate}, 
+                    Ph:${details?.code} ${details?.mobile}`}</label>
                   </div>
                 </li>
               )) : <p className="text-red-500 font-normal flex justify-center">Please add your address first, then return to checkout and select the address to order.</p>}

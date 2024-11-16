@@ -43,9 +43,9 @@ export default function Cart() {
       const response = await axiosInstance.get(`/user/getcarts`);
       // setCartData(response?.data?.data)
       if (response?.data?.data?.item) {
-        setCartData(response.data.data.item); 
+        setCartData(response.data.data.item);
       } else {
-        setCartData([]); 
+        setCartData([]);
       }
       const items = response?.data?.data?.item;
       const filteredItems = items.filter((obj) => {
@@ -101,20 +101,20 @@ export default function Cart() {
     }
     setLoadingIndex(index);
 
-     
-     const updatedCartData = [...cartData];
-     updatedCartData[index].qty = newQty;
 
-     const items = updatedCartData;
-      const filteredItems = items.filter((obj) => {
-        return obj.productId.isAvailable != false
-      })
-      const totalSalePrice = calculateTotalSalePrice(filteredItems);
-      setSalePriceTotal(totalSalePrice)
-      const totalProPrice = calculateTotalProPrice(filteredItems);
-      setProPriceTotal(totalProPrice)
+    const updatedCartData = [...cartData];
+    updatedCartData[index].qty = newQty;
 
-     setCartData(updatedCartData);
+    const items = updatedCartData;
+    const filteredItems = items.filter((obj) => {
+      return obj.productId.isAvailable != false
+    })
+    const totalSalePrice = calculateTotalSalePrice(filteredItems);
+    setSalePriceTotal(totalSalePrice)
+    const totalProPrice = calculateTotalProPrice(filteredItems);
+    setProPriceTotal(totalProPrice)
+
+    setCartData(updatedCartData);
 
     try {
       const response = await axiosInstance.patch(`/user/updateQty`, { qty: newQty, productId: item?.productId?._id, size: item.size });
@@ -153,7 +153,7 @@ export default function Cart() {
     try {
       const response = await axiosInstance.patch(urlQuery, { size: itemId?.size });
       if (response?.data?.userData) {
-        dispatch(setUserDetails(response?.data?.userData));   
+        dispatch(setUserDetails(response?.data?.userData));
         dispatch(setCart(true))
       }
       const updatedCartItems = cartData.filter((item) => item?._id !== itemId?._id);
@@ -161,7 +161,7 @@ export default function Cart() {
       // setProPriceTotal(null)
       // setSalePriceTotal(null)
       setCartData(
-         updatedCartItems
+        updatedCartItems
       );
 
       const filteredItems = updatedCartItems.filter((obj) => {
@@ -185,9 +185,7 @@ export default function Cart() {
   const deliveryCharge = 12
   const includedDeliveryCharge = ordersCount === 0 ? 0 : salePriceTotal < 200 ? salePriceTotal + deliveryCharge : 0;
   const lastTotal = (includedDeliveryCharge ? includedDeliveryCharge : salePriceTotal).toFixed(2)
-console.log('cartData12',cartData);
-console.log('cartData?.length',cartData?.length);
-
+  const handleCart = () => dispatch(setCart(false))
   return (
     <div className="p-4 md:min-h-[40vh]">
       <h2 className="text-2xl font-semibold mb-4 hidden lg:block">Shopping Cart 🛒</h2>
@@ -199,7 +197,7 @@ console.log('cartData?.length',cartData?.length);
           transition={{ duration: 0.5 }}
         >
           <p className="text-xs sm:text-sm text-gray-600 mt-8">Your cart is empty.</p>
-          <Link href="/allproducts">
+          <Link href="/allproducts" onClick={handleCart}>
             <button className="bg-gray-200 px-3 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm mt-2">
               <i className="fas fa-plus me-2"></i>Add Items
             </button>
@@ -266,7 +264,7 @@ console.log('cartData?.length',cartData?.length);
                             <button className="px-2 border border-gray-300 rounded"
                               onClick={() => handleQuantityChange(item, 'increment', index)}
                               disabled={loadingIndex === index}>
-                              { '+'}
+                              {'+'}
                             </button>
                           </>
                         ) :
@@ -303,7 +301,7 @@ console.log('cartData?.length',cartData?.length);
                     <p>Delivery Charge</p>
                     <p>{ordersCount === 0 ? 'Free ' : includedDeliveryCharge ? deliveryCharge : 'Free'}</p>
                   </div>
-                  <hr className="my-2"/>
+                  <hr className="my-2" />
                   <div className="flex justify-between font-semibold text-lg">
                     <p>Total</p>
                     <p>AED - {lastTotal}</p>

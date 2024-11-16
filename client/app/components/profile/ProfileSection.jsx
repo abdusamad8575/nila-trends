@@ -18,7 +18,7 @@ const ProfileSection = ({ showOrders }) => {
    const [profileImage, setProfileImage] = useState(null);
    const [previewImage, setPreviewImage] = useState('/assets/avatar.png');
    const [addresses, setAddresses] = useState([]);
-   const [newAddress, setNewAddress] = useState({ firstname: '', lastname: '', address_line_1: '', address_line_2: '', city: '', state: '', zip: '', country: '', mobile: '' });
+   const [newAddress, setNewAddress] = useState({ fullname: '', email: '', address_line_1: '', address_line_2: '', emirate: 'Select your Emirate', area: '', code: '+971', mobile: '', type: 'home' });
    const [showAddressForm, setShowAddressForm] = useState(false);
    const [isEditing, setIsEditing] = useState(false);
 
@@ -72,7 +72,7 @@ const ProfileSection = ({ showOrders }) => {
             setShowAddressForm(false);
             setAddresses(res?.data?.data)
             setNewAddress({
-               firstname: '', lastname: '', email: '', address_line_1: '', address_line_2: '', city: '', state: '', zip: '', country: '', mobile: '', type: ''
+               fullname: '', email: '', address_line_1: '', address_line_2: '', emirate: 'Select your Emirate', area: '', code: '+971', mobile: '', type: 'home'
             });
          })
          .catch((error) => console.error(error));
@@ -106,8 +106,8 @@ const ProfileSection = ({ showOrders }) => {
    };
 
    const validateFields = () => {
-      const { firstname, lastname, email, address_line_1, city, state, zip, country, mobile } = newAddress;
-      if (!firstname || !lastname || !email || !address_line_1 || !city || !state || !zip || !country || !mobile) {
+      const { fullname, email, address_line_1, emirate, area, code, mobile } = newAddress;
+      if (!fullname || !email || !address_line_1 || !emirate || emirate === "Select your Emirate" || !area || !code || !mobile) {
          return false;
       }
       return true;
@@ -115,7 +115,6 @@ const ProfileSection = ({ showOrders }) => {
 
    const logoutUser = () => {
       dispatch(clearUserDetails());
-
       localStorage.removeItem('Tokens');
       router.push('/')
    };
@@ -214,16 +213,16 @@ const ProfileSection = ({ showOrders }) => {
                   <div key={index} className="flex flex-col text-xs md:text-sm border rounded-lg p-4">
                      <div className="relative flex justify-between items-start mb-2">
                         <div>
-                           <p className="font-bold">{address?.firstname} {address?.lastname}</p>
+                           <p className="font-bold">{address?.fullname}</p>
                            <p>Email: {address?.email}</p>
-                           <p>Phone: {address?.mobile}</p>
+                           <p>Phone: {address?.code} {address?.mobile}</p>
                         </div>
                         <div className="flex items-center xl:hidden gap-2">
                            <button onClick={() => handleEditClick(address)} className="font-medium">Edit</button>
                            <button onClick={() => handleDelete(address._id)} className="text-red-500 font-medium">Delete</button>
                         </div>
                      </div>
-                     <p className="text-gray-600">{address?.address_line_1}, {address?.address_line_2}, {address?.city}, {address?.state}, {address?.zip}, {address?.country}</p>
+                     <p className="text-gray-600">{address?.address_line_1}, {address?.address_line_2}, {address?.area}, {address?.emirate}</p>
                      <div className="xl:flex hidden items-center gap-2 mt-auto pt-3">
                         <button onClick={() => handleEditClick(address)} className="font-medium">Edit</button>
                         <button onClick={() => handleDelete(address._id)} className="text-red-500 font-medium">Delete</button>

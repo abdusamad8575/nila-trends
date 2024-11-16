@@ -10,7 +10,7 @@ const OrderDetails = ({ data }) => {
                <div>
                   <p className="font-bold">Order No : {data?._id}</p>
                   <p className="text-xs text-gray-600 pt-2">Shipping addresses</p>
-                  <p className="text-xs text-gray-600 max-w-xs">{data?.address.address_line_1}, {data?.address.city}</p>
+                  <p className="text-xs text-gray-600 max-w-xs">{data?.address.address_line_1}, {data?.address.address_line_2}</p>
                </div>
                <p className="text-sm text-gray-600">{dayjs(data?.createdAt).format('DD/MM/YYYY')}</p>
             </div>
