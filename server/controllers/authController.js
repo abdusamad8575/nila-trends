@@ -87,8 +87,8 @@ module.exports.googleLogin = async (req, res) => {
     const { email, name, sub, picture } = ticket.getPayload();
     let user = await User.findOne({ email });
     if (!user) {
+      const image = Date.now() + '-' + `${sub}.jpg`
       if (picture) {
-        const image = Date.now() + '-' + `${sub}.jpg`
         const filePath = path.join(__dirname, '../public/uploads/', image);
         const response = await axios({
           url: picture,
@@ -97,36 +97,21 @@ module.exports.googleLogin = async (req, res) => {
         });
 
         const writer = fs.createWriteStream(filePath);
-        response.data.pipe(writer);
-
-        writer.on('finish', async () => {
-          user = await User.create({
-            email,
-            username: name,
-            profile: image
-          });
-          const token = generateTokens(user._id)
-          return res.status(200).json({
-            message: "Login successful",
-            token,
-            user
-          });
-        });
-
-        writer.on('error', async (err) => {
-          console.error('Error downloading the picture:', err);
-          user = await User.create({
-            email,
-            username: name,
-          });
-          const token = generateTokens(user._id)
-          return res.status(200).json({
-            message: "Login successful",
-            token,
-            user
+        await new Promise((resolve, reject) => {
+          response.data.pipe(writer);
+          writer.on('finish', resolve);
+          writer.on('error', (err) => {
+            console.error('Error downloading the picture:', err);
+            reject(err);
           });
         });
       }
+
+      user = await User.create({
+        email,
+        username: name,
+        profile: image,
+      });
     }
     const token = generateTokens(user._id)
     return res.status(200).json({
@@ -144,51 +129,36 @@ module.exports.facebookLogin = async (req, res) => {
   const data = req.body;
   try {
     console.log(data)
-    const facebook_id = data?.userID
+    const facebook_id = data?.id
     let user = await User.findOne({ facebook_id });
 
     if (!user) {
-      const pictureUrl = data?.picture?.data?.url;
-      if (pictureUrl) {
-        const image = Date.now() + '-' + `${facebook_id}.jpg`
+      const picture = data?.picture?.data?.url;
+      const image = Date.now() + '-' + `${facebook_id}.jpg`
+      if (picture) {
         const filePath = path.join(__dirname, '../public/uploads/', image);
         const response = await axios({
-          url: pictureUrl,
+          url: picture,
           method: 'GET',
           responseType: 'stream',
         });
 
         const writer = fs.createWriteStream(filePath);
-        response.data.pipe(writer);
-
-        writer.on('finish', async () => {
-          user = await User.create({
-            facebook_id,
-            username: data?.name,
-            profile: image
-          });
-          const token = generateTokens(user._id)
-          return res.status(200).json({
-            message: "Login successful",
-            token,
-            user
-          });
-        });
-
-        writer.on('error', async (err) => {
-          console.error('Error downloading the picture:', err);
-          user = await User.create({
-            facebook_id,
-            username: data?.name,
-          });
-          const token = generateTokens(user._id)
-          return res.status(200).json({
-            message: "Login successful",
-            token,
-            user
+        await new Promise((resolve, reject) => {
+          response.data.pipe(writer);
+          writer.on('finish', resolve);
+          writer.on('error', (err) => {
+            console.error('Error downloading the picture:', err);
+            reject(err);
           });
         });
       }
+
+      user = await User.create({
+        facebook_id,
+        username: data?.name,
+        profile: image,
+      });
     }
     const token = generateTokens(user._id)
     return res.status(200).json({
