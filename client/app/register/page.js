@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import CodeInput from './CodeInput';
 import Image from 'next/image';
+import FacebookLoginComponent from '../components/facebook';
 
 const countries = [
   {
@@ -37,7 +38,7 @@ const OTPPage = () => {
   const [timer, setTimer] = useState(5);
   const [showResend, setShowResend] = useState(false);
 
-  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+  const [selectedCountry, setSelectedCountry] = useState(countries[1]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleCountrySelect = (country) => {
@@ -201,6 +202,7 @@ const OTPPage = () => {
         </form>
         <div className="text-center my-4">OR</div>
         <GoogleLoginComponent />
+        <FacebookLoginComponent/>
       </div>
     </div>
   );

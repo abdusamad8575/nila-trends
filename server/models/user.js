@@ -14,6 +14,9 @@ const userSchema = mongoose.Schema({
     phone: {
         type: String,
     },
+    facebook_id: {
+        type: Number
+    },
     // password:{
     //     type:String,
     //     required:true

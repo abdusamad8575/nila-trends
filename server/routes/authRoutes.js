@@ -7,7 +7,8 @@ const {
   getCurrentUser,
   sendOtp,
   verifyOtp,
-  googleLogin
+  googleLogin,
+  facebookLogin
 } = require("../controllers/authController");
 const authorization = require("../middlewares/authorization");
 
@@ -15,6 +16,7 @@ const authorization = require("../middlewares/authorization");
 // router.post("/login", signin);
 router.get("/user", authorization, getCurrentUser);
 router.post('/google-login', googleLogin);       
+router.post('/facebook-login', facebookLogin);       
 
 router.post('/send-otp',sendOtp);
 router.post('/verify-otp',verifyOtp);

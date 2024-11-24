@@ -1,7 +1,9 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require('google-auth-library');
-
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -67,53 +69,69 @@ module.exports.verifyOtp = async (req, res) => {
     await user.save();
   }
 
-  const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRY,
-  });
-
-  const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRY,
-  });
-
+  const token = generateTokens(user._id)
   res.status(200).json({
     message: 'Login successful',
-    data: { token: { accessToken, refreshToken }, user }
+    data: { token, user }
   });
 };
 
 module.exports.googleLogin = async (req, res) => {
   const { tokenId } = req.body;
-
   try {
     const ticket = await client.verifyIdToken({
       idToken: tokenId,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email } = ticket.getPayload();
-
+    const { email, name, sub, picture } = ticket.getPayload();
     let user = await User.findOne({ email });
-    // console.log('user',user);
     if (!user) {
-      // const encryptedPassword = await bcrypt.hash(email + process.env.JWT_ACCESS_SECRET, 10);
-      // console.log('encryptedPassword',encryptedPassword);
-      user = await User.create({
-        email
-        // password: encryptedPassword,
-      });
+      if (picture) {
+        const image = Date.now() + '-' + `${sub}.jpg`
+        const filePath = path.join(__dirname, '../public/uploads/', image);
+        const response = await axios({
+          url: picture,
+          method: 'GET',
+          responseType: 'stream',
+        });
+
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+
+        writer.on('finish', async () => {
+          user = await User.create({
+            email,
+            username: name,
+            profile: image
+          });
+          const token = generateTokens(user._id)
+          return res.status(200).json({
+            message: "Login successful",
+            token,
+            user
+          });
+        });
+
+        writer.on('error', async (err) => {
+          console.error('Error downloading the picture:', err);
+          user = await User.create({
+            email,
+            username: name,
+          });
+          const token = generateTokens(user._id)
+          return res.status(200).json({
+            message: "Login successful",
+            token,
+            user
+          });
+        });
+      }
     }
-
-    const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: process.env.JWT_ACCESS_EXPIRY,
-    });
-
-    const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRY,
-    });
-
+    const token = generateTokens(user._id)
     return res.status(200).json({
       message: "Login successful",
-      token: { accessToken, refreshToken },
+      token,
       user
     });
   } catch (error) {
@@ -121,3 +139,76 @@ module.exports.googleLogin = async (req, res) => {
     return res.status(500).json({ message: error?.message ?? "Something went wrong" });
   }
 };
+
+module.exports.facebookLogin = async (req, res) => {
+  const data = req.body;
+  try {
+    console.log(data)
+    const facebook_id = data?.userID
+    let user = await User.findOne({ facebook_id });
+
+    if (!user) {
+      const pictureUrl = data?.picture?.data?.url;
+      if (pictureUrl) {
+        const image = Date.now() + '-' + `${facebook_id}.jpg`
+        const filePath = path.join(__dirname, '../public/uploads/', image);
+        const response = await axios({
+          url: pictureUrl,
+          method: 'GET',
+          responseType: 'stream',
+        });
+
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+
+        writer.on('finish', async () => {
+          user = await User.create({
+            facebook_id,
+            username: data?.name,
+            profile: image
+          });
+          const token = generateTokens(user._id)
+          return res.status(200).json({
+            message: "Login successful",
+            token,
+            user
+          });
+        });
+
+        writer.on('error', async (err) => {
+          console.error('Error downloading the picture:', err);
+          user = await User.create({
+            facebook_id,
+            username: data?.name,
+          });
+          const token = generateTokens(user._id)
+          return res.status(200).json({
+            message: "Login successful",
+            token,
+            user
+          });
+        });
+      }
+    }
+    const token = generateTokens(user._id)
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user
+    });
+  } catch (error) {
+    console.log(error?.message);
+    return res.status(500).json({ message: error?.message ?? "Something went wrong" });
+  }
+};
+
+function generateTokens(_id) {
+  const accessToken = jwt.sign({ _id }, process.env.JWT_ACCESS_SECRET, {
+    expiresIn: process.env.JWT_ACCESS_EXPIRY,
+  });
+
+  const refreshToken = jwt.sign({ _id }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRY,
+  });
+  return { accessToken, refreshToken }
+}
