@@ -13,7 +13,6 @@ import Link from 'next/link';
 import axiosInstance from '../../../axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
-import { setCheckout } from '../../../redux/actions/storeActions';
 import { setCheckoutProduct } from '../../../redux/actions/storeActions';
 import toast from 'react-hot-toast';
 import Review from '@/app/components/products/Review';
@@ -62,7 +61,7 @@ const ProductPage = () => {
       }
       if (selectedSize || product?.stock) {
          selectedSize ? dispatch(setCheckoutProduct({ product, selectedSize: selectedSize, coupon: selectedCouponDetails || null })) : dispatch(setCheckoutProduct({ product }))
-         dispatch(setCheckout(true))
+         router.push('/checkout')
       } else {
          toast.error('please select size')
       }
@@ -353,7 +352,7 @@ const ProductPage = () => {
                </div>)
                :
                (
-                  <div className={`hidden md:block flex text-center`}>
+                  <div className={`hidden md:flex text-center`}>
                     {product?.stock && (
                       <>
                         <h3>Stock</h3>

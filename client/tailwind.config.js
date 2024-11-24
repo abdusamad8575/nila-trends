@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+        roboto: ['var(--font-roboto)'],
+        mono: ['var(--font-roboto-mono)'],
+        rochester: ['var(--font-rochester)'],
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

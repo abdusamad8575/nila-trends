@@ -19,8 +19,8 @@ const getOrders = async (req, res) => {
   try {
     const data = await Order.find().sort({ createdAt: -1 });
     res.status(200).json({ data })
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 };
@@ -36,8 +36,8 @@ const getClientOrders = async (req, res) => {
     .sort({ createdAt: -1 });   
     console.log('order data',data);
     res.status(200).json({ data })
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 };
@@ -54,7 +54,7 @@ const getAdminOrders = async (req, res) => {
       sort: { [sortBy]: order === 'desc' ? -1 : 1 },
       populate: [
         { path: 'userId', select: 'username email' },
-        { path: 'address', select: 'firstname lastname address_line_1 address_line_2 zip mobile city state' },
+        { path: 'address', select: 'fullname address_line_1 address_line_2 emirate area code mobile' },
         { path: 'products.item.product_id', select: 'name category price image' },
       ],
     };
@@ -79,9 +79,9 @@ const getAdminOrders = async (req, res) => {
       page: result.page,
       totalPages: result.totalPages,
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' });
   }
 };
 
@@ -93,8 +93,8 @@ const getUserOrders = async (req, res) => {
       .populate('address')
       .sort({ createdAt: -1 });
     res.status(200).json({ data })
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 };
@@ -108,9 +108,9 @@ const getOrderById = async (req, res) => {
 
     // console.log(data);
     res.status(200).json({ data });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' });
   }
 };
 
@@ -188,7 +188,7 @@ const createOrder = async (req, res) => {
     const customerEmailHtml = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6;">
         <h1 style="color: #4CAF50;">Order Received</h1>
-        <p>Dear ${productDetails?.address?.firstname} ${productDetails?.address?.lastname},</p>
+        <p>Dear ${productDetails?.address?.fullname},</p>
         <p>Thank you for your order. </p>
         <p>Here are your order details:</p>
         <table style="width: 100%; border-collapse: collapse;">
@@ -215,7 +215,7 @@ const createOrder = async (req, res) => {
     const internalEmailHtml = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6;">
         <h1 style="color: #4CAF50;">Order Received</h1>
-        <p>New order has been placed by <b>${productDetails?.address?.firstname} ${productDetails?.address?.lastname}</b> at ${orderTime}.</p>
+        <p>New order has been placed by <b>${productDetails?.address?.fullname}</b> at ${orderTime}.</p>
         <p><strong>Email:</strong> ${productDetails?.address?.email}</p>
         <p><strong>Phone:</strong> ${productDetails?.address?.mobile}</p>
         <table style="width: 100%; border-collapse: collapse;">
@@ -258,8 +258,8 @@ console.log('productDetails?.address?.email',productDetails?.address?.email);
 
 
     res.status(201).json({ user, message: 'Order placed successfully' });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 }
@@ -270,8 +270,8 @@ const updateOrder = async (req, res) => {
     const data = await Order.updateOne({ _id },
       { $set: { status } })
     res.status(201).json({ data, message: 'Order updated successfully' });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 }
@@ -283,8 +283,8 @@ const getReviewOrders = async (req, res) => {
     const orders = await Order.find({ userId, 'products.item.product_id': productId });
 
     res.status(200).json({ canWriteReview: orders.length > 0 });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+  } catch (err) {
+    res.status(500).json({ success: false, err: err.message });
   }
 };
 
@@ -302,9 +302,9 @@ const updateOrderStatus = async (req, res) => {
     await order.save();
 
     res.status(200).json({ message: 'Order status updated successfully' });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error?.message ?? 'Something went wrong' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' });
   }
 };
 module.exports = {

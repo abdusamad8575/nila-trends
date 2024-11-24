@@ -21,19 +21,12 @@ const orderSchema = new mongoose.Schema({
     //     required: true
     // },
     address: {
-        firstname: {
+        emirate: {
             type: String,
+            enum: ["Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Umm Al Quwain", "Ras Al Khaimah", "Fujairah"],
             required: true
         },
-        lastname: {
-            type: String,
-            required: true
-        },
-        email: {
-            type: String,
-            required: true
-        },
-        country: {
+        area: {
             type: String,
             required: true
         },
@@ -43,26 +36,30 @@ const orderSchema = new mongoose.Schema({
         },
         address_line_2: {
             type: String,
-            required: true
         },
-        type: {
-            type: String
+        landmark: {
+            type: String,
         },
-        city: {
+        fullname: {
             type: String,
             required: true
         },
-        state: {
+        email: {
             type: String,
             required: true
         },
-        zip: {
+        code: {
             type: String,
             required: true
         },
         mobile: {
             type: Number,
-            required: true 
+            required: true
+        },
+        type: {
+            type: String,
+            enum: ["home", "office"],
+            default: "home",
         },
     },
     products: {   

@@ -7,9 +7,8 @@ import { useTheme } from 'next-themes';
 import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../../../axios'
 import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
-import { setCart, setCheckout, setProfile } from '../../../redux/actions/storeActions';
+import { setCart, setProfile } from '../../../redux/actions/storeActions';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import Checkout from '../checkout';
 import Profile from '../profile';
 import Image from 'next/image';
 
@@ -84,7 +83,6 @@ const Navbar = () => {
   //   return () => window.removeEventListener('scroll', handleScroll);
   // }, []);
   const handleCart = (state) => dispatch(setCart(state))
-  const handleCheckout = (state) => dispatch(setCheckout(state))
   const handleProfile = (state) => dispatch(setProfile(state))
 
   return (
@@ -160,7 +158,6 @@ const Navbar = () => {
         </div>
       </div>
       <ModalLayout open={storeData?.cart} setOpen={handleCart} bgcolor={'#fff'}><Cart /></ModalLayout>
-      <ModalLayout open={storeData?.checkout} setOpen={handleCheckout} bgcolor={'#fff'} width='500px'><Checkout /></ModalLayout>
       <ModalLayout open={storeData?.profile} setOpen={handleProfile} bgcolor={'#fff'}><Profile /></ModalLayout>
     </nav>
   );

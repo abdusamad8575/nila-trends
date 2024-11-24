@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Roboto, Roboto_Mono, Rochester } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar";
 import MobileNavbar from "./components/navbar-mobile";
@@ -7,8 +7,32 @@ import { Providers } from "./providers"
 import CustomToaster from "./components/common/CustomToaster";
 import Loading from "./loading";
 
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
+})
 
-const inter = Inter({ subsets: ["latin"] });
+const rochester = Rochester({
+  subsets: ['latin'],
+  weight: ['400',],
+  display: 'swap',
+  variable: '--font-rochester'
+})
+
+const roboto_mono = Roboto_Mono({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-roboto-mono'
+})
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-roboto'
+})
 
 export const metadata = {
   title: "Nilaa Trends",
@@ -19,7 +43,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${roboto.variable} ${rochester.variable} ${roboto_mono.variable} font-sans`}>
         <CustomToaster />
         {/* <Loading/> */}
         <Providers>

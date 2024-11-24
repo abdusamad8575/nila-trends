@@ -4,7 +4,7 @@ import axiosInstance from '../../../axios'
 import { FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../../redux/actions/userActions';
-import { setCheckout, setCart, setCheckoutProduct } from '../../../redux/actions/storeActions';
+import { setCart } from '../../../redux/actions/storeActions';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "@mui/material";
@@ -178,8 +178,8 @@ export default function Cart() {
   };
 
   const handleCheckout = () => {
-    dispatch(setCheckoutProduct(null))
-    dispatch(setCheckout(true))
+    router.push('/checkout')
+    dispatch(setCart(false))
   }
 
   const deliveryCharge = 12

@@ -205,7 +205,7 @@ exports.confirmNgeniusPayment = async (req, res) => {
             const customerEmailHtml = `
               <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h1 style="color: #4CAF50;">Order Received</h1>
-                <p>Dear ${productDetails?.address?.firstname} ${productDetails?.address?.lastname},</p>
+                <p>Dear ${productDetails?.address?.fullname},</p>
                 <p>Thank you for your order. </p>
                 <p>Here are your order details:</p>
                 <table style="width: 100%; border-collapse: collapse;">
@@ -232,7 +232,7 @@ exports.confirmNgeniusPayment = async (req, res) => {
             const internalEmailHtml = `
               <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h1 style="color: #4CAF50;">Order Received</h1>
-                <p>New order has been placed by <b>${productDetails?.address?.firstname} ${productDetails?.address?.lastname}</b> at ${orderTime}.</p>
+                <p>New order has been placed by <b>${productDetails?.address?.fullname}</b> at ${orderTime}.</p>
                 <p><strong>Email:</strong> ${productDetails?.address?.email}</p>
                 <p><strong>Phone:</strong> ${productDetails?.address?.mobile}</p>
                 <table style="width: 100%; border-collapse: collapse;">
