@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 import axios from '../../../axios';
 import { CircularProgress } from '@mui/material';
 
@@ -9,11 +9,6 @@ const FacebookLoginComponent = (props) => {
    const router = useRouter();
 
    const handleFacebookCallback = async (response) => {
-      if (response?.status === "unknown") {
-         console.error('Oops!', 'Something went wrong with facebook Login.');
-         return;
-      }
-      console.log(response);
       setIsLoading(true);
       try {
          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/facebook-login`, response);
@@ -36,22 +31,24 @@ const FacebookLoginComponent = (props) => {
                <p className="text-black text-xl font-medium"><CircularProgress size={20} color='inherit' />&nbsp;loading...</p>
             </div>
          )}
-         <div id="googleSignInDiv" className="mb-4"></div>
          <FacebookLogin
             appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
-            autoLoad={false}
-            fields="name,email,picture"
-            callback={handleFacebookCallback}
-            buttonStyle={{
+            style={{
                padding: "10px 20px",
                backgroundColor: "#4267B2",
                color: "#fff",
                borderRadius: "5px",
-               fontSize: "12px",
+               fontSize: "14px",
                cursor: "pointer",
-               fontWeight: "bold",
                width: "100%"
             }}
+            onSuccess={(response) => {
+               console.log('Login Success!', response);
+            }}
+            onFail={(error) => {
+               console.log('Login Failed!', error);
+            }}
+            onProfileSuccess={handleFacebookCallback}
          />
       </>
    );

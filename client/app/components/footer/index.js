@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSearch, faHeart, faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
 import { setUserDetails, clearUserDetails } from '../../../redux/actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
-
+import axiosInstance from '../../../axios'
 const MobileFooter = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
